@@ -309,7 +309,7 @@
                 </div>
                 <div class="upload-text">Drop your ASS files here</div>
                 <div class="upload-subtext">or click to browse and select multiple files</div>
-                <button type="button" class="browse-button" onclick="document.getElementById('fileInput').click()">
+                <button type="button" class="browse-button" id="browseButton">
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
                     </svg>
@@ -344,13 +344,20 @@
         const progressFill = document.getElementById('progressFill');
         const statusMessage = document.getElementById('statusMessage');
         const uploadForm = document.getElementById('uploadForm');
+        const browseButton = document.getElementById('browseButton'); // Added this line
 
         let selectedFiles = [];
 
         // --- Event Listeners ---
+
+        // FIXED: New event listener for the button to stop event bubbling
+        browseButton.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            fileInput.click();
+        });
+
         uploadArea.addEventListener('click', () => fileInput.click());
         
-        // IMPROVEMENT: Added keyboard accessibility (Enter/Space to open file dialog)
         uploadArea.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -390,7 +397,6 @@
                 return;
             }
 
-            // IMPROVEMENT: Prevent adding duplicate files
             const existingFileNames = new Set(selectedFiles.map(f => f.name));
             const uniqueNewFiles = assFiles.filter(f => !existingFileNames.has(f.name));
 
@@ -402,7 +408,6 @@
                 hideStatus();
             }
 
-            // IMPROVEMENT: Reset the file input to allow re-adding the same file after removing it
             fileInput.value = null;
         }
 
@@ -453,12 +458,11 @@
             progressFill.style.width = '0%';
             showStatus('🔄 Processing files...', 'processing');
 
-            // Simulate progress for better UX
             let progress = 0;
             const progressInterval = setInterval(() => {
                 progress += Math.random() * 10;
                 if (progress > 95) {
-                    clearInterval(progressInterval); // Stop before 100%
+                    clearInterval(progressInterval);
                 }
                 progressFill.style.width = progress + '%';
             }, 150);
@@ -494,7 +498,6 @@
                         hideStatus();
                     }, 4000);
                 } else {
-                    // IMPROVEMENT: Better error feedback from the server
                     const errorText = await response.text();
                     console.error("Server Error:", errorText);
                     throw new Error(`Processing failed: ${response.statusText}`);
