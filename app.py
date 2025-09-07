@@ -1,59 +1,60 @@
 from flask import Flask, render_template, request, send_file
 import zipfile
 import io
+import re
 
 app = Flask(__name__)
 
-def fix_rtl_content(original_content):
-    """
-    This function translates the logic from the user-provided Aegisub Lua script
-    to correctly process .ass subtitle files for RTL text.
-    """
-    # The special 'Right-to-Left Embedding' Unicode character
-    u202b = '\u202b'
-    
-    # Process the file line by line
+# The special 'Right-to-Left Embedding' Unicode character
+U202B = '\u202b'
+
+def fix_ass_file(content):
+    """Applies the specific RTL fix logic for .ASS file format."""
     processed_lines = []
-    for line in original_content.splitlines():
-        # The fix should only apply to 'Dialogue' lines
+    for line in content.splitlines():
         if line.strip().startswith('Dialogue:'):
-            # Split the line into its 10 components.
-            # The 10th component (index 9) is the actual subtitle text.
             parts = line.split(',', 9)
             if len(parts) == 10:
                 text_portion = parts[9]
-                
-                # --- Start of Lua Script Logic Translation ---
-                # 1. Remove all existing RTL characters to reset the line
-                temp_text = text_portion.replace(u202b, '')
-                
-                # 2. Add the RTL character to the very beginning
-                temp_text = u202b + temp_text
-                
-                # 3. Add the RTL character after hard and soft newlines
-                temp_text = temp_text.replace('\\N', '\\N' + u202b)
-                temp_text = temp_text.replace('\\n', '\\n' + u202b)
-                
-                # 4. Add the RTL character after a style block closing bracket
-                temp_text = temp_text.replace('}', '}' + u202b)
-                
-                # 5. Clean up: remove the RTL character if it's right before a style block opening bracket
-                temp_text = temp_text.replace(u202b + '{', '{')
-                # --- End of Lua Script Logic Translation ---
-
-                # Reassemble the dialogue line with the fixed text
+                temp_text = text_portion.replace(U202B, '')
+                temp_text = U202B + temp_text
+                temp_text = temp_text.replace('\\N', '\\N' + U202B)
+                temp_text = temp_text.replace('\\n', '\\n' + U202B)
+                temp_text = temp_text.replace('}', '}' + U202B)
+                temp_text = temp_text.replace(U202B + '{', '{')
                 parts[9] = temp_text
                 processed_lines.append(','.join(parts))
             else:
-                # If the dialogue line is malformed, add it back as is
                 processed_lines.append(line)
         else:
-            # If the line is not a dialogue line (e.g., style, header), keep it unchanged
             processed_lines.append(line)
-            
-    # Join all the lines back together into a single string
     return '\n'.join(processed_lines)
 
+def fix_srt_file(content):
+    """Applies the specific RTL fix logic for .SRT file format."""
+    processed_lines = []
+    # An SRT timestamp line looks like: 00:00:20,000 --> 00:00:24,400
+    timestamp_pattern = re.compile(r'\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}')
+    
+    is_subtitle_text = False
+    for line in content.splitlines():
+        if timestamp_pattern.search(line):
+            # The lines after a timestamp are the subtitle text
+            is_subtitle_text = True
+            processed_lines.append(line)
+        elif line.strip() == '':
+            # An empty line marks the end of a subtitle block
+            is_subtitle_text = False
+            processed_lines.append(line)
+        elif is_subtitle_text:
+            # This is a line of text that needs to be fixed
+            temp_text = line.replace(U202B, '')
+            processed_lines.append(U202B + temp_text)
+        else:
+            # This is a block number or other non-text line
+            processed_lines.append(line)
+            
+    return '\n'.join(processed_lines)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -67,19 +68,24 @@ def index():
             for f in files:
                 content = None
                 try:
-                    # Try to decode with common encodings
                     content = f.read().decode('utf-8-sig')
                 except UnicodeDecodeError:
                     try:
                         f.seek(0)
                         content = f.read().decode('utf-16')
-                    except UnicodeDecodeError:
+                    except Exception:
                         content = f"Error: Could not decode file '{f.filename}'."
 
                 if content:
-                    # Apply the new, correct RTL fix logic
-                    fixed_content = fix_rtl_content(content)
-                    # Encode back to utf-8 before writing to the zip
+                    filename_lower = f.filename.lower()
+                    fixed_content = content # Default to original content
+
+                    # Check file type and apply the correct fix
+                    if filename_lower.endswith('.ass'):
+                        fixed_content = fix_ass_file(content)
+                    elif filename_lower.endswith('.srt'):
+                        fixed_content = fix_srt_file(content)
+                    
                     zf.writestr(f.filename, fixed_content.encode('utf-8'))
 
         memory_file.seek(0)
