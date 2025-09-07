@@ -14,7 +14,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- CSS Variables for Dark Theme by Default --- */
         :root {
             --bg-gradient-start: #1e293b;
             --bg-gradient-end: #475569;
@@ -27,49 +26,21 @@
             --file-item-bg: rgba(51, 65, 85, 0.8);
             --footer-border-color: #334155;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-            transition: font-family 0.3s ease;
-        }
-        
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end)); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; overflow-x: hidden; transition: font-family 0.3s ease; }
         html[dir="rtl"] body { font-family: 'Tajawal', sans-serif; }
         .lang-ar { display: none; }
         html[lang="ar"] .lang-en { display: none; }
         html[lang="ar"] .lang-ar { display: inline; }
-
-        .lang-switch-container {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: white;
-            font-size: 0.9rem;
-        }
-        
+        .lang-switch-container { position: absolute; top: 20px; right: 20px; display: flex; align-items: center; gap: 10px; color: white; font-size: 0.9rem; z-index: 10; }
         .lang-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
         .lang-switch input { opacity: 0; width: 0; height: 0; }
-        
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .4s; border-radius: 26px; }
         .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: #667eea; }
         input:checked + .slider:before { transform: translateX(24px); }
-        
         .background-pattern { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.2) 2px, transparent 2px), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.2) 2px, transparent 2px); background-size: 60px 60px; animation: float 20s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(1deg); } }
-        
         .container { background: var(--container-bg); backdrop-filter: blur(20px); border-radius: 24px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); padding: 40px; width: 100%; max-width: 600px; position: relative; z-index: 1; border: 1px solid var(--border-color); }
         .header { text-align: center; margin-bottom: 40px; }
         .title { font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; line-height: 1.2; }
@@ -100,7 +71,6 @@
 </head>
 <body>
     <div class="background-pattern"></div>
-    
     <div class="lang-switch-container">
         <span class="lang-en">EN</span>
         <span class="lang-ar">AR</span>
@@ -109,7 +79,6 @@
             <span class="slider"></span>
         </label>
     </div>
-    
     <div class="container">
         <div class="header">
             <h1 class="title"><span class="lang-en">RTL Subtitle Fixer</span><span class="lang-ar">مُصلح ملفات الترجمة</span></h1>
@@ -132,7 +101,6 @@
     </div>
 
     <script>
-        // --- JavaScript has been simplified: Theme logic removed ---
         const translations = {
             error_select_files: { en: "Please select ASS or SRT subtitle files only.", ar: "يرجى تحديد ملفات ترجمة من نوع ASS أو SRT فقط." },
             error_process: { en: "Please select files to process.", ar: "يرجى تحديد ملفات للمعالجة." },
@@ -155,7 +123,6 @@
         let selectedFiles = [];
         let currentLang = 'en';
 
-        // --- Language Switch Logic (Unchanged) ---
         function setLanguage(lang) {
             document.documentElement.lang = lang;
             document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -168,15 +135,11 @@
             setLanguage(e.target.checked ? 'ar' : 'en');
         });
 
-        // Load saved language preference on page load
         document.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('language') || 'en';
             setLanguage(savedLang);
         });
 
-        // The rest of the functions (addFiles, handleFormSubmit, etc.) are exactly the same as before.
-        // For brevity, they are not repeated here but are included in the full code block above.
-        // No changes are needed to them.
         browseButton.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
         uploadArea.addEventListener('click', () => fileInput.click(); });
         uploadArea.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
@@ -196,6 +159,7 @@
             if (selectedFiles.length > 0) { processButton.style.display = 'block'; hideStatus(); }
             fileInput.value = null;
         }
+
         function renderFileList() {
             if (selectedFiles.length === 0) { fileList.style.display = 'none'; processButton.style.display = 'none'; return; }
             fileList.style.display = 'block';
@@ -209,10 +173,12 @@
                 </div>`;
             }).join('');
         }
+
         function removeFile(index) {
             selectedFiles.splice(index, 1);
             renderFileList();
         }
+
         async function handleFormSubmit(e) {
             e.preventDefault();
             if (selectedFiles.length === 0) { showStatus(translations.error_process[currentLang], 'error'); return; }
@@ -263,6 +229,7 @@
                 processButton.disabled = false;
             }
         }
+        
         function formatFileSize(bytes) { if (bytes === 0) return '0 Bytes'; const k = 1024; const i = Math.floor(Math.log(bytes) / Math.log(k)); return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + ['Bytes', 'KB', 'MB', 'GB', 'TB'][i]; }
         function showStatus(message, type) { statusMessage.textContent = message; statusMessage.className = `status-message ${type}`; statusMessage.style.display = 'block'; }
         function hideStatus() { statusMessage.style.display = 'none'; }
