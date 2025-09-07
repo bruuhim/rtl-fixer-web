@@ -89,7 +89,8 @@
             cursor: pointer;
         }
 
-        .upload-area:hover {
+        .upload-area:hover, .upload-area:focus {
+            outline: none;
             border-color: #667eea;
             background: rgba(102, 126, 234, 0.05);
             transform: translateY(-2px);
@@ -288,36 +289,6 @@
             color: #667eea;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .spinner {
-            display: inline-block;
-            margin-right: 8px;
-            animation: spin 1s linear infinite;
-        }
-
-        @media (max-width: 640px) {
-            .container {
-                padding: 30px 20px;
-                margin: 20px;
-            }
-
-            .title {
-                font-size: 2rem;
-            }
-
-            .upload-area {
-                padding: 40px 15px;
-            }
-
-            .upload-icon {
-                width: 60px;
-                height: 60px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -330,7 +301,7 @@
         </div>
 
         <form id="uploadForm" enctype="multipart/form-data">
-            <div class="upload-area" id="uploadArea">
+            <div class="upload-area" id="uploadArea" role="button" tabindex="0">
                 <div class="upload-icon">
                     <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
                         <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
@@ -376,8 +347,16 @@
 
         let selectedFiles = [];
 
-        // Drag and drop functionality
+        // --- Event Listeners ---
         uploadArea.addEventListener('click', () => fileInput.click());
+        
+        // IMPROVEMENT: Added keyboard accessibility (Enter/Space to open file dialog)
+        uploadArea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
+            }
+        });
         
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
@@ -391,27 +370,40 @@
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
-            const files = Array.from(e.dataTransfer.files);
-            addFiles(files);
+            addFiles(Array.from(e.dataTransfer.files));
         });
 
         fileInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files);
-            addFiles(files);
+            if (e.target.files.length > 0) {
+                addFiles(Array.from(e.target.files));
+            }
         });
+        
+        uploadForm.addEventListener('submit', handleFormSubmit);
 
-        function addFiles(files) {
-            const assFiles = files.filter(file => file.name.toLowerCase().endsWith('.ass'));
+        // --- Core Functions ---
+        function addFiles(newFiles) {
+            const assFiles = newFiles.filter(file => file.name.toLowerCase().endsWith('.ass'));
             
-            if (assFiles.length === 0) {
+            if (assFiles.length === 0 && selectedFiles.length === 0) {
                 showStatus('Please select ASS subtitle files only.', 'error');
                 return;
             }
 
-            selectedFiles = [...selectedFiles, ...assFiles];
+            // IMPROVEMENT: Prevent adding duplicate files
+            const existingFileNames = new Set(selectedFiles.map(f => f.name));
+            const uniqueNewFiles = assFiles.filter(f => !existingFileNames.has(f.name));
+
+            selectedFiles = [...selectedFiles, ...uniqueNewFiles];
             renderFileList();
-            processButton.style.display = 'block';
-            hideStatus();
+            
+            if(selectedFiles.length > 0) {
+                processButton.style.display = 'block';
+                hideStatus();
+            }
+
+            // IMPROVEMENT: Reset the file input to allow re-adding the same file after removing it
+            fileInput.value = null;
         }
 
         function renderFileList() {
@@ -429,7 +421,7 @@
                         <div class="file-name">${file.name}</div>
                         <div class="file-size">${formatFileSize(file.size)}</div>
                     </div>
-                    <button type="button" class="remove-button" onclick="removeFile(${index})">
+                    <button type="button" class="remove-button" onclick="removeFile(${index})" aria-label="Remove ${file.name}">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
                         </svg>
@@ -443,25 +435,7 @@
             renderFileList();
         }
 
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        function showStatus(message, type) {
-            statusMessage.textContent = message;
-            statusMessage.className = `status-message ${type}`;
-            statusMessage.style.display = 'block';
-        }
-
-        function hideStatus() {
-            statusMessage.style.display = 'none';
-        }
-
-        uploadForm.addEventListener('submit', async (e) => {
+        async function handleFormSubmit(e) {
             e.preventDefault();
             
             if (selectedFiles.length === 0) {
@@ -476,16 +450,18 @@
 
             processButton.disabled = true;
             progressBar.style.display = 'block';
-            
+            progressFill.style.width = '0%';
             showStatus('🔄 Processing files...', 'processing');
 
-            // Simulate progress
+            // Simulate progress for better UX
             let progress = 0;
             const progressInterval = setInterval(() => {
-                progress += Math.random() * 15;
-                if (progress > 90) progress = 90;
+                progress += Math.random() * 10;
+                if (progress > 95) {
+                    clearInterval(progressInterval); // Stop before 100%
+                }
                 progressFill.style.width = progress + '%';
-            }, 200);
+            }, 150);
 
             try {
                 const response = await fetch('/', {
@@ -502,32 +478,54 @@
                     const a = document.createElement('a');
                     a.style.display = 'none';
                     a.href = url;
-                    a.download = 'fixed_files.zip';
+                    a.download = response.headers.get('Content-Disposition')?.split('filename=')[1]?.replaceAll('"', '') || 'fixed_files.zip';
                     document.body.appendChild(a);
                     a.click();
                     window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
                     
                     showStatus('✅ Files processed successfully! Download started.', 'success');
                     
-                    // Reset form after success
                     setTimeout(() => {
                         selectedFiles = [];
                         renderFileList();
                         progressBar.style.display = 'none';
                         progressFill.style.width = '0%';
                         hideStatus();
-                    }, 3000);
+                    }, 4000);
                 } else {
-                    throw new Error('Processing failed');
+                    // IMPROVEMENT: Better error feedback from the server
+                    const errorText = await response.text();
+                    console.error("Server Error:", errorText);
+                    throw new Error(`Processing failed: ${response.statusText}`);
                 }
             } catch (error) {
                 clearInterval(progressInterval);
                 showStatus('❌ Error processing files. Please try again.', 'error');
-                console.error('Error:', error);
+                console.error('Fetch Error:', error);
             } finally {
                 processButton.disabled = false;
             }
-        });
+        }
+
+        // --- Helper Functions ---
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}`;
+            statusMessage.style.display = 'block';
+        }
+
+        function hideStatus() {
+            statusMessage.style.display = 'none';
+        }
     </script>
 </body>
 </html>
