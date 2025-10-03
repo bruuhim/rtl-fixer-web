@@ -531,32 +531,55 @@
             progressFill.style.width = '0%';
             showStatus(translations.status_processing[currentLang], 'processing');
             try {
-                const zip = new JSZip();
-                let processedCount = 0;
-                for (const file of selectedFiles) {
-                    const originalText = await readFileAsText(file);
-                    const nameLower = file.name.toLowerCase();
+                if (selectedFiles.length === 1) {
+                    const onlyFile = selectedFiles[0];
+                    const originalText = await readFileAsText(onlyFile);
+                    const nameLower = onlyFile.name.toLowerCase();
                     let fixedText = originalText;
                     if (nameLower.endsWith('.ass')) {
                         fixedText = fixAssContent(originalText);
                     } else if (nameLower.endsWith('.srt')) {
                         fixedText = fixSrtContent(originalText);
                     }
-                    zip.file(file.name, fixedText);
-                    processedCount += 1;
-                    const pct = Math.round((processedCount / selectedFiles.length) * 100);
-                    progressFill.style.width = pct + '%';
+                    progressFill.style.width = '100%';
+                    const blob = new Blob([fixedText], { type: 'text/plain;charset=utf-8' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = getSingleDownloadName(onlyFile.name);
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                } else {
+                    const zip = new JSZip();
+                    let processedCount = 0;
+                    for (const file of selectedFiles) {
+                        const originalText = await readFileAsText(file);
+                        const nameLower = file.name.toLowerCase();
+                        let fixedText = originalText;
+                        if (nameLower.endsWith('.ass')) {
+                            fixedText = fixAssContent(originalText);
+                        } else if (nameLower.endsWith('.srt')) {
+                            fixedText = fixSrtContent(originalText);
+                        }
+                        zip.file(file.name, fixedText);
+                        processedCount += 1;
+                        const pct = Math.round((processedCount / selectedFiles.length) * 100);
+                        progressFill.style.width = pct + '%';
+                    }
+                    const blob = await zip.generateAsync({ type: 'blob' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = getZipDownloadName(selectedFiles);
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
                 }
-                const blob = await zip.generateAsync({ type: 'blob' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = 'fixed_files.zip';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
                 showStatus(translations.status_success[currentLang], 'success');
                 setTimeout(() => {
                     selectedFiles = [];
@@ -633,6 +656,22 @@
                 }
             }
             return result.join('\n');
+        }
+
+        function getSingleDownloadName(originalName) {
+            const lastDot = originalName.lastIndexOf('.');
+            const base = lastDot > 0 ? originalName.substring(0, lastDot) : originalName;
+            const ext = lastDot > 0 ? originalName.substring(lastDot) : '';
+            return base + '_Fixed.by.@bruuhim' + ext;
+        }
+
+        function getZipDownloadName(files) {
+            const first = files[0]?.name || 'Subtitles';
+            const lastDot = first.lastIndexOf('.');
+            const base = lastDot > 0 ? first.substring(0, lastDot) : first;
+            const more = files.length - 1;
+            if (more <= 0) return base + '_Fixed.by.@bruuhim.zip';
+            return base + '_and_' + more + '_more_Fixed.by.@bruuhim.zip';
         }
 
         function formatFileSize(bytes) { if (bytes === 0) return '0 Bytes'; const k = 1024; const i = Math.floor(Math.log(bytes) / Math.log(k)); return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + ['Bytes', 'KB', 'MB', 'GB', 'TB'][i]; }
