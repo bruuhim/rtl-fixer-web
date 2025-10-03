@@ -325,12 +325,14 @@
         .status-message { 
             text-align: center; 
             margin-top: 16px; 
-            font-weight: 500; 
+            font-weight: 600; 
             display: none; 
+            padding: 10px 12px;
+            border-radius: 8px;
         }
-        .success { color: #10b981; } 
-        .error { color: #ef4444; } 
-        .processing { color: #667eea; }
+        .success { color: #10b981; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25);} 
+        .error { color: #ef4444; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25);} 
+        .processing { color: #667eea; background: rgba(102,126,234,0.12); border: 1px solid rgba(102,126,234,0.25);} 
         .footer-credit { 
             text-align: center; 
             margin-top: 30px; 
@@ -401,7 +403,7 @@
                 <span class="lang-ar">معالجة الملفات</span>
             </button>
             <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
-            <div class="status-message" id="statusMessage"></div>
+            <div class="status-message" id="statusMessage" aria-live="polite"></div>
         </form>
 
         <div class="footer-credit">
@@ -411,6 +413,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script>
         // Translations for dynamic text
         const translations = {
@@ -523,46 +526,115 @@
         async function handleFormSubmit(e) {
             e.preventDefault();
             if (selectedFiles.length === 0) { showStatus(translations.error_process[currentLang], 'error'); return; }
-            const formData = new FormData();
-            selectedFiles.forEach(file => formData.append('files', file));
             processButton.disabled = true;
             progressBar.style.display = 'block';
             progressFill.style.width = '0%';
             showStatus(translations.status_processing[currentLang], 'processing');
             try {
-                const response = await fetch('/', { method: 'POST', body: formData });
-                progressFill.style.width = '100%';
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
-                    a.download = 'fixed_files.zip';
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                    showStatus(translations.status_success[currentLang], 'success');
-                    setTimeout(() => {
-                        selectedFiles = [];
-                        renderFileList();
-                        progressBar.style.display = 'none';
-                        progressFill.style.width = '0%';
-                        hideStatus();
-                    }, 4000);
-                } else {
-                    const errorText = await response.text();
-                    console.error("Server Error:", errorText);
-                    throw new Error(`Processing failed: ${response.statusText}`);
+                const zip = new JSZip();
+                let processedCount = 0;
+                for (const file of selectedFiles) {
+                    const originalText = await readFileAsText(file);
+                    const nameLower = file.name.toLowerCase();
+                    let fixedText = originalText;
+                    if (nameLower.endsWith('.ass')) {
+                        fixedText = fixAssContent(originalText);
+                    } else if (nameLower.endsWith('.srt')) {
+                        fixedText = fixSrtContent(originalText);
+                    }
+                    zip.file(file.name, fixedText);
+                    processedCount += 1;
+                    const pct = Math.round((processedCount / selectedFiles.length) * 100);
+                    progressFill.style.width = pct + '%';
                 }
+                const blob = await zip.generateAsync({ type: 'blob' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'fixed_files.zip';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                showStatus(translations.status_success[currentLang], 'success');
+                setTimeout(() => {
+                    selectedFiles = [];
+                    renderFileList();
+                    progressBar.style.display = 'none';
+                    progressFill.style.width = '0%';
+                    hideStatus();
+                }, 3000);
             } catch (error) {
+                console.error('Processing Error:', error);
                 showStatus(translations.status_error[currentLang], 'error');
-                console.error('Fetch Error:', error);
             } finally {
                 processButton.disabled = false;
             }
         }
+
+        function readFileAsText(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsText(file);
+            });
+        }
+
+        const U202B = "\u202B";
+        function replaceAllString(source, search, replacement) {
+            return source.split(search).join(replacement);
+        }
+
+        function fixAssContent(content) {
+            const lines = content.split(/\r?\n/);
+            const result = [];
+            for (const line of lines) {
+                if (line.trim().startsWith('Dialogue:')) {
+                    const parts = line.split(',', 9);
+                    if (parts.length === 10) {
+                        let textPortion = parts[9];
+                        textPortion = replaceAllString(textPortion, U202B, '');
+                        textPortion = U202B + textPortion;
+                        textPortion = replaceAllString(textPortion, '\\N', '\\N' + U202B);
+                        textPortion = replaceAllString(textPortion, '\\n', '\\n' + U202B);
+                        textPortion = replaceAllString(textPortion, '}', '}' + U202B);
+                        textPortion = replaceAllString(textPortion, U202B + '{', '{');
+                        parts[9] = textPortion;
+                        result.push(parts.join(','));
+                    } else {
+                        result.push(line);
+                    }
+                } else {
+                    result.push(line);
+                }
+            }
+            return result.join('\n');
+        }
+
+        function fixSrtContent(content) {
+            const lines = content.split(/\r?\n/);
+            const result = [];
+            const timestamp = /^\d{2}:\d{2}:\d{2},\d{3}\s+-->\s+\d{2}:\d{2}:\d{2},\d{3}$/;
+            let isSubtitleText = false;
+            for (const line of lines) {
+                if (timestamp.test(line)) {
+                    isSubtitleText = true;
+                    result.push(line);
+                } else if (line.trim() === '') {
+                    isSubtitleText = false;
+                    result.push(line);
+                } else if (isSubtitleText) {
+                    const cleaned = replaceAllString(line, U202B, '');
+                    result.push(U202B + cleaned);
+                } else {
+                    result.push(line);
+                }
+            }
+            return result.join('\n');
+        }
+
         function formatFileSize(bytes) { if (bytes === 0) return '0 Bytes'; const k = 1024; const i = Math.floor(Math.log(bytes) / Math.log(k)); return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + ['Bytes', 'KB', 'MB', 'GB', 'TB'][i]; }
         function showStatus(message, type) { statusMessage.textContent = message; statusMessage.className = `status-message ${type}`; statusMessage.style.display = 'block'; }
         function hideStatus() { statusMessage.style.display = 'none'; }
