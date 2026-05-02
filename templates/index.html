@@ -538,7 +538,7 @@
             }
 
             .container {
-                max-width: 650px; /* Slimmer for better UX */
+                max-width: 800px; /* Wider layout as requested */
                 height: 100%;
                 padding: 32px;
                 margin: 0 auto;
@@ -660,7 +660,7 @@
                             <span class="lang-en">Browse Files</span>
                             <span class="lang-ar">تصفح الملفات</span>
                         </button>
-                        <input type="file" id="fileInput" name="files" multiple accept=".ass,.srt" class="file-input">
+                        <input type="file" id="fileInput" multiple accept=".ass,.srt" class="file-input">
                     </div>
                     
                     <div class="file-list" id="fileList"></div>
@@ -691,6 +691,27 @@
                             </select>
                         </div>
                     </div>
+
+                    <!-- Moved RTL Fix to Easy Settings -->
+                    <div class="section-card" style="margin-top: 16px;">
+                        <!-- RTL Fix -->
+                        <label class="checkbox-group" style="margin-bottom: 8px;">
+                            <input type="checkbox" name="fix_rtl" value="true" checked>
+                            <span class="checkbox-label" style="font-weight: 600; font-size: 0.95rem;">
+                                ✨ <span class="lang-en">Fix Arabic RTL Direction</span><span class="lang-ar">إصلاح اتجاه النصوص العربية (RTL)</span>
+                            </span>
+                        </label>
+                        <div class="radio-options" style="margin-bottom: 0;">
+                            <label class="radio-group">
+                                <input type="radio" name="fix_rtl_pdf" value="false" checked>
+                                <span>RLE (U+202B) الافتراضي</span>
+                            </label>
+                            <label class="radio-group">
+                                <input type="radio" name="fix_rtl_pdf" value="true">
+                                <span>RLE + PDF للمشغلات المتقدمة</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="advanced-toggle" id="advancedToggle">
@@ -705,39 +726,13 @@
                 <div class="advanced-content" id="advancedContent">
                     <!-- COLUMN 2: Repair Options -->
                     <div class="panel-column">
-                    <div class="section-card">
-                        <div class="section-title">
-                            <i class="fa-solid fa-wrench"></i>
-                            <span class="lang-en">Repair & Adjustments</span>
-                            <span class="lang-ar">خيارات الإصلاح والضبط</span>
-                        </div>
-                        
-                        <!-- RTL Fix -->
-                        <label class="checkbox-group">
-                            <input type="checkbox" name="fix_rtl" value="true" checked>
-                            <span class="checkbox-label" style="font-weight: 600;">
-                                ✨ <span class="lang-en">Fix Arabic RTL Direction</span><span class="lang-ar">إصلاح اتجاه النصوص العربية (RTL)</span>
-                            </span>
-                        </label>
-                        <div class="radio-options">
-                            <label class="radio-group">
-                                <input type="radio" name="fix_rtl_pdf" value="false" checked>
-                                <span>RLE (U+202B) الافتراضي</span>
-                            </label>
-                            <label class="radio-group">
-                                <input type="radio" name="fix_rtl_pdf" value="true">
-                                <span>RLE + PDF للمشغلات المتقدمة</span>
-                            </label>
-                        </div>
-
-                        <hr>
-                        
-                        <!-- Time Shift -->
-                        <div class="section-title" style="font-size: 0.9rem; margin-bottom: 12px;">
-                            <i class="fa-regular fa-clock" style="color: var(--text-secondary);"></i>
-                            <span class="lang-en">Time Shift</span>
-                            <span class="lang-ar">ضبط التوقيت (تأخير/تقديم)</span>
-                        </div>
+                        <div class="section-card">
+                            <!-- Time Shift -->
+                            <div class="section-title" style="font-size: 0.9rem; margin-bottom: 12px;">
+                                <i class="fa-regular fa-clock" style="color: var(--text-secondary);"></i>
+                                <span class="lang-en">Time Shift</span>
+                                <span class="lang-ar">ضبط التوقيت (تأخير/تقديم)</span>
+                            </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label" style="font-size: 0.75rem;">
