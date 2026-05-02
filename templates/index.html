@@ -251,6 +251,8 @@
             margin-bottom: 12px;
             cursor: pointer;
         }
+        html[dir="rtl"] .checkbox-group { flex-direction: row-reverse; justify-content: flex-end; }
+        html[dir="rtl"] .checkbox-label { text-align: right; }
         .checkbox-group input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
@@ -323,6 +325,7 @@
             font-size: 0.8rem;
             color: var(--text-secondary);
         }
+        html[dir="rtl"] .radio-group { flex-direction: row-reverse; justify-content: flex-end; }
         .radio-group input[type="radio"] {
             appearance: none;
             width: 16px;
@@ -502,6 +505,9 @@
         
         .advanced-toggle { display: none !important; }
             #uploadForm { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; flex: 1; min-height: 0; overflow: hidden; }
+            .col-1 { order: 1 !important; }
+            .col-2 { order: 2 !important; }
+            .col-3 { order: 3 !important; }
             .panels-layout { display: contents; }
             .advanced-content { display: contents; }
         
@@ -544,7 +550,10 @@
             .header {
                 flex-direction: row;
                 margin-bottom: 32px;
+                justify-content: flex-start;
+                text-align: left;
             }
+            html[dir="rtl"] .header { flex-direction: row-reverse; text-align: right; }
             html[dir="ltr"] .header { text-align: center; }
 
             .logo {
@@ -564,6 +573,9 @@
             .subtitle { margin: 0; font-size: 0.95rem; }
 
             #uploadForm { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; flex: 1; min-height: 0; overflow: hidden; }
+            .col-1 { order: 1 !important; }
+            .col-2 { order: 2 !important; }
+            .col-3 { order: 3 !important; }
 
             .panels-layout { display: contents; }
 
@@ -626,7 +638,7 @@
             <div class="panels-layout">
                 
                 <!-- COLUMN 1: Files & Formats -->
-                <div class="panel-column">
+                <div class="panel-column col-1">
                     <div class="upload-area" id="uploadArea" role="button" tabindex="0">
                         <div class="upload-icon">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -709,7 +721,7 @@
 
                 <div class="advanced-content" id="advancedContent">
                     <!-- COLUMN 2: Repair Options -->
-                    <div class="panel-column">
+                    <div class="panel-column col-2">
                         <div class="section-card">
                             <!-- Time Shift -->
                             <div class="section-title" style="font-size: 0.9rem; margin-bottom: 12px;">
@@ -755,7 +767,7 @@
                 </div>
 
                 <!-- COLUMN 3: Cleanup Options -->
-                <div class="panel-column">
+                <div class="panel-column col-3">
                     <div class="section-card">
                         <div class="section-title">
                             <i class="fa-solid fa-broom"></i>
