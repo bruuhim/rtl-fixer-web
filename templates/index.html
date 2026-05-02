@@ -45,14 +45,15 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 20px;
+            padding: 60px 20px 20px 20px;
             overflow-x: hidden;
         }
 
         .top-bar {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 12px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
         }
 
         .lang-switch-container {
@@ -368,13 +369,14 @@
         .status-message { text-align: center; margin-top: 12px; display: none; padding: 10px; border-radius: var(--border-radius-sm); font-size: 0.85rem; }
         .success { color: var(--success-color); background: rgba(130, 168, 130, 0.1); }
         .error { color: var(--error-color); background: rgba(209, 123, 123, 0.1); }
+        .processing { color: var(--accent-color); background: rgba(196, 139, 97, 0.1); }
 
         .footer-credit { text-align: center; margin-top: 16px; font-size: 0.75rem; color: var(--text-secondary); }
         .footer-credit a { color: var(--accent-color); text-decoration: none; font-weight: 700; }
 
         @media (min-width: 1024px) {
             body { height: 100vh; overflow: hidden; padding: 0; display: flex; align-items: center; justify-content: center; }
-            .top-bar { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+            .top-bar { position: fixed; }
             .container { width: 95%; max-width: 1400px; height: 95vh; padding: 40px; }
             .header { flex-direction: row; margin-bottom: 32px; }
             #uploadForm { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
@@ -383,7 +385,7 @@
             .panel-column::-webkit-scrollbar { width: 4px; }
             .panel-column::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
             .advanced-toggle { display: none; }
-            .advanced-content { display: flex; flex-direction: row; flex: 1; gap: 24px; margin-top: 0; }
+            .advanced-content { display: contents; }
             .form-actions { margin-top: auto; }
         }
     </style>
@@ -594,7 +596,7 @@
         browseButton.addEventListener('click', () => fileInput.click());
         uploadArea.addEventListener('click', () => fileInput.click());
         uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = 'var(--accent-color)'; });
-        uploadArea.addEventListener('dragleave', () => uploadArea.style.borderColor = 'var(--border-color)';);
+        uploadArea.addEventListener('dragleave', () => uploadArea.style.borderColor = 'var(--border-color)');
         uploadArea.addEventListener('drop', (e) => { e.preventDefault(); addFiles(Array.from(e.dataTransfer.files)); });
         fileInput.addEventListener('change', (e) => addFiles(Array.from(e.target.files)));
 
@@ -603,6 +605,7 @@
             selectedFiles = [...selectedFiles, ...valid];
             renderFiles();
             processButton.disabled = selectedFiles.length === 0;
+            fileInput.value = '';
         }
 
         function renderFiles() {
@@ -624,7 +627,7 @@
             processIcon.style.display = 'none';
             processSpinner.style.display = 'block';
             statusMessage.style.display = 'block';
-            statusMessage.className = 'status-message success';
+            statusMessage.className = 'status-message processing';
             statusMessage.textContent = translations.processing;
 
             const formData = new FormData(uploadForm);
@@ -633,13 +636,34 @@
             try {
                 const res = await fetch('/process', { method: 'POST', body: formData });
                 if (!res.ok) throw new Error();
+                
+                let filename = selectedFiles.length === 1 ? selectedFiles[0].name.replace(/\.[^.]+$/, '') + '_Fixed.srt' : 'fixed_subtitles.zip';
+                const contentDisposition = res.headers.get('Content-Disposition');
+                if (contentDisposition) {
+                    const matchUtf8 = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i);
+                    const matchNormal = contentDisposition.match(/filename="?([^"]+)"?/);
+                    if (matchUtf8 && matchUtf8[1]) {
+                        filename = decodeURIComponent(matchUtf8[1]);
+                    } else if (matchNormal && matchNormal[1]) {
+                        filename = matchNormal[1];
+                    }
+                }
+
                 const blob = await res.blob();
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = selectedFiles.length === 1 ? selectedFiles[0].name.replace(/\.[^.]+$/, '') + '_Fixed.srt' : 'fixed_subtitles.zip';
+                a.download = filename;
                 a.click();
+                
+                statusMessage.className = 'status-message success';
                 statusMessage.textContent = translations.success;
+                setTimeout(() => {
+                    selectedFiles = [];
+                    renderFiles();
+                    processButton.disabled = true;
+                    statusMessage.style.display = 'none';
+                }, 4000);
             } catch (err) {
                 statusMessage.className = 'status-message error';
                 statusMessage.textContent = translations.error;
