@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bruuhim Subtitle Studio</title>
+    <link rel="icon" type="image/jpeg" href="/static/Icon.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,23 +12,25 @@
     
     <style>
         :root {
-            --bg-color: #f7f5f0;
-            --surface-color: #ffffff;
-            --text-primary: #2d2a26;
-            --text-secondary: #78716c;
-            --accent-color: #c48b61; /* Warm elegant beige/caramel */
-            --accent-hover: #b07a51;
-            --border-color: #e6e4dd;
-            --input-bg: #faf9f6;
-            --success-color: #6b8e6b;
-            --error-color: #c06c6c;
+            /* Dark Beige / Warm Dark Theme */
+            --bg-color: #1a1817;
+            --surface-color: #262321;
+            --surface-color-alt: #2d2927;
+            --text-primary: #f0ebe1;
+            --text-secondary: #9c948a;
+            --accent-color: #c48b61;
+            --accent-hover: #d99f73;
+            --border-color: #3b3632;
+            --input-bg: #1f1c1a;
+            --success-color: #82a882;
+            --error-color: #d17b7b;
             
             --border-radius-lg: 20px;
             --border-radius-md: 12px;
             --border-radius-sm: 8px;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.03);
-            --shadow-md: 0 8px 24px rgba(0,0,0,0.06);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.2);
+            --shadow-md: 0 8px 32px rgba(0,0,0,0.3);
+            --transition: all 0.2s ease-in-out;
         }
 
         * {
@@ -36,6 +39,7 @@
             box-sizing: border-box;
         }
 
+        /* Default (Mobile) */
         body {
             font-family: 'Noto Kufi Arabic', sans-serif;
             background-color: var(--bg-color);
@@ -43,9 +47,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-            transition: var(--transition);
+            padding: 20px;
         }
         
         html[dir="ltr"] body {
@@ -60,10 +62,13 @@
         .lang-ar { display: inline; }
         .lang-ar-block { display: block; }
 
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
         .lang-switch-container {
-            position: absolute;
-            top: 24px;
-            right: 24px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -72,15 +77,10 @@
             border-radius: 30px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-color);
-            z-index: 100;
-        }
-        html[dir="ltr"] .lang-switch-container {
-            right: auto;
-            left: 24px;
         }
 
         .lang-switch-container span {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
             color: var(--text-secondary);
         }
@@ -88,176 +88,168 @@
         .lang-switch {
             position: relative;
             display: inline-block;
-            width: 44px;
-            height: 24px;
+            width: 40px;
+            height: 22px;
         }
         .lang-switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #d6d3cd;
-            transition: .4s;
-            border-radius: 24px;
+            background-color: #4a4540;
+            transition: .3s;
+            border-radius: 22px;
         }
         .slider:before {
             position: absolute;
             content: "";
-            height: 18px; width: 18px;
+            height: 16px; width: 16px;
             left: 3px; bottom: 3px;
-            background-color: white;
-            transition: .4s;
+            background-color: #f0ebe1;
+            transition: .3s;
             border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         input:checked + .slider { background-color: var(--accent-color); }
-        input:checked + .slider:before { transform: translateX(20px); }
+        input:checked + .slider:before { transform: translateX(18px); }
 
         /* Main Container */
         .container { 
             background: var(--surface-color); 
             border-radius: var(--border-radius-lg); 
             box-shadow: var(--shadow-md); 
-            padding: 40px; 
+            padding: 24px; 
             width: 100%; 
-            max-width: 900px; 
+            max-width: 600px; /* Mobile width */
+            margin: 0 auto;
             border: 1px solid var(--border-color);
-            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
 
         /* Typography */
-        .header { text-align: center; margin-bottom: 40px; }
+        .header { text-align: center; margin-bottom: 24px; display: flex; flex-direction: column; align-items: center; gap: 8px;}
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            margin-bottom: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
         .title { 
-            font-size: 2.2rem; 
+            font-size: 1.8rem; 
             font-weight: 700; 
             color: var(--text-primary);
-            margin-bottom: 12px; 
             letter-spacing: -0.5px;
         }
         .subtitle { 
             color: var(--text-secondary); 
-            font-size: 1.1rem; 
+            font-size: 0.95rem; 
             font-weight: 400; 
             max-width: 600px;
             margin: 0 auto;
-            line-height: 1.5;
         }
 
         /* Layout */
-        .two-panel-layout {
+        .panels-layout {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 32px;
-        }
-        @media (min-width: 800px) {
-            .two-panel-layout {
-                grid-template-columns: 1fr 1fr;
-            }
+            gap: 20px;
+            flex: 1;
+            min-height: 0;
         }
 
         .panel-column {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 16px;
         }
 
         /* Forms */
         .form-row {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             width: 100%;
         }
-        @media (max-width: 500px) {
-            .form-row { flex-direction: column; gap: 16px; }
+        @media (max-width: 400px) {
+            .form-row { flex-direction: column; }
         }
         
         .form-group {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
         .form-label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-primary);
             font-weight: 600;
         }
         .form-select, .form-input {
             width: 100%;
-            padding: 12px 16px;
+            padding: 10px 14px;
             border-radius: var(--border-radius-md);
             background: var(--input-bg);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
             font-family: inherit;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: var(--transition);
         }
         .form-select:focus, .form-input:focus {
             outline: none;
             border-color: var(--accent-color);
-            background: var(--surface-color);
-            box-shadow: 0 0 0 3px rgba(196, 139, 97, 0.15);
+            background: var(--surface-color-alt);
         }
         .form-select:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
-            background: #f1efea;
         }
 
         /* Section Cards */
         .section-card {
-            background: var(--surface-color);
+            background: var(--surface-color-alt);
             border-radius: var(--border-radius-md);
-            padding: 24px;
+            padding: 16px;
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
-            position: relative;
-            overflow: hidden;
-        }
-        .section-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--accent-color);
-        }
-        html[dir="ltr"] .section-card::before {
-            right: auto;
-            left: 0;
+            border-top: 3px solid var(--accent-color);
+            display: flex;
+            flex-direction: column;
         }
         
         .section-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         .section-title i {
             color: var(--accent-color);
-            font-size: 1.2rem;
         }
 
         /* Checkboxes */
         .checkbox-group {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 14px;
+            gap: 10px;
+            margin-bottom: 12px;
             cursor: pointer;
         }
         .checkbox-group input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             background: var(--input-bg);
-            border: 2px solid #d6d3cd;
+            border: 2px solid #5a544d;
             border-radius: 6px;
             cursor: pointer;
             position: relative;
@@ -274,62 +266,60 @@
             position: absolute;
             left: 6px;
             top: 2px;
-            width: 5px;
-            height: 11px;
-            border: solid white;
+            width: 4px;
+            height: 10px;
+            border: solid var(--bg-color);
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
         }
         .checkbox-label {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text-primary);
             user-select: none;
-            line-height: 1.5;
+            line-height: 1.4;
         }
         
         .sub-checkboxes {
-            margin-right: 34px;
-            margin-top: -6px;
-            margin-bottom: 16px;
+            margin-right: 30px;
+            margin-top: -4px;
+            margin-bottom: 12px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            transition: opacity 0.2s;
+            gap: 8px;
         }
         html[dir="ltr"] .sub-checkboxes {
             margin-right: 0;
-            margin-left: 34px;
+            margin-left: 30px;
         }
         .checkbox-group.disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             pointer-events: none;
         }
 
-        /* Radio options */
         .radio-options {
-            margin-right: 34px;
-            margin-top: 8px;
+            margin-right: 30px;
+            margin-top: 4px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
         }
         html[dir="ltr"] .radio-options {
             margin-right: 0;
-            margin-left: 34px;
+            margin-left: 30px;
         }
         .radio-group {
             display: flex;
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
         }
         .radio-group input[type="radio"] {
             appearance: none;
-            width: 18px;
-            height: 18px;
-            border: 2px solid #d6d3cd;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #5a544d;
             border-radius: 50%;
             position: relative;
             cursor: pointer;
@@ -340,8 +330,8 @@
         .radio-group input[type="radio"]:checked::after {
             content: '';
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             background: var(--accent-color);
             border-radius: 50%;
             top: 50%;
@@ -349,92 +339,40 @@
             transform: translate(-50%, -50%);
         }
 
-        /* Collapsible */
-        .collapsible-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            padding: 4px 0;
-            user-select: none;
-        }
-        .collapsible-header .section-title {
-            margin-bottom: 0;
-        }
-        .toggle-btn {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: inherit;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: var(--transition);
-        }
-        .toggle-btn:hover { 
-            background: var(--border-color);
-            color: var(--text-primary);
-        }
-        .toggle-icon { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .collapsible-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0;
-        }
-        .collapsible-content.expanded {
-            max-height: 500px;
-            padding-top: 20px;
-            opacity: 1;
-        }
-
         /* Upload Area */
         .upload-area { 
             border: 2px dashed var(--border-color); 
-            border-radius: var(--border-radius-lg); 
-            padding: 48px 24px; 
+            border-radius: var(--border-radius-md); 
+            padding: 30px 16px; 
             text-align: center; 
             transition: var(--transition); 
             background: var(--input-bg); 
             cursor: pointer; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         .upload-area:hover, .upload-area:focus { 
             outline: none; 
             border-color: var(--accent-color); 
-            background: #fffbfa;
-        }
-        .upload-area.dragover { 
-            border-color: var(--accent-color); 
-            background: #fffbfa;
-            transform: scale(1.01); 
+            background: var(--surface-color-alt);
         }
         .upload-icon { 
-            width: 64px; 
-            height: 64px; 
-            margin: 0 auto 20px; 
+            width: 48px; 
+            height: 48px; 
+            margin-bottom: 12px; 
             background: var(--surface-color);
-            border: 2px solid var(--border-color);
+            border: 1px solid var(--border-color);
             border-radius: 50%; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            transition: var(--transition); 
             color: var(--accent-color);
-            font-size: 1.5rem;
-            box-shadow: var(--shadow-sm);
+            font-size: 1.2rem;
         }
-        .upload-area:hover .upload-icon { 
-            transform: translateY(-5px); 
-            border-color: var(--accent-color);
-            background: var(--accent-color);
-            color: white;
-        }
-        .upload-text { font-size: 1.15rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
-        .upload-subtext { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px; }
+        .upload-text { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+        .upload-subtext { color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 16px; }
         .file-input { display: none; }
         
         .browse-button { 
@@ -442,136 +380,231 @@
             background: var(--surface-color); 
             color: var(--text-primary);
             border: 1px solid var(--border-color); 
-            padding: 10px 24px; 
-            border-radius: var(--border-radius-md); 
+            padding: 8px 16px; 
+            border-radius: var(--border-radius-sm); 
             font-weight: 600; cursor: pointer; 
-            transition: var(--transition); 
-            font-size: 0.95rem; 
-            box-shadow: var(--shadow-sm);
+            font-size: 0.85rem; 
         }
         .browse-button:hover { 
             background: var(--accent-color);
-            color: white;
+            color: var(--bg-color);
             border-color: var(--accent-color);
         }
         
-        .file-list { margin-top: 20px; display: none; max-height: 240px; overflow-y: auto; padding-right: 4px; }
-        .file-list::-webkit-scrollbar { width: 6px; }
-        .file-list::-webkit-scrollbar-track { background: transparent; }
-        .file-list::-webkit-scrollbar-thumb { background: #d6d3cd; border-radius: 10px; }
+        .file-list { margin-top: 12px; display: none; max-height: 120px; overflow-y: auto; padding-right: 4px; }
+        .file-list::-webkit-scrollbar { width: 4px; }
+        .file-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         
         .file-item { 
-            display: flex; align-items: center; gap: 16px; padding: 16px; 
-            background: var(--surface-color); border-radius: var(--border-radius-md); 
-            margin-bottom: 12px; border: 1px solid var(--border-color); 
-            transition: var(--transition); 
-            box-shadow: var(--shadow-sm);
+            display: flex; align-items: center; gap: 12px; padding: 10px; 
+            background: var(--surface-color-alt); border-radius: var(--border-radius-sm); 
+            margin-bottom: 8px; border: 1px solid var(--border-color); 
         }
-        .file-item:hover { border-color: var(--accent-color); }
         .file-icon { 
-            width: 40px; height: 40px; background: #f1efea; 
+            width: 32px; height: 32px; background: var(--input-bg); 
             border-radius: var(--border-radius-sm); display: flex; align-items: center; justify-content: center; 
-            color: var(--text-secondary); font-weight: 700; font-size: 0.8rem; 
+            color: var(--text-secondary); font-weight: 700; font-size: 0.75rem; 
         }
         .file-info { flex: 1; overflow: hidden; }
-        .file-name { font-weight: 600; color: var(--text-primary); margin-bottom: 4px; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .file-size { font-size: 0.85rem; color: var(--text-secondary); }
+        .file-name { font-weight: 600; color: var(--text-primary); margin-bottom: 2px; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-size { font-size: 0.75rem; color: var(--text-secondary); }
         .remove-button { 
-            background: transparent; color: var(--text-secondary); border: none; width: 32px; height: 32px; 
+            background: transparent; color: var(--text-secondary); border: none; width: 28px; height: 28px; 
             border-radius: 50%; cursor: pointer; display: flex; align-items: center; 
-            justify-content: center; transition: var(--transition); flex-shrink: 0;
-            font-size: 1.2rem;
+            justify-content: center; transition: var(--transition);
         }
-        .remove-button:hover { color: var(--error-color); background: rgba(192, 108, 108, 0.1); }
+        .remove-button:hover { color: var(--error-color); background: rgba(209, 123, 123, 0.1); }
         
         /* Main Button */
         .process-button { 
             width: 100%; background: var(--accent-color); 
-            color: white; border: none; padding: 18px; border-radius: var(--border-radius-lg); 
-            font-size: 1.15rem; font-weight: 700; cursor: pointer; 
-            margin-top: 16px; transition: var(--transition); 
-            display: flex; justify-content: center; align-items: center; gap: 12px;
-            box-shadow: 0 4px 12px rgba(196, 139, 97, 0.3);
+            color: var(--bg-color); border: none; padding: 16px; border-radius: var(--border-radius-md); 
+            font-size: 1.1rem; font-weight: 700; cursor: pointer; 
+            transition: var(--transition); 
+            display: flex; justify-content: center; align-items: center; gap: 10px;
         }
         .process-button:hover:not(:disabled) { 
             background: var(--accent-hover); 
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 16px rgba(196, 139, 97, 0.4); 
         }
         .process-button:disabled { 
-            background: #d6d3cd; 
+            background: var(--border-color); 
             cursor: not-allowed; 
-            box-shadow: none; 
-            color: #f7f5f0;
+            color: var(--text-secondary);
         }
         
         .spinner {
-            display: none; width: 22px; height: 22px; border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%; border-top-color: #fff; animation: spin 1s linear infinite;
+            display: none; width: 20px; height: 20px; border: 3px solid rgba(26,24,23,0.2);
+            border-radius: 50%; border-top-color: var(--bg-color); animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         
         .status-message { 
-            text-align: center; margin-top: 20px; font-weight: 600; 
-            display: none; padding: 16px; border-radius: var(--border-radius-md);
-            font-size: 0.95rem;
+            text-align: center; margin-top: 16px; font-weight: 600; 
+            display: none; padding: 12px; border-radius: var(--border-radius-md);
+            font-size: 0.9rem;
         }
-        .success { color: var(--success-color); background: #f0f7f0; border: 1px solid #d1e5d1;} 
-        .error { color: var(--error-color); background: #fdf3f3; border: 1px solid #f6d8d8;} 
-        .processing { color: var(--accent-color); background: #fcf6f2; border: 1px solid #f5e3d7;} 
+        .success { color: var(--success-color); background: rgba(130, 168, 130, 0.1); border: 1px solid rgba(130, 168, 130, 0.2);} 
+        .error { color: var(--error-color); background: rgba(209, 123, 123, 0.1); border: 1px solid rgba(209, 123, 123, 0.2);} 
+        .processing { color: var(--accent-color); background: rgba(196, 139, 97, 0.1); border: 1px solid rgba(196, 139, 97, 0.2);} 
         
         .footer-credit { 
-            text-align: center; margin-top: 40px; font-size: 0.9rem; color: var(--text-secondary); 
+            text-align: center; margin-top: 16px; font-size: 0.8rem; color: var(--text-secondary); 
             font-weight: 500;
         }
-        .footer-credit a { color: var(--accent-color); font-weight: 700; text-decoration: none; transition: var(--transition); }
-        .footer-credit a:hover { color: var(--accent-hover); text-decoration: underline; }
+        .footer-credit a { color: var(--accent-color); font-weight: 700; text-decoration: none; }
+        .footer-credit a:hover { text-decoration: underline; }
 
-        .time-shift-preview { font-size: 0.85rem; font-weight: 500; margin-top: 8px; display: none; }
+        .time-shift-preview { font-size: 0.8rem; font-weight: 500; margin-top: 6px; display: none; }
         
         hr {
             border: none;
             height: 1px;
             background: var(--border-color);
-            margin: 24px 0;
+            margin: 16px 0;
+        }
+
+        /* ----------------------------------------------------
+           PC Layout - WIDE & NO SCROLL 
+           ---------------------------------------------------- */
+        @media (min-width: 1024px) {
+            body {
+                height: 100vh;
+                overflow: hidden; /* No scrolling on PC */
+                padding: 2vh 2vw;
+            }
+
+            .top-bar {
+                position: absolute;
+                top: 2vh;
+                right: 2vw;
+                margin: 0;
+            }
+
+            html[dir="ltr"] .top-bar {
+                right: auto;
+                left: 2vw;
+            }
+
+            .container {
+                max-width: 1500px;
+                height: 100%;
+                padding: 3vh 3vw;
+                margin: 0;
+            }
+
+            .header {
+                flex-direction: row;
+                text-align: right;
+                justify-content: center;
+                gap: 20px;
+                margin-bottom: 3vh;
+            }
+            html[dir="ltr"] .header { text-align: left; }
+
+            .logo {
+                width: 70px;
+                height: 70px;
+                margin-bottom: 0;
+            }
+
+            .header-text {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .title { margin-bottom: 4px; font-size: 2rem; }
+            .subtitle { margin: 0; font-size: 1rem; }
+
+            #uploadForm {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                min-height: 0; /* Important for preventing overflow */
+            }
+
+            .panels-layout {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 2vw;
+            }
+
+            .panel-column {
+                overflow-y: auto; /* allow inner scroll only if absolutely needed */
+                padding-right: 8px;
+            }
+            
+            /* Custom scrollbar for inner columns if they ever overflow */
+            .panel-column::-webkit-scrollbar { width: 4px; }
+            .panel-column::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+            /* Adjust spacing to fit height */
+            .section-card {
+                padding: 1vw;
+            }
+
+            .upload-area {
+                padding: 2vw 1vw;
+                flex: 1;
+            }
+
+            .form-actions {
+                margin-top: 2vh;
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: 20px;
+                align-items: center;
+            }
+            
+            .process-button {
+                margin-top: 0;
+            }
+            
+            .status-message {
+                margin-top: 0;
+            }
         }
     </style>
 </head>
 <body>
     
-    <div class="lang-switch-container">
-        <span class="lang-en">En</span>
-        <span class="lang-ar">عربي</span>
-        <label class="lang-switch">
-            <input type="checkbox" id="languageToggle">
-            <span class="slider"></span>
-        </label>
+    <div class="top-bar">
+        <div class="lang-switch-container">
+            <span class="lang-en">En</span>
+            <span class="lang-ar">عربي</span>
+            <label class="lang-switch">
+                <input type="checkbox" id="languageToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
     </div>
     
     <div class="container">
         <div class="header">
-            <h1 class="title">
-                <span class="lang-en">Bruuhim Subtitle Studio</span>
-                <span class="lang-ar">ستوديو ترجمات Bruuhim</span>
-            </h1>
-            <p class="subtitle">
-                <span class="lang-en">Upload, fix, clean, and convert your subtitle files seamlessly.</span>
-                <span class="lang-ar">ارفع ملفات الترجمة، أصلحها، نظفها وحول صيغتها في ثوانٍ.</span>
-            </p>
+            <img src="/static/Icon.jpg" alt="Logo" class="logo">
+            <div class="header-text">
+                <h1 class="title">
+                    <span class="lang-en">Bruuhim Subtitle Studio</span>
+                    <span class="lang-ar">ستوديو ترجمات Bruuhim</span>
+                </h1>
+                <p class="subtitle">
+                    <span class="lang-en">Upload, fix, clean, and convert your subtitle files seamlessly.</span>
+                    <span class="lang-ar">ارفع ملفات الترجمة، أصلحها، نظفها وحول صيغتها في ثوانٍ.</span>
+                </p>
+            </div>
         </div>
 
         <form id="uploadForm" enctype="multipart/form-data">
-            <div class="two-panel-layout">
+            <div class="panels-layout">
                 
-                <!-- LEFT PANEL: Files & Formats -->
+                <!-- COLUMN 1: Files & Formats -->
                 <div class="panel-column">
                     <div class="upload-area" id="uploadArea" role="button" tabindex="0">
                         <div class="upload-icon">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
                         </div>
                         <div class="upload-text">
-                            <span class="lang-en">Drag & drop subtitle files here</span>
-                            <span class="lang-ar">اسحب وأفلت ملفات الترجمة هنا</span>
+                            <span class="lang-en">Drag & drop subtitle files</span>
+                            <span class="lang-ar">اسحب وأفلت ملفات الترجمة</span>
                         </div>
                         <div class="upload-subtext">
                             <span class="lang-en">Supports SRT and ASS files</span>
@@ -613,27 +646,10 @@
                             </select>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="lang-en">Translation</span>
-                            <span class="lang-ar">ترجمة النص</span>
-                        </label>
-                        <select class="form-select" disabled>
-                            <option>-- بدون ترجمة --</option>
-                        </select>
-                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">
-                            <i class="fa-solid fa-language" style="margin: 0 4px;"></i>
-                            <span class="lang-en">AI Translation feature coming soon</span>
-                            <span class="lang-ar">ميزة الترجمة الذكية ستتوفر قريباً</span>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- RIGHT PANEL: Processing Options -->
+                <!-- COLUMN 2: Repair Options -->
                 <div class="panel-column">
-                    
-                    <!-- Repair Options -->
                     <div class="section-card">
                         <div class="section-title">
                             <i class="fa-solid fa-wrench"></i>
@@ -661,41 +677,51 @@
 
                         <hr>
                         
-                        <!-- Time Shift Collapsible -->
-                        <div class="collapsible-header" onclick="toggleCollapse('timeShiftPanel', 'tsIcon')">
-                            <div class="section-title" style="font-size: 1rem;">
-                                <i class="fa-regular fa-clock" style="color: var(--text-secondary);"></i>
-                                <span class="lang-en">Time Shift</span>
-                                <span class="lang-ar">ضبط التوقيت (تأخير/تقديم)</span>
-                            </div>
-                            <button type="button" class="toggle-btn">
-                                <span class="lang-en">Expand</span>
-                                <span class="lang-ar">إظهار</span>
-                                <i id="tsIcon" class="fa-solid fa-chevron-down toggle-icon"></i>
-                            </button>
+                        <!-- Time Shift -->
+                        <div class="section-title" style="font-size: 0.95rem; margin-bottom: 12px;">
+                            <i class="fa-regular fa-clock" style="color: var(--text-secondary);"></i>
+                            <span class="lang-en">Time Shift</span>
+                            <span class="lang-ar">ضبط التوقيت (تأخير/تقديم)</span>
                         </div>
-                        <div id="timeShiftPanel" class="collapsible-content">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" style="font-size: 0.85rem;">
-                                        <span class="lang-en">Shift (milliseconds)</span>
-                                        <span class="lang-ar">مقدار الإزاحة (بالمللي ثانية)</span>
-                                    </label>
-                                    <input type="number" id="timeShiftMs" name="time_shift_ms" class="form-input" value="0" step="100" placeholder="مثال: 1000 أو -500">
-                                    <div id="timeShiftPreview" class="time-shift-preview"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" style="font-size: 0.85rem;">
-                                        <span class="lang-en">From Timestamp</span>
-                                        <span class="lang-ar">بدءاً من التوقيت</span>
-                                    </label>
-                                    <input type="text" name="time_shift_from" class="form-input" value="00:00:00,000" placeholder="00:00:00,000">
-                                </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" style="font-size: 0.8rem;">
+                                    <span class="lang-en">Shift (ms)</span>
+                                    <span class="lang-ar">مقدار الإزاحة (ms)</span>
+                                </label>
+                                <input type="number" id="timeShiftMs" name="time_shift_ms" class="form-input" value="0" step="100" placeholder="مثال: 1000 أو -500">
+                                <div id="timeShiftPreview" class="time-shift-preview"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" style="font-size: 0.8rem;">
+                                    <span class="lang-en">From Timestamp</span>
+                                    <span class="lang-ar">بدءاً من التوقيت</span>
+                                </label>
+                                <input type="text" name="time_shift_from" class="form-input" value="00:00:00,000" placeholder="00:00:00,000">
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="lang-en">Translation</span>
+                                <span class="lang-ar">ترجمة النص</span>
+                            </label>
+                            <select class="form-select" disabled>
+                                <option>-- بدون ترجمة --</option>
+                            </select>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
+                                <i class="fa-solid fa-language" style="margin: 0 4px;"></i>
+                                <span class="lang-en">AI Translation coming soon</span>
+                                <span class="lang-ar">ميزة الترجمة الذكية ستتوفر قريباً</span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Cleanup Options -->
+                <!-- COLUMN 3: Cleanup Options -->
+                <div class="panel-column">
                     <div class="section-card">
                         <div class="section-title">
                             <i class="fa-solid fa-broom"></i>
@@ -715,7 +741,7 @@
                             <input type="checkbox" name="remove_music_lines" value="true">
                             <span class="checkbox-label">
                                 <span class="lang-en">Remove Music Lines (♪ ♫...)</span>
-                                <span class="lang-ar">إزالة العلامات والأسطر الموسيقية (♪ ♫...)</span>
+                                <span class="lang-ar">إزالة العلامات والأسطر الموسيقية (♪ ♫)</span>
                             </span>
                         </label>
                         
@@ -754,64 +780,50 @@
                         <hr>
 
                         <!-- Clean Brackets -->
-                        <div class="collapsible-header" onclick="toggleCollapse('bracketsPanel', 'bracketsIcon')">
-                            <div class="section-title" style="font-size: 1rem;">
-                                <i class="fa-solid fa-code" style="color: var(--text-secondary); font-size: 0.9rem;"></i>
-                                <span class="lang-en">Clean Brackets / Symbols</span>
-                                <span class="lang-ar">إزالة الأقواس والرموز</span>
-                            </div>
-                            <button type="button" class="toggle-btn">
-                                <span class="lang-en">Expand</span>
-                                <span class="lang-ar">إظهار</span>
-                                <i id="bracketsIcon" class="fa-solid fa-chevron-down toggle-icon"></i>
-                            </button>
+                        <div class="section-title" style="font-size: 0.95rem; margin-bottom: 12px;">
+                            <i class="fa-solid fa-code" style="color: var(--text-secondary); font-size: 0.9rem;"></i>
+                            <span class="lang-en">Clean Brackets</span>
+                            <span class="lang-ar">إزالة الأقواس والرموز</span>
                         </div>
-                        <div id="bracketsPanel" class="collapsible-content">
-                            <input type="hidden" name="clean_brackets" id="cleanBracketsHidden" value="false">
-                            <input type="hidden" name="bracket_options" id="bracketOptionsHidden" value="{}">
-                            
-                            <div style="display: flex; flex-direction: column; gap: 8px;">
-                                <label class="checkbox-group">
-                                    <input type="checkbox" class="bracket-opt" data-key="remove_square">
-                                    <span class="checkbox-label">
-                                        <span class="lang-en">Remove content inside Square brackets []</span>
-                                        <span class="lang-ar">حذف ما بداخل الأقواس المربعة []</span>
-                                    </span>
-                                </label>
-                                <label class="checkbox-group">
-                                    <input type="checkbox" class="bracket-opt" data-key="remove_round">
-                                    <span class="checkbox-label">
-                                        <span class="lang-en">Remove content inside Round brackets ()</span>
-                                        <span class="lang-ar">حذف ما بداخل الأقواس الدائرية ()</span>
-                                    </span>
-                                </label>
-                                <label class="checkbox-group">
-                                    <input type="checkbox" class="bracket-opt" data-key="remove_curly_text">
-                                    <span class="checkbox-label">
-                                        <span class="lang-en">Remove content inside Curly brackets {}</span>
-                                        <span class="lang-ar">حذف ما بداخل الأقواس المعقوفة {}</span>
-                                    </span>
-                                </label>
-                                <label class="checkbox-group">
-                                    <input type="checkbox" class="bracket-opt" data-key="remove_angle">
-                                    <span class="checkbox-label">
-                                        <span class="lang-en">Remove content inside Angle brackets &lt;&gt;</span>
-                                        <span class="lang-ar">حذف ما بداخل الأقواس الزاوية &lt;&gt;</span>
-                                    </span>
-                                </label>
-                            </div>
+                        
+                        <input type="hidden" name="clean_brackets" id="cleanBracketsHidden" value="false">
+                        <input type="hidden" name="bracket_options" id="bracketOptionsHidden" value="{}">
+                        
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <label class="checkbox-group">
+                                <input type="checkbox" class="bracket-opt" data-key="remove_square">
+                                <span class="checkbox-label">
+                                    <span class="lang-en">Inside Square brackets []</span>
+                                    <span class="lang-ar">حذف المحتوى المربع []</span>
+                                </span>
+                            </label>
+                            <label class="checkbox-group">
+                                <input type="checkbox" class="bracket-opt" data-key="remove_round">
+                                <span class="checkbox-label">
+                                    <span class="lang-en">Inside Round brackets ()</span>
+                                    <span class="lang-ar">حذف المحتوى الدائري ()</span>
+                                </span>
+                            </label>
+                            <label class="checkbox-group">
+                                <input type="checkbox" class="bracket-opt" data-key="remove_curly_text">
+                                <span class="checkbox-label">
+                                    <span class="lang-en">Inside Curly brackets {}</span>
+                                    <span class="lang-ar">حذف المحتوى المعقوف {}</span>
+                                </span>
+                            </label>
                         </div>
                     </div>
-                    
-                    <button type="submit" class="process-button" id="processButton" disabled>
-                        <i class="fa-solid fa-bolt" id="processIcon"></i>
-                        <div class="spinner" id="processSpinner"></div>
-                        <span class="lang-en">Start Processing</span>
-                        <span class="lang-ar">بدء المعالجة</span>
-                    </button>
-                    
-                    <div class="status-message" id="statusMessage" aria-live="polite"></div>
                 </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="process-button" id="processButton" disabled>
+                    <i class="fa-solid fa-bolt" id="processIcon"></i>
+                    <div class="spinner" id="processSpinner"></div>
+                    <span class="lang-en">Start Processing</span>
+                    <span class="lang-ar">بدء المعالجة والتحميل</span>
+                </button>
+                <div class="status-message" id="statusMessage" aria-live="polite"></div>
             </div>
         </form>
 
@@ -859,19 +871,6 @@
 
         languageToggle.addEventListener('change', (e) => setLanguage(e.target.checked ? 'en' : 'ar'));
         document.addEventListener('DOMContentLoaded', () => setLanguage(localStorage.getItem('language') || 'ar'));
-
-        // UI Interactions
-        function toggleCollapse(panelId, iconId) {
-            const panel = document.getElementById(panelId);
-            const icon = document.getElementById(iconId);
-            if (panel.classList.contains('expanded')) {
-                panel.classList.remove('expanded');
-                icon.style.transform = 'rotate(0deg)';
-            } else {
-                panel.classList.add('expanded');
-                icon.style.transform = 'rotate(180deg)';
-            }
-        }
 
         // Dependent Checkboxes
         const removeAllTags = document.getElementById('removeAllTags');
