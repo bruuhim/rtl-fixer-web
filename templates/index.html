@@ -998,10 +998,15 @@
                 }
                 
                 const contentDisposition = response.headers.get('Content-Disposition');
-                let filename = 'fixed_subtitles.zip';
+                let filename = selectedFiles.length === 1 ? 'fixed_subtitle.srt' : 'fixed_subtitles.zip';
                 if (contentDisposition) {
-                    const match = contentDisposition.match(/filename="?([^"]+)"?/);
-                    if (match && match[1]) filename = match[1];
+                    const matchUtf8 = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i);
+                    const matchNormal = contentDisposition.match(/filename="?([^"]+)"?/);
+                    if (matchUtf8 && matchUtf8[1]) {
+                        filename = decodeURIComponent(matchUtf8[1]);
+                    } else if (matchNormal && matchNormal[1]) {
+                        filename = matchNormal[1];
+                    }
                 }
                 
                 const blob = await response.blob();

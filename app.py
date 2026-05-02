@@ -512,7 +512,7 @@ def process():
     }
     download_mode = request.form.get('download_mode', 'zip')
     
-    if len(files) == 1 and download_mode == 'single':
+    if len(files) == 1:
         try:
             f = files[0]
             content_bytes = f.read()
@@ -548,6 +548,8 @@ def process():
                 
             # Determine output filename
             base_name = os.path.splitext(f.filename)[0]
+            if not base_name:
+                base_name = "Subtitle"
             ext_map = {'srt': '.srt', 'ass': '.ass', 'vtt': '.vtt', 'lrc': '.lrc'}
             out_ext = ext_map.get(output_format, '.srt')
             out_filename = f"{base_name}_Fixed.by.@bruuhim{out_ext}"
@@ -558,10 +560,12 @@ def process():
             else:
                 out_bytes = fixed_content.encode('utf-8')
                 
+            import urllib.parse
+            encoded_name = urllib.parse.quote(out_filename)
             return Response(
                 out_bytes,
                 mimetype="text/plain",
-                headers={"Content-disposition": f"attachment; filename={secure_filename(out_filename)}"}
+                headers={"Content-Disposition": f"attachment; filename*=UTF-8''{encoded_name}"}
             )
             
         except Exception as e:
@@ -601,6 +605,8 @@ def process():
                     fixed_content = convert_srt_to_lrc(fixed_content)
 
                 base_name = os.path.splitext(f.filename)[0]
+                if not base_name:
+                    base_name = f"Subtitle_{files.index(f) + 1}"
                 ext_map = {'srt': '.srt', 'ass': '.ass', 'vtt': '.vtt', 'lrc': '.lrc'}
                 out_ext = ext_map.get(output_format, '.srt')
                 out_filename = f"{base_name}_Fixed.by.@bruuhim{out_ext}"
@@ -616,7 +622,9 @@ def process():
 
     memory_file.seek(0)
     
-    first_name = os.path.splitext(files[0].filename)[0] if files else "Subtitles"
+    first_name = os.path.splitext(files[0].filename)[0] if files and files[0].filename else "Subtitles"
+    if not first_name:
+        first_name = "Subtitle"
     more = len(files) - 1
     if more <= 0:
         zip_name = f"{first_name}_Fixed.by.@bruuhim.zip"
