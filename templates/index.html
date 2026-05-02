@@ -17,7 +17,6 @@
         }
 
         body {
-            /* Using Tajawal as the default font for Arabic */
             font-family: 'Tajawal', sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
@@ -31,38 +30,19 @@
             color: #e2e8f0;
         }
         
-        /* --- Language and RTL Styles --- */
-        
-        /* When in English mode, use the Inter font for the whole page */
         html[dir="ltr"] body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* By default, hide English text */
-        .lang-en {
-            display: none;
-        }
+        .lang-en { display: none; }
         
-        /* When English is active, hide Arabic and show English */
-        html[lang="en"] .lang-ar {
-            display: none;
-        }
-        html[lang="en"] .lang-en {
-            display: inline;
-        }
-        html[lang="en"] .lang-en-block {
-            display: block;
-        }
+        html[lang="en"] .lang-ar { display: none; }
+        html[lang="en"] .lang-en { display: inline; }
+        html[lang="en"] .lang-en-block { display: block; }
 
-        /* Show Arabic by default */
-        .lang-ar {
-            display: inline;
-        }
-        .lang-ar-block {
-            display: block;
-        }
+        .lang-ar { display: inline; }
+        .lang-ar-block { display: block; }
 
-        /* Language Switch Styles */
         .lang-switch-container {
             position: absolute;
             top: 20px;
@@ -79,18 +59,11 @@
             width: 50px;
             height: 26px;
         }
-        .lang-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+        .lang-switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background-color: #475569;
             transition: .4s;
             border-radius: 26px;
@@ -98,37 +71,28 @@
         .slider:before {
             position: absolute;
             content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
+            height: 20px; width: 20px;
+            left: 3px; bottom: 3px;
             background-color: #1e293b;
             transition: .4s;
             border-radius: 50%;
         }
-        input:checked + .slider {
-            background-color: #667eea;
-        }
-        input:checked + .slider:before {
-            transform: translateX(24px);
-        }
+        input:checked + .slider { background-color: #e05555; }
+        input:checked + .slider:before { transform: translateX(24px); }
 
-        /* Dark Mode Styles */
         .background-pattern { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             opacity: 0.05; 
             background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 2px, transparent 2px); 
             background-size: 60px 60px; 
             animation: float 20s ease-in-out infinite; 
+            pointer-events: none;
         }
         @keyframes float { 
             0%, 100% { transform: translateY(0px) rotate(0deg); } 
             50% { transform: translateY(-20px) rotate(1deg); } 
         }
+        
         .container { 
             background: rgba(30, 41, 59, 0.95); 
             backdrop-filter: blur(20px); 
@@ -136,31 +100,221 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3); 
             padding: 40px; 
             width: 100%; 
-            max-width: 600px; 
+            max-width: 800px; 
             position: relative; 
             z-index: 1; 
             border: 1px solid rgba(71, 85, 105, 0.2); 
+            margin: 40px 0;
         }
-        .header { text-align: center; margin-bottom: 40px; }
+        
+        .header { text-align: center; margin-bottom: 30px; }
         .title { 
-            font-size: 2.5rem; 
+            font-size: 2.2rem; 
             font-weight: 800; 
-            background: linear-gradient(135deg, #667eea, #764ba2); 
+            background: linear-gradient(135deg, #ff6b6b, #e05555); 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
             background-clip: text; 
             margin-bottom: 8px; 
             line-height: 1.2; 
         }
-        .subtitle { 
-            color: #94a3b8; 
-            font-size: 1.1rem; 
-            font-weight: 500; 
+        .subtitle { color: #94a3b8; font-size: 1.05rem; font-weight: 500; }
+        
+        .two-panel-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
         }
+        @media (min-width: 768px) {
+            .two-panel-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .panel-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Form elements */
+        .form-row {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-label {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+        .form-select, .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid #475569;
+            color: #f8fafc;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: #e05555;
+            box-shadow: 0 0 0 2px rgba(224, 85, 85, 0.2);
+        }
+        .form-select:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* Section Cards */
+        .section-card {
+            background: rgba(51, 65, 85, 0.5);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(71, 85, 105, 0.3);
+            border-right: 3px solid #e05555; /* RTL logic, left border in LTR */
+        }
+        html[dir="ltr"] .section-card {
+            border-right: 1px solid rgba(71, 85, 105, 0.3);
+            border-left: 3px solid #e05555;
+        }
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Checkboxes */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+        .checkbox-group input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid #475569;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            margin-top: 2px;
+            transition: all 0.2s;
+        }
+        .checkbox-group input[type="checkbox"]:checked {
+            background: #e05555;
+            border-color: #e05555;
+        }
+        .checkbox-group input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 4px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .checkbox-label {
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            user-select: none;
+        }
+        .sub-checkboxes {
+            margin-right: 30px;
+            margin-top: -6px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+        html[dir="ltr"] .sub-checkboxes {
+            margin-right: 0;
+            margin-left: 30px;
+        }
+        .checkbox-group.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* Sub-radio options */
+        .radio-options {
+            margin-right: 30px;
+            margin-top: 8px;
+            display: flex;
+            gap: 16px;
+        }
+        html[dir="ltr"] .radio-options {
+            margin-right: 0;
+            margin-left: 30px;
+        }
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
+
+        /* Collapsible Panels */
+        .collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 0;
+            padding-bottom: 8px;
+        }
+        .toggle-btn {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .toggle-btn:hover { color: #e2e8f0; }
+        .toggle-icon { transition: transform 0.3s; }
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            padding-top: 0;
+        }
+        .collapsible-content.expanded {
+            max-height: 400px; /* arbitrary max height */
+            padding-top: 12px;
+        }
+
+        /* Upload Area */
         .upload-area { 
             border: 2px dashed #475569; 
             border-radius: 16px; 
-            padding: 60px 20px; 
+            padding: 40px 20px; 
             text-align: center; 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             background: rgba(51, 65, 85, 0.3); 
@@ -170,188 +324,98 @@
         }
         .upload-area:hover, .upload-area:focus { 
             outline: none; 
-            border-color: #667eea; 
-            background: rgba(102, 126, 234, 0.1); 
+            border-color: #e05555; 
+            background: rgba(224, 85, 85, 0.05); 
             transform: translateY(-2px); 
         }
         .upload-area.dragover { 
-            border-color: #667eea; 
-            background: rgba(102, 126, 234, 0.15); 
+            border-color: #e05555; 
+            background: rgba(224, 85, 85, 0.1); 
             transform: scale(1.02); 
         }
         .upload-icon { 
-            width: 80px; 
-            height: 80px; 
-            margin: 0 auto 20px; 
-            background: linear-gradient(135deg, #667eea, #764ba2); 
+            width: 60px; 
+            height: 60px; 
+            margin: 0 auto 16px; 
+            background: linear-gradient(135deg, #ff6b6b, #e05555); 
             border-radius: 50%; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             transition: all 0.3s ease; 
         }
-        .upload-area:hover .upload-icon { 
-            transform: scale(1.1) rotate(5deg); 
-        }
-        .upload-text { 
-            font-size: 1.2rem; 
-            font-weight: 600; 
-            color: #e2e8f0; 
-            margin-bottom: 8px; 
-        }
-        .upload-subtext { 
-            color: #94a3b8; 
-            font-size: 0.95rem; 
-            margin-bottom: 20px; 
-        }
+        .upload-area:hover .upload-icon { transform: scale(1.1) rotate(5deg); }
+        .upload-text { font-size: 1.1rem; font-weight: 600; color: #e2e8f0; margin-bottom: 8px; }
+        .upload-subtext { color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px; }
         .file-input { display: none; }
+        
         .browse-button { 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 8px; 
-            background: linear-gradient(135deg, #667eea, #764ba2); 
-            color: white; 
-            border: none; 
-            padding: 12px 24px; 
-            border-radius: 10px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-            text-decoration: none; 
-            font-size: 0.95rem; 
+            display: inline-flex; align-items: center; gap: 8px; 
+            background: linear-gradient(135deg, #ff6b6b, #e05555); 
+            color: white; border: none; padding: 10px 20px; 
+            border-radius: 10px; font-weight: 600; cursor: pointer; 
+            transition: all 0.3s ease; font-size: 0.9rem; 
         }
-        .browse-button:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3); 
-        }
-        .file-list { margin-top: 30px; display: none; }
+        .browse-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(224, 85, 85, 0.3); }
+        
+        .file-list { margin-top: 16px; display: none; max-height: 200px; overflow-y: auto; }
         .file-item { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            padding: 16px; 
-            background: rgba(51, 65, 85, 0.4); 
-            border-radius: 12px; 
-            margin-bottom: 12px; 
-            border: 1px solid rgba(71, 85, 105, 0.3); 
+            display: flex; align-items: center; gap: 12px; padding: 12px; 
+            background: rgba(51, 65, 85, 0.4); border-radius: 12px; 
+            margin-bottom: 8px; border: 1px solid rgba(71, 85, 105, 0.3); 
             transition: all 0.3s ease; 
         }
         html[dir="rtl"] .file-item { text-align: right; }
-        .file-item:hover { 
-            background: rgba(51, 65, 85, 0.6); 
-            transform: translateX(4px); 
-        }
-        html[dir="rtl"] .file-item:hover { 
-            transform: translateX(-4px); 
-        }
+        .file-item:hover { background: rgba(51, 65, 85, 0.6); transform: translateX(4px); }
+        html[dir="rtl"] .file-item:hover { transform: translateX(-4px); }
         .file-icon { 
-            width: 40px; 
-            height: 40px; 
-            background: linear-gradient(135deg, #10b981, #059669); 
-            border-radius: 8px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: white; 
-            font-weight: 600; 
-            font-size: 0.8rem; 
+            width: 32px; height: 32px; background: linear-gradient(135deg, #10b981, #059669); 
+            border-radius: 6px; display: flex; align-items: center; justify-content: center; 
+            color: white; font-weight: 600; font-size: 0.75rem; 
         }
-        .file-info { flex: 1; }
-        .file-name { 
-            font-weight: 600; 
-            color: #e2e8f0; 
-            margin-bottom: 2px; 
-        }
-        .file-size { 
-            font-size: 0.85rem; 
-            color: #94a3b8; 
-        }
+        .file-info { flex: 1; overflow: hidden; }
+        .file-name { font-weight: 600; color: #e2e8f0; margin-bottom: 2px; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-size { font-size: 0.8rem; color: #94a3b8; }
         .remove-button { 
-            background: #ef4444; 
-            color: white; 
-            border: none; 
-            width: 32px; 
-            height: 32px; 
-            border-radius: 50%; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            transition: all 0.3s ease; 
+            background: #ef4444; color: white; border: none; width: 28px; height: 28px; 
+            border-radius: 50%; cursor: pointer; display: flex; align-items: center; 
+            justify-content: center; transition: all 0.3s ease; flex-shrink: 0;
         }
-        .remove-button:hover { 
-            background: #dc2626; 
-            transform: scale(1.1); 
-        }
+        .remove-button:hover { background: #dc2626; transform: scale(1.1); }
+        
         .process-button { 
-            width: 100%; 
-            background: linear-gradient(135deg, #10b981, #059669); 
-            color: white; 
-            border: none; 
-            padding: 16px; 
-            border-radius: 12px; 
-            font-size: 1.1rem; 
-            font-weight: 600; 
-            cursor: pointer; 
-            margin-top: 20px; 
-            transition: all 0.3s ease; 
-            display: none; 
+            width: 100%; background: linear-gradient(135deg, #ff6b6b, #e05555); 
+            color: white; border: none; padding: 16px; border-radius: 12px; 
+            font-size: 1.1rem; font-weight: 700; cursor: pointer; 
+            margin-top: 10px; transition: all 0.3s ease; display: flex; justify-content: center; align-items: center; gap: 10px;
         }
-        .process-button:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3); 
+        .process-button:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(224, 85, 85, 0.4); }
+        .process-button:disabled { background: #64748b; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
+        
+        .spinner {
+            display: none; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite;
         }
-        .process-button:disabled { 
-            background: #64748b; 
-            cursor: not-allowed; 
-            transform: none; 
-            box-shadow: none; 
-        }
-        .progress-bar { 
-            width: 100%; 
-            height: 8px; 
-            background: rgba(71, 85, 105, 0.4); 
-            border-radius: 4px; 
-            margin-top: 20px; 
-            overflow: hidden; 
-            display: none; 
-        }
-        .progress-fill { 
-            height: 100%; 
-            background: linear-gradient(135deg, #10b981, #059669); 
-            width: 0%; 
-            transition: width 0.3s ease; 
-            border-radius: 4px; 
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
         .status-message { 
-            text-align: center; 
-            margin-top: 16px; 
-            font-weight: 600; 
-            display: none; 
-            padding: 10px 12px;
-            border-radius: 8px;
+            text-align: center; margin-top: 16px; font-weight: 600; 
+            display: none; padding: 12px; border-radius: 10px;
         }
         .success { color: #10b981; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25);} 
         .error { color: #ef4444; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25);} 
-        .processing { color: #667eea; background: rgba(102,126,234,0.12); border: 1px solid rgba(102,126,234,0.25);} 
+        .processing { color: #e05555; background: rgba(224,85,85,0.12); border: 1px solid rgba(224,85,85,0.25);} 
+        
         .footer-credit { 
-            text-align: center; 
-            margin-top: 30px; 
-            padding-top: 20px; 
-            border-top: 1px solid #475569; 
-            font-size: 0.9rem; 
-            color: #94a3b8; 
+            text-align: center; margin-top: 40px; padding-top: 20px; 
+            border-top: 1px solid #475569; font-size: 0.9rem; color: #94a3b8; 
         }
-        .footer-credit a { 
-            color: #94a3b8; 
-            font-weight: 600; 
-            text-decoration: none; 
-            transition: color 0.2s ease; 
-        }
-        .footer-credit a:hover { 
-            color: #e2e8f0; 
-            text-decoration: underline; 
-        }
+        .footer-credit a { color: #94a3b8; font-weight: 600; text-decoration: none; transition: color 0.2s ease; }
+        .footer-credit a:hover { color: #e05555; text-decoration: underline; }
+
+        .time-shift-preview { font-size: 0.85rem; color: #10b981; margin-top: 4px; display: none; }
+        .checkbox-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+        @media (min-width: 400px) { .checkbox-grid { grid-template-columns: 1fr 1fr; } }
     </style>
 </head>
 <body>
@@ -373,38 +437,269 @@
                 <span class="lang-ar">مُصلح ملفات الترجمة</span>
             </h1>
             <p class="subtitle">
-                <span class="lang-en">Upload your subtitle files and fix RTL text issues instantly</span>
-                <span class="lang-ar">ارفع ملفات الترجمة الخاصة بك وأصلح مشاكل النصوص من اليمين إلى اليسار فوراً</span>
+                <span class="lang-en">Upload your subtitle files and fix text issues instantly</span>
+                <span class="lang-ar">ارفع ملفات الترجمة الخاصة بك وأصلح مشاكل النصوص فوراً</span>
             </p>
         </div>
+
         <form id="uploadForm" enctype="multipart/form-data">
-            <div class="upload-area" id="uploadArea" role="button" tabindex="0">
-                <div class="upload-icon">
-                    <svg width="40" height="40" fill="white" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/></svg>
+            <div class="two-panel-layout">
+                
+                <!-- LEFT PANEL: Files & Formats -->
+                <div class="panel-column">
+                    <div class="upload-area" id="uploadArea" role="button" tabindex="0">
+                        <div class="upload-icon">
+                            <svg width="32" height="32" fill="white" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/></svg>
+                        </div>
+                        <div class="upload-text">
+                            <span class="lang-en">Drop your subtitle files here</span>
+                            <span class="lang-ar">اسحب ملفات الترجمة إلى هنا</span>
+                        </div>
+                        <div class="upload-subtext">
+                            <span class="lang-en">Supports SRT, ASS</span>
+                            <span class="lang-ar">يدعم صيغ SRT, ASS</span>
+                        </div>
+                        <button type="button" class="browse-button" id="browseButton">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/></svg>
+                            <span class="lang-en">Browse Files</span>
+                            <span class="lang-ar">استعراض الملفات</span>
+                        </button>
+                        <input type="file" id="fileInput" name="files" multiple accept=".ass,.srt" class="file-input">
+                    </div>
+                    
+                    <div class="file-list" id="fileList"></div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="lang-en">Output Format</span>
+                                <span class="lang-ar">صيغة الإخراج</span>
+                            </label>
+                            <select name="output_format" class="form-select">
+                                <option value="srt">SRT (الافتراضي)</option>
+                                <option value="ass">ASS</option>
+                                <option value="vtt">WebVTT</option>
+                                <option value="lrc">LRC</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="lang-en">Input Encoding</span>
+                                <span class="lang-ar">ترميز الإدخال</span>
+                            </label>
+                            <select name="input_encoding" class="form-select">
+                                <option value="auto">تلقائي (الافتراضي)</option>
+                                <option value="utf-8">UTF-8</option>
+                                <option value="utf-16">UTF-16</option>
+                                <option value="latin-1">Latin-1</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 4px;">
+                        <label class="form-label">
+                            <span class="lang-en">Translation</span>
+                            <span class="lang-ar">ترجمة</span>
+                        </label>
+                        <select class="form-select" disabled>
+                            <option>-- لا تُقم بالترجمة --</option>
+                        </select>
+                        <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 4px;">
+                            <span class="lang-en">Translation feature coming soon</span>
+                            <span class="lang-ar">ميزة الترجمة ستُضاف قريباً</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="upload-text">
-                    <span class="lang-en">Drop your ASS or SRT files here</span>
-                    <span class="lang-ar">اسحب ملفات ASS أو SRT إلى هنا</span>
+
+                <!-- RIGHT PANEL: Processing Options -->
+                <div class="panel-column">
+                    
+                    <!-- Repair Options -->
+                    <div class="section-card">
+                        <div class="section-title">
+                            <i class="fa-solid fa-wrench" style="color: #cbd5e1;"></i>
+                            <span class="lang-en">Repair Options</span>
+                            <span class="lang-ar">خيارات الإصلاح</span>
+                        </div>
+                        
+                        <!-- Time Shift Collapsible -->
+                        <div class="collapsible-header" onclick="toggleCollapse('timeShiftPanel', 'tsIcon')">
+                            <span style="font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                                🕐 
+                                <span class="lang-en">Time Shift</span>
+                                <span class="lang-ar">إزاحة توقيت الترجمات</span>
+                            </span>
+                            <button type="button" class="toggle-btn">
+                                <span class="lang-en">Show Options</span>
+                                <span class="lang-ar">إظهار الخيارات</span>
+                                <i id="tsIcon" class="fa-solid fa-caret-down toggle-icon"></i>
+                            </button>
+                        </div>
+                        <div id="timeShiftPanel" class="collapsible-content">
+                            <div class="form-row" style="margin-bottom: 12px;">
+                                <div class="form-group">
+                                    <label class="form-label" style="font-size: 0.85rem;">
+                                        <span class="lang-en">Shift (milliseconds)</span>
+                                        <span class="lang-ar">تأخير (مللي ثانية)</span>
+                                    </label>
+                                    <input type="number" id="timeShiftMs" name="time_shift_ms" class="form-input" value="0" step="100" placeholder="e.g. 1000 or -500">
+                                    <div id="timeShiftPreview" class="time-shift-preview"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="font-size: 0.85rem;">
+                                        <span class="lang-en">From Timestamp</span>
+                                        <span class="lang-ar">من الطابع الزمني</span>
+                                    </label>
+                                    <input type="text" name="time_shift_from" class="form-input" value="00:00:00,000" placeholder="00:00:00,000">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="height: 1px; background: rgba(71, 85, 105, 0.5); margin: 12px 0;"></div>
+
+                        <!-- RTL Fix -->
+                        <label class="checkbox-group">
+                            <input type="checkbox" name="fix_rtl" value="true" checked>
+                            <span class="checkbox-label" style="font-weight: 600;">
+                                ✨ <span class="lang-en">Fix Arabic RTL Direction</span><span class="lang-ar">إصلاح اتجاه اللغة العربية</span>
+                            </span>
+                        </label>
+                        <div class="radio-options">
+                            <label class="radio-group">
+                                <input type="radio" name="fix_rtl_pdf" value="false" checked>
+                                <span>RLE (U+202B)</span>
+                            </label>
+                            <label class="radio-group">
+                                <input type="radio" name="fix_rtl_pdf" value="true">
+                                <span>RLE + PDF (U+202B...U+202C)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Cleanup Options -->
+                    <div class="section-card">
+                        <div class="section-title">
+                            <i class="fa-solid fa-broom" style="color: #cbd5e1;"></i>
+                            <span class="lang-en">Cleanup Options</span>
+                            <span class="lang-ar">خيارات التنظيف</span>
+                        </div>
+                        
+                        <div class="checkbox-grid">
+                            <div class="grid-col">
+                                <label class="checkbox-group">
+                                    <input type="checkbox" name="remove_music_lines" value="true">
+                                    <span class="checkbox-label">
+                                        <span class="lang-en">Remove Music Lines (♪ ♫...)</span>
+                                        <span class="lang-ar">حذف الأسطر الموسيقية (♪ ♫...)</span>
+                                    </span>
+                                </label>
+                                
+                                <label class="checkbox-group">
+                                    <input type="checkbox" id="removeAllTags" name="remove_all_tags" value="true">
+                                    <span class="checkbox-label">
+                                        <span class="lang-en">Remove All Tags</span>
+                                        <span class="lang-ar">حذف جميع التنسيقات (Tags)</span>
+                                    </span>
+                                </label>
+                                
+                                <div class="sub-checkboxes" id="tagKeepOptions">
+                                    <label class="checkbox-group disabled">
+                                        <input type="checkbox" name="keep_italic" value="true" disabled>
+                                        <span class="checkbox-label">
+                                            <span class="lang-en">Keep Italic &lt;i&gt;</span>
+                                            <span class="lang-ar">ابق المائل &lt;i&gt;</span>
+                                        </span>
+                                    </label>
+                                    <label class="checkbox-group disabled">
+                                        <input type="checkbox" name="keep_bold" value="true" disabled>
+                                        <span class="checkbox-label">
+                                            <span class="lang-en">Keep Bold &lt;b&gt;</span>
+                                            <span class="lang-ar">ابق العريض &lt;b&gt;</span>
+                                        </span>
+                                    </label>
+                                    <label class="checkbox-group disabled">
+                                        <input type="checkbox" name="keep_font_color" value="true" disabled>
+                                        <span class="checkbox-label">
+                                            <span class="lang-en">Keep Color &lt;font&gt;</span>
+                                            <span class="lang-ar">ابق اللون &lt;font&gt;</span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="grid-col">
+                                <label class="checkbox-group">
+                                    <input type="checkbox" name="remove_tashkeel" value="true">
+                                    <span class="checkbox-label">
+                                        <span class="lang-en">Remove Arabic Diacritics</span>
+                                        <span class="lang-ar">إزالة التشكيل والتنوين</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clean Brackets -->
+                    <div class="section-card">
+                        <div class="collapsible-header" onclick="toggleCollapse('bracketsPanel', 'bracketsIcon')" style="margin-bottom: 0; padding-bottom: 0;">
+                            <span style="font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #f1f5f9;">
+                                <i class="fa-solid fa-code" style="color: #cbd5e1; font-size: 0.9rem;"></i>
+                                <span class="lang-en">Clean Brackets / Symbols</span>
+                                <span class="lang-ar">إزالة الأقواس / الرموز</span>
+                            </span>
+                            <button type="button" class="toggle-btn">
+                                <span class="lang-en">Show Options</span>
+                                <span class="lang-ar">إظهار الخيارات</span>
+                                <i id="bracketsIcon" class="fa-solid fa-caret-down toggle-icon"></i>
+                            </button>
+                        </div>
+                        <div id="bracketsPanel" class="collapsible-content">
+                            <input type="hidden" name="clean_brackets" id="cleanBracketsHidden" value="false">
+                            <input type="hidden" name="bracket_options" id="bracketOptionsHidden" value="{}">
+                            
+                            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                                <label class="checkbox-group">
+                                    <input type="checkbox" class="bracket-opt" data-key="remove_square">
+                                    <span class="checkbox-label">
+                                        <span class="lang-en">Remove content inside [] Square brackets</span>
+                                        <span class="lang-ar">إزالة المحتوى داخل [] الأقواس المربعة</span>
+                                    </span>
+                                </label>
+                                <label class="checkbox-group">
+                                    <input type="checkbox" class="bracket-opt" data-key="remove_round">
+                                    <span class="checkbox-label">
+                                        <span class="lang-en">Remove content inside () Round brackets</span>
+                                        <span class="lang-ar">إزالة المحتوى داخل () الأقواس الدائرة</span>
+                                    </span>
+                                </label>
+                                <label class="checkbox-group">
+                                    <input type="checkbox" class="bracket-opt" data-key="remove_curly_text">
+                                    <span class="checkbox-label">
+                                        <span class="lang-en">Remove content inside {} Curly brackets</span>
+                                        <span class="lang-ar">إزالة المحتوى داخل {} الأقواس المعقوفة</span>
+                                    </span>
+                                </label>
+                                <label class="checkbox-group">
+                                    <input type="checkbox" class="bracket-opt" data-key="remove_angle">
+                                    <span class="checkbox-label">
+                                        <span class="lang-en">Remove content inside <> Angle brackets</span>
+                                        <span class="lang-ar">إزالة المحتوى داخل <> أقواس زاوية</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="process-button" id="processButton" disabled>
+                        <i class="fa-solid fa-wand-magic-sparkles" id="processIcon"></i>
+                        <div class="spinner" id="processSpinner"></div>
+                        <span class="lang-en">Start Processing</span>
+                        <span class="lang-ar">ابدأ المعالجة</span>
+                    </button>
+                    
+                    <div class="status-message" id="statusMessage" aria-live="polite"></div>
                 </div>
-                <div class="upload-subtext">
-                    <span class="lang-en">or click to browse and select multiple files</span>
-                    <span class="lang-ar">أو انقر للاستعراض وتحديد عدة ملفات</span>
-                </div>
-                <button type="button" class="browse-button" id="browseButton">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/></svg>
-                    <span class="lang-en">Browse Files</span>
-                    <span class="lang-ar">استعراض الملفات</span>
-                </button>
-                <input type="file" id="fileInput" name="files" multiple accept=".ass,.srt" class="file-input">
             </div>
-            <div class="file-list" id="fileList"></div>
-            <button type="submit" class="process-button" id="processButton">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>
-                <span class="lang-en">Process Files</span>
-                <span class="lang-ar">معالجة الملفات</span>
-            </button>
-            <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
-            <div class="status-message" id="statusMessage" aria-live="polite"></div>
         </form>
 
         <div class="footer-credit">
@@ -414,94 +709,134 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script>
-        // Translations for dynamic text
         const translations = {
-            error_select_files: {
-                en: "Please select ASS or SRT subtitle files only.",
-                ar: "يرجى تحديد ملفات ترجمة من نوع ASS أو SRT فقط."
-            },
-            error_process: {
-                en: "Please select files to process.",
-                ar: "يرجى تحديد ملفات للمعالجة."
-            },
-            status_processing: {
-                en: "🔄 Processing files...",
-                ar: "🔄 جاري معالجة الملفات..."
-            },
-            status_success: {
-                en: "✅ Files processed successfully! Download started.",
-                ar: "✅ تمت معالجة الملفات بنجاح! بدأ التنزيل."
-            },
-            status_error: {
-                en: "❌ Error processing files. Please try again.",
-                ar: "❌ خطأ في معالجة الملفات. يرجى المحاولة مرة أخرى."
-            }
+            error_select_files: { en: "Please select ASS or SRT subtitle files only.", ar: "يرجى تحديد ملفات ترجمة من نوع ASS أو SRT فقط." },
+            status_processing: { en: "🔄 Processing files...", ar: "🔄 جاري معالجة الملفات..." },
+            status_success: { en: "✅ Files processed successfully! Download started.", ar: "✅ تمت معالجة الملفات بنجاح! بدأ التنزيل." },
+            status_error: { en: "❌ Error processing files. Please try again.", ar: "❌ خطأ في معالجة الملفات. يرجى المحاولة مرة أخرى." },
+            time_shift_preview: { en: "Shift by {0} seconds", ar: "سيتم إزاحة التوقيت بمقدار {0} ثانية" }
         };
 
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const fileList = document.getElementById('fileList');
         const processButton = document.getElementById('processButton');
+        const processIcon = document.getElementById('processIcon');
+        const processSpinner = document.getElementById('processSpinner');
         const uploadForm = document.getElementById('uploadForm');
         const browseButton = document.getElementById('browseButton');
-        const progressBar = document.getElementById('progressBar');
-        const progressFill = document.getElementById('progressFill');
         const statusMessage = document.getElementById('statusMessage');
         const languageToggle = document.getElementById('languageToggle');
         
         let selectedFiles = [];
-        let currentLang = 'ar'; // Default to Arabic
+        let currentLang = 'ar';
 
-        // Language Switch Logic
+        // Language Logic
         function setLanguage(lang) {
             document.documentElement.lang = lang;
             document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
             currentLang = lang;
             localStorage.setItem('language', lang);
-            languageToggle.checked = lang === 'en'; // Inverted logic since Arabic is default
+            languageToggle.checked = lang === 'en';
+            
+            // update time shift preview text if visible
+            const ms = parseInt(document.getElementById('timeShiftMs').value) || 0;
+            updateTimeShiftPreview(ms);
         }
 
-        languageToggle.addEventListener('change', (e) => {
-            setLanguage(e.target.checked ? 'en' : 'ar'); // Inverted logic
+        languageToggle.addEventListener('change', (e) => setLanguage(e.target.checked ? 'en' : 'ar'));
+        document.addEventListener('DOMContentLoaded', () => setLanguage(localStorage.getItem('language') || 'ar'));
+
+        // UI Interactions
+        function toggleCollapse(panelId, iconId) {
+            const panel = document.getElementById(panelId);
+            const icon = document.getElementById(iconId);
+            if (panel.classList.contains('expanded')) {
+                panel.classList.remove('expanded');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                panel.classList.add('expanded');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Dependent Checkboxes (Remove Tags -> Keep specific)
+        const removeAllTags = document.getElementById('removeAllTags');
+        const tagKeepOptions = document.getElementById('tagKeepOptions');
+        removeAllTags.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            const subs = tagKeepOptions.querySelectorAll('.checkbox-group');
+            const inputs = tagKeepOptions.querySelectorAll('input[type="checkbox"]');
+            
+            subs.forEach(sub => isChecked ? sub.classList.remove('disabled') : sub.classList.add('disabled'));
+            inputs.forEach(input => input.disabled = !isChecked);
         });
 
-        // Load saved language preference on page load, default to Arabic
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('language') || 'ar'; // Default to Arabic
-            setLanguage(savedLang);
+        // Time Shift Preview
+        const timeShiftMs = document.getElementById('timeShiftMs');
+        const timeShiftPreview = document.getElementById('timeShiftPreview');
+        function updateTimeShiftPreview(ms) {
+            if (ms === 0 || isNaN(ms)) {
+                timeShiftPreview.style.display = 'none';
+            } else {
+                const sec = (ms / 1000).toFixed(1);
+                timeShiftPreview.textContent = translations.time_shift_preview[currentLang].replace('{0}', sec);
+                timeShiftPreview.style.display = 'block';
+                timeShiftPreview.style.color = ms > 0 ? '#10b981' : '#ef4444'; // green forward, red backward
+            }
+        }
+        timeShiftMs.addEventListener('input', (e) => updateTimeShiftPreview(parseInt(e.target.value)));
+
+        // Brackets JSON logic
+        const bracketOpts = document.querySelectorAll('.bracket-opt');
+        const cleanBracketsHidden = document.getElementById('cleanBracketsHidden');
+        const bracketOptionsHidden = document.getElementById('bracketOptionsHidden');
+        
+        bracketOpts.forEach(cb => {
+            cb.addEventListener('change', () => {
+                let opts = {};
+                let anyChecked = false;
+                bracketOpts.forEach(b => {
+                    opts[b.dataset.key] = b.checked;
+                    if(b.checked) anyChecked = true;
+                });
+                cleanBracketsHidden.value = anyChecked ? "true" : "false";
+                bracketOptionsHidden.value = JSON.stringify(opts);
+            });
         });
 
-        // Original Logic (with translation updates)
+        // File Upload Logic
         browseButton.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
         uploadArea.addEventListener('click', () => fileInput.click());
-        uploadArea.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
         uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
         uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
         uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.classList.remove('dragover'); addFiles(Array.from(e.dataTransfer.files)); });
         fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) addFiles(Array.from(e.target.files)); });
-        uploadForm.addEventListener('submit', handleFormSubmit);
 
         function addFiles(newFiles) {
             const subtitleFiles = newFiles.filter(file => {
-                const lowerCaseName = file.name.toLowerCase();
-                return lowerCaseName.endsWith('.ass') || lowerCaseName.endsWith('.srt');
+                const ln = file.name.toLowerCase();
+                return ln.endswith('.ass') || ln.endsWith('.srt') || ln.endsWith('.vtt') || ln.endsWith('.lrc'); // allow more? wait, only .ass/.srt accepted initially
             });
-            if (subtitleFiles.length === 0 && selectedFiles.length === 0) {
+            // Fix: Actually we only accept .ass and .srt for now
+            const validFiles = newFiles.filter(file => file.name.toLowerCase().endsWith('.ass') || file.name.toLowerCase().endsWith('.srt'));
+            
+            if (validFiles.length === 0 && selectedFiles.length === 0) {
                 showStatus(translations.error_select_files[currentLang], 'error');
                 return;
             }
             const existingFileNames = new Set(selectedFiles.map(f => f.name));
-            const uniqueNewFiles = subtitleFiles.filter(f => !existingFileNames.has(f.name));
+            const uniqueNewFiles = validFiles.filter(f => !existingFileNames.has(f.name));
             selectedFiles = [...selectedFiles, ...uniqueNewFiles];
             renderFileList();
-            if(selectedFiles.length > 0) { processButton.style.display = 'block'; hideStatus(); }
+            processButton.disabled = selectedFiles.length === 0;
             fileInput.value = null;
+            if(selectedFiles.length > 0) hideStatus();
         }
 
         function renderFileList() {
-            if (selectedFiles.length === 0) { fileList.style.display = 'none'; processButton.style.display = 'none'; return; }
+            if (selectedFiles.length === 0) { fileList.style.display = 'none'; return; }
             fileList.style.display = 'block';
             fileList.innerHTML = selectedFiles.map((file, index) => {
                 const extension = file.name.split('.').pop().toUpperCase();
@@ -513,170 +848,90 @@
                         <div class="file-size">${formatFileSize(file.size)}</div>
                     </div>
                     <button type="button" class="remove-button" onclick="removeFile(${index})" aria-label="Remove ${file.name}">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>
                     </button>
                 </div>`;
             }).join('');
         }
 
-        function removeFile(index) {
+        window.removeFile = function(index) {
             selectedFiles.splice(index, 1);
             renderFileList();
+            processButton.disabled = selectedFiles.length === 0;
         }
 
-        async function handleFormSubmit(e) {
+        // Form Submit
+        uploadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (selectedFiles.length === 0) { showStatus(translations.error_process[currentLang], 'error'); return; }
+            if (selectedFiles.length === 0) return;
+            
             processButton.disabled = true;
-            progressBar.style.display = 'block';
-            progressFill.style.width = '0%';
+            processIcon.style.display = 'none';
+            processSpinner.style.display = 'block';
             showStatus(translations.status_processing[currentLang], 'processing');
+            
+            const formData = new FormData(uploadForm);
+            selectedFiles.forEach(file => formData.append('files', file));
+            
+            // Set download mode
+            formData.append('download_mode', selectedFiles.length === 1 ? 'single' : 'zip');
+
             try {
-                if (selectedFiles.length === 1) {
-                    const onlyFile = selectedFiles[0];
-                    const originalText = await readFileAsText(onlyFile);
-                    const nameLower = onlyFile.name.toLowerCase();
-                    let fixedText = originalText;
-                    if (nameLower.endsWith('.ass')) {
-                        fixedText = fixAssContent(originalText);
-                    } else if (nameLower.endsWith('.srt')) {
-                        fixedText = fixSrtContent(originalText);
-                    }
-                    progressFill.style.width = '100%';
-                    const blob = new Blob([fixedText], { type: 'text/plain;charset=utf-8' });
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
-                    a.download = getSingleDownloadName(onlyFile.name);
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                } else {
-                    const zip = new JSZip();
-                    let processedCount = 0;
-                    for (const file of selectedFiles) {
-                        const originalText = await readFileAsText(file);
-                        const nameLower = file.name.toLowerCase();
-                        let fixedText = originalText;
-                        if (nameLower.endsWith('.ass')) {
-                            fixedText = fixAssContent(originalText);
-                        } else if (nameLower.endsWith('.srt')) {
-                            fixedText = fixSrtContent(originalText);
-                        }
-                        zip.file(file.name, fixedText);
-                        processedCount += 1;
-                        const pct = Math.round((processedCount / selectedFiles.length) * 100);
-                        progressFill.style.width = pct + '%';
-                    }
-                    const blob = await zip.generateAsync({ type: 'blob' });
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
-                    a.download = getZipDownloadName(selectedFiles);
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
+                const response = await fetch('/process', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'Server error');
                 }
+                
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'fixed_subtitles.zip';
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename="?([^"]+)"?/);
+                    if (match && match[1]) filename = match[1];
+                }
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
                 showStatus(translations.status_success[currentLang], 'success');
                 setTimeout(() => {
                     selectedFiles = [];
                     renderFileList();
-                    progressBar.style.display = 'none';
-                    progressFill.style.width = '0%';
+                    processButton.disabled = true;
                     hideStatus();
-                }, 3000);
+                }, 4000);
             } catch (error) {
                 console.error('Processing Error:', error);
-                showStatus(translations.status_error[currentLang], 'error');
+                showStatus(translations.status_error[currentLang] + " " + (error.message || ""), 'error');
             } finally {
-                processButton.disabled = false;
+                processButton.disabled = selectedFiles.length === 0;
+                processIcon.style.display = 'block';
+                processSpinner.style.display = 'none';
             }
-        }
+        });
 
-        function readFileAsText(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsText(file);
-            });
+        function formatFileSize(bytes) { 
+            if (bytes === 0) return '0 Bytes'; 
+            const k = 1024; const i = Math.floor(Math.log(bytes) / Math.log(k)); 
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + ['Bytes', 'KB', 'MB', 'GB', 'TB'][i]; 
         }
-
-        const U202B = "\u202B";
-        function replaceAllString(source, search, replacement) {
-            return source.split(search).join(replacement);
+        function showStatus(message, type) { 
+            statusMessage.textContent = message; 
+            statusMessage.className = `status-message ${type}`; 
+            statusMessage.style.display = 'block'; 
         }
-
-        function fixAssContent(content) {
-            const lines = content.split(/\r?\n/);
-            const result = [];
-            for (const line of lines) {
-                if (line.trim().startsWith('Dialogue:')) {
-                    const parts = line.split(',', 9);
-                    if (parts.length === 10) {
-                        let textPortion = parts[9];
-                        textPortion = replaceAllString(textPortion, U202B, '');
-                        textPortion = U202B + textPortion;
-                        textPortion = replaceAllString(textPortion, '\\N', '\\N' + U202B);
-                        textPortion = replaceAllString(textPortion, '\\n', '\\n' + U202B);
-                        textPortion = replaceAllString(textPortion, '}', '}' + U202B);
-                        textPortion = replaceAllString(textPortion, U202B + '{', '{');
-                        parts[9] = textPortion;
-                        result.push(parts.join(','));
-                    } else {
-                        result.push(line);
-                    }
-                } else {
-                    result.push(line);
-                }
-            }
-            return result.join('\n');
-        }
-
-        function fixSrtContent(content) {
-            const lines = content.split(/\r?\n/);
-            const result = [];
-            const timestamp = /^\d{2}:\d{2}:\d{2},\d{3}\s+-->\s+\d{2}:\d{2}:\d{2},\d{3}$/;
-            let isSubtitleText = false;
-            for (const line of lines) {
-                if (timestamp.test(line)) {
-                    isSubtitleText = true;
-                    result.push(line);
-                } else if (line.trim() === '') {
-                    isSubtitleText = false;
-                    result.push(line);
-                } else if (isSubtitleText) {
-                    const cleaned = replaceAllString(line, U202B, '');
-                    result.push(U202B + cleaned);
-                } else {
-                    result.push(line);
-                }
-            }
-            return result.join('\n');
-        }
-
-        function getSingleDownloadName(originalName) {
-            const lastDot = originalName.lastIndexOf('.');
-            const base = lastDot > 0 ? originalName.substring(0, lastDot) : originalName;
-            const ext = lastDot > 0 ? originalName.substring(lastDot) : '';
-            return base + '_Fixed.by.@bruuhim' + ext;
-        }
-
-        function getZipDownloadName(files) {
-            const first = files[0]?.name || 'Subtitles';
-            const lastDot = first.lastIndexOf('.');
-            const base = lastDot > 0 ? first.substring(0, lastDot) : first;
-            const more = files.length - 1;
-            if (more <= 0) return base + '_Fixed.by.@bruuhim.zip';
-            return base + '_and_' + more + '_more_Fixed.by.@bruuhim.zip';
-        }
-
-        function formatFileSize(bytes) { if (bytes === 0) return '0 Bytes'; const k = 1024; const i = Math.floor(Math.log(bytes) / Math.log(k)); return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + ['Bytes', 'KB', 'MB', 'GB', 'TB'][i]; }
-        function showStatus(message, type) { statusMessage.textContent = message; statusMessage.className = `status-message ${type}`; statusMessage.style.display = 'block'; }
         function hideStatus() { statusMessage.style.display = 'none'; }
     </script>
 </body>
