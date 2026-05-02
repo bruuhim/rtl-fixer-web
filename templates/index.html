@@ -1,15 +1,35 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" data-theme="dark">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bruuhim Subtitle Studio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
+        :root {
+            --bg-color: #f7f5f0;
+            --surface-color: #ffffff;
+            --text-primary: #2d2a26;
+            --text-secondary: #78716c;
+            --accent-color: #c48b61; /* Warm elegant beige/caramel */
+            --accent-hover: #b07a51;
+            --border-color: #e6e4dd;
+            --input-bg: #faf9f6;
+            --success-color: #6b8e6b;
+            --error-color: #c06c6c;
+            
+            --border-radius-lg: 20px;
+            --border-radius-md: 12px;
+            --border-radius-sm: 8px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.03);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.06);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,115 +37,119 @@
         }
 
         body {
-            font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Noto Kufi Arabic', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-            transition: font-family 0.3s ease;
-            color: #e2e8f0;
+            padding: 40px 20px;
+            transition: var(--transition);
         }
         
         html[dir="ltr"] body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
+        /* Language Toggle System */
         .lang-en { display: none; }
-        
         html[lang="en"] .lang-ar { display: none; }
         html[lang="en"] .lang-en { display: inline; }
         html[lang="en"] .lang-en-block { display: block; }
-
         .lang-ar { display: inline; }
         .lang-ar-block { display: block; }
 
         .lang-switch-container {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 24px;
+            right: 24px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: #e2e8f0;
-            font-size: 0.9rem;
+            gap: 12px;
+            background: var(--surface-color);
+            padding: 8px 16px;
+            border-radius: 30px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            z-index: 100;
         }
+        html[dir="ltr"] .lang-switch-container {
+            right: auto;
+            left: 24px;
+        }
+
+        .lang-switch-container span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
         .lang-switch {
             position: relative;
             display: inline-block;
-            width: 50px;
-            height: 26px;
+            width: 44px;
+            height: 24px;
         }
         .lang-switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #475569;
+            background-color: #d6d3cd;
             transition: .4s;
-            border-radius: 26px;
+            border-radius: 24px;
         }
         .slider:before {
             position: absolute;
             content: "";
-            height: 20px; width: 20px;
+            height: 18px; width: 18px;
             left: 3px; bottom: 3px;
-            background-color: #1e293b;
+            background-color: white;
             transition: .4s;
             border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        input:checked + .slider { background-color: #e05555; }
-        input:checked + .slider:before { transform: translateX(24px); }
+        input:checked + .slider { background-color: var(--accent-color); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
-        .background-pattern { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            opacity: 0.05; 
-            background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 2px, transparent 2px); 
-            background-size: 60px 60px; 
-            animation: float 20s ease-in-out infinite; 
-            pointer-events: none;
-        }
-        @keyframes float { 
-            0%, 100% { transform: translateY(0px) rotate(0deg); } 
-            50% { transform: translateY(-20px) rotate(1deg); } 
-        }
-        
+        /* Main Container */
         .container { 
-            background: rgba(30, 41, 59, 0.95); 
-            backdrop-filter: blur(20px); 
-            border-radius: 24px; 
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3); 
+            background: var(--surface-color); 
+            border-radius: var(--border-radius-lg); 
+            box-shadow: var(--shadow-md); 
             padding: 40px; 
             width: 100%; 
-            max-width: 800px; 
-            position: relative; 
-            z-index: 1; 
-            border: 1px solid rgba(71, 85, 105, 0.2); 
-            margin: 40px 0;
+            max-width: 900px; 
+            border: 1px solid var(--border-color);
+            margin-top: 40px;
         }
-        
-        .header { text-align: center; margin-bottom: 30px; }
+
+        /* Typography */
+        .header { text-align: center; margin-bottom: 40px; }
         .title { 
             font-size: 2.2rem; 
-            font-weight: 800; 
-            background: linear-gradient(135deg, #ff6b6b, #e05555); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            background-clip: text; 
-            margin-bottom: 8px; 
-            line-height: 1.2; 
+            font-weight: 700; 
+            color: var(--text-primary);
+            margin-bottom: 12px; 
+            letter-spacing: -0.5px;
         }
-        .subtitle { color: #94a3b8; font-size: 1.05rem; font-weight: 500; }
-        
+        .subtitle { 
+            color: var(--text-secondary); 
+            font-size: 1.1rem; 
+            font-weight: 400; 
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* Layout */
         .two-panel-layout {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 24px;
+            gap: 32px;
         }
-        @media (min-width: 768px) {
+        @media (min-width: 800px) {
             .two-panel-layout {
                 grid-template-columns: 1fr 1fr;
             }
@@ -134,296 +158,390 @@
         .panel-column {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
         }
 
-        /* Form elements */
+        /* Forms */
         .form-row {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             width: 100%;
         }
+        @media (max-width: 500px) {
+            .form-row { flex-direction: column; gap: 16px; }
+        }
+        
         .form-group {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
         .form-label {
             font-size: 0.9rem;
-            color: #cbd5e1;
+            color: var(--text-primary);
             font-weight: 600;
         }
         .form-select, .form-input {
             width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid #475569;
-            color: #f8fafc;
+            padding: 12px 16px;
+            border-radius: var(--border-radius-md);
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
             font-family: inherit;
             font-size: 0.95rem;
-            transition: all 0.2s;
+            transition: var(--transition);
         }
         .form-select:focus, .form-input:focus {
             outline: none;
-            border-color: #e05555;
-            box-shadow: 0 0 0 2px rgba(224, 85, 85, 0.2);
+            border-color: var(--accent-color);
+            background: var(--surface-color);
+            box-shadow: 0 0 0 3px rgba(196, 139, 97, 0.15);
         }
         .form-select:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+            background: #f1efea;
         }
-        
+
         /* Section Cards */
         .section-card {
-            background: rgba(51, 65, 85, 0.5);
-            border-radius: 12px;
-            padding: 16px;
-            border: 1px solid rgba(71, 85, 105, 0.3);
-            border-right: 3px solid #e05555; /* RTL logic, left border in LTR */
+            background: var(--surface-color);
+            border-radius: var(--border-radius-md);
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
         }
-        html[dir="ltr"] .section-card {
-            border-right: 1px solid rgba(71, 85, 105, 0.3);
-            border-left: 3px solid #e05555;
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--accent-color);
         }
+        html[dir="ltr"] .section-card::before {
+            right: auto;
+            left: 0;
+        }
+        
         .section-title {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            color: #f1f5f9;
-            margin-bottom: 16px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+        }
+        .section-title i {
+            color: var(--accent-color);
+            font-size: 1.2rem;
         }
 
         /* Checkboxes */
         .checkbox-group {
             display: flex;
             align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 12px;
+            gap: 12px;
+            margin-bottom: 14px;
             cursor: pointer;
         }
         .checkbox-group input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid #475569;
+            width: 22px;
+            height: 22px;
+            background: var(--input-bg);
+            border: 2px solid #d6d3cd;
             border-radius: 6px;
             cursor: pointer;
             position: relative;
             flex-shrink: 0;
-            margin-top: 2px;
-            transition: all 0.2s;
+            margin-top: 1px;
+            transition: var(--transition);
         }
         .checkbox-group input[type="checkbox"]:checked {
-            background: #e05555;
-            border-color: #e05555;
+            background: var(--accent-color);
+            border-color: var(--accent-color);
         }
         .checkbox-group input[type="checkbox"]:checked::after {
             content: '';
             position: absolute;
             left: 6px;
             top: 2px;
-            width: 4px;
-            height: 10px;
+            width: 5px;
+            height: 11px;
             border: solid white;
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
         }
         .checkbox-label {
             font-size: 0.95rem;
-            color: #e2e8f0;
+            color: var(--text-primary);
             user-select: none;
+            line-height: 1.5;
         }
+        
         .sub-checkboxes {
-            margin-right: 30px;
+            margin-right: 34px;
             margin-top: -6px;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             transition: opacity 0.2s;
         }
         html[dir="ltr"] .sub-checkboxes {
             margin-right: 0;
-            margin-left: 30px;
+            margin-left: 34px;
         }
         .checkbox-group.disabled {
             opacity: 0.5;
             pointer-events: none;
         }
 
-        /* Sub-radio options */
+        /* Radio options */
         .radio-options {
-            margin-right: 30px;
+            margin-right: 34px;
             margin-top: 8px;
             display: flex;
-            gap: 16px;
+            flex-direction: column;
+            gap: 12px;
         }
         html[dir="ltr"] .radio-options {
             margin-right: 0;
-            margin-left: 30px;
+            margin-left: 34px;
         }
         .radio-group {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             cursor: pointer;
-            font-size: 0.85rem;
-            color: #cbd5e1;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .radio-group input[type="radio"] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #d6d3cd;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+        }
+        .radio-group input[type="radio"]:checked {
+            border-color: var(--accent-color);
+        }
+        .radio-group input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        /* Collapsible Panels */
+        /* Collapsible */
         .collapsible-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
+            padding: 4px 0;
+            user-select: none;
+        }
+        .collapsible-header .section-title {
             margin-bottom: 0;
-            padding-bottom: 8px;
         }
         .toggle-btn {
             font-size: 0.85rem;
-            color: #94a3b8;
-            background: none;
-            border: none;
+            color: var(--text-secondary);
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 20px;
             cursor: pointer;
             font-family: inherit;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+            transition: var(--transition);
         }
-        .toggle-btn:hover { color: #e2e8f0; }
-        .toggle-icon { transition: transform 0.3s; }
+        .toggle-btn:hover { 
+            background: var(--border-color);
+            color: var(--text-primary);
+        }
+        .toggle-icon { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .collapsible-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease-out;
-            padding-top: 0;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
         }
         .collapsible-content.expanded {
-            max-height: 400px; /* arbitrary max height */
-            padding-top: 12px;
+            max-height: 500px;
+            padding-top: 20px;
+            opacity: 1;
         }
 
         /* Upload Area */
         .upload-area { 
-            border: 2px dashed #475569; 
-            border-radius: 16px; 
-            padding: 40px 20px; 
+            border: 2px dashed var(--border-color); 
+            border-radius: var(--border-radius-lg); 
+            padding: 48px 24px; 
             text-align: center; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            background: rgba(51, 65, 85, 0.3); 
-            position: relative; 
-            overflow: hidden; 
+            transition: var(--transition); 
+            background: var(--input-bg); 
             cursor: pointer; 
         }
         .upload-area:hover, .upload-area:focus { 
             outline: none; 
-            border-color: #e05555; 
-            background: rgba(224, 85, 85, 0.05); 
-            transform: translateY(-2px); 
+            border-color: var(--accent-color); 
+            background: #fffbfa;
         }
         .upload-area.dragover { 
-            border-color: #e05555; 
-            background: rgba(224, 85, 85, 0.1); 
-            transform: scale(1.02); 
+            border-color: var(--accent-color); 
+            background: #fffbfa;
+            transform: scale(1.01); 
         }
         .upload-icon { 
-            width: 60px; 
-            height: 60px; 
-            margin: 0 auto 16px; 
-            background: linear-gradient(135deg, #ff6b6b, #e05555); 
+            width: 64px; 
+            height: 64px; 
+            margin: 0 auto 20px; 
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
             border-radius: 50%; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            transition: all 0.3s ease; 
+            transition: var(--transition); 
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-sm);
         }
-        .upload-area:hover .upload-icon { transform: scale(1.1) rotate(5deg); }
-        .upload-text { font-size: 1.1rem; font-weight: 600; color: #e2e8f0; margin-bottom: 8px; }
-        .upload-subtext { color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px; }
+        .upload-area:hover .upload-icon { 
+            transform: translateY(-5px); 
+            border-color: var(--accent-color);
+            background: var(--accent-color);
+            color: white;
+        }
+        .upload-text { font-size: 1.15rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+        .upload-subtext { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px; }
         .file-input { display: none; }
         
         .browse-button { 
             display: inline-flex; align-items: center; gap: 8px; 
-            background: linear-gradient(135deg, #ff6b6b, #e05555); 
-            color: white; border: none; padding: 10px 20px; 
-            border-radius: 10px; font-weight: 600; cursor: pointer; 
-            transition: all 0.3s ease; font-size: 0.9rem; 
+            background: var(--surface-color); 
+            color: var(--text-primary);
+            border: 1px solid var(--border-color); 
+            padding: 10px 24px; 
+            border-radius: var(--border-radius-md); 
+            font-weight: 600; cursor: pointer; 
+            transition: var(--transition); 
+            font-size: 0.95rem; 
+            box-shadow: var(--shadow-sm);
         }
-        .browse-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(224, 85, 85, 0.3); }
+        .browse-button:hover { 
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
         
-        .file-list { margin-top: 16px; display: none; max-height: 200px; overflow-y: auto; }
+        .file-list { margin-top: 20px; display: none; max-height: 240px; overflow-y: auto; padding-right: 4px; }
+        .file-list::-webkit-scrollbar { width: 6px; }
+        .file-list::-webkit-scrollbar-track { background: transparent; }
+        .file-list::-webkit-scrollbar-thumb { background: #d6d3cd; border-radius: 10px; }
+        
         .file-item { 
-            display: flex; align-items: center; gap: 12px; padding: 12px; 
-            background: rgba(51, 65, 85, 0.4); border-radius: 12px; 
-            margin-bottom: 8px; border: 1px solid rgba(71, 85, 105, 0.3); 
-            transition: all 0.3s ease; 
+            display: flex; align-items: center; gap: 16px; padding: 16px; 
+            background: var(--surface-color); border-radius: var(--border-radius-md); 
+            margin-bottom: 12px; border: 1px solid var(--border-color); 
+            transition: var(--transition); 
+            box-shadow: var(--shadow-sm);
         }
-        html[dir="rtl"] .file-item { text-align: right; }
-        .file-item:hover { background: rgba(51, 65, 85, 0.6); transform: translateX(4px); }
-        html[dir="rtl"] .file-item:hover { transform: translateX(-4px); }
+        .file-item:hover { border-color: var(--accent-color); }
         .file-icon { 
-            width: 32px; height: 32px; background: linear-gradient(135deg, #10b981, #059669); 
-            border-radius: 6px; display: flex; align-items: center; justify-content: center; 
-            color: white; font-weight: 600; font-size: 0.75rem; 
+            width: 40px; height: 40px; background: #f1efea; 
+            border-radius: var(--border-radius-sm); display: flex; align-items: center; justify-content: center; 
+            color: var(--text-secondary); font-weight: 700; font-size: 0.8rem; 
         }
         .file-info { flex: 1; overflow: hidden; }
-        .file-name { font-weight: 600; color: #e2e8f0; margin-bottom: 2px; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .file-size { font-size: 0.8rem; color: #94a3b8; }
+        .file-name { font-weight: 600; color: var(--text-primary); margin-bottom: 4px; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-size { font-size: 0.85rem; color: var(--text-secondary); }
         .remove-button { 
-            background: #ef4444; color: white; border: none; width: 28px; height: 28px; 
+            background: transparent; color: var(--text-secondary); border: none; width: 32px; height: 32px; 
             border-radius: 50%; cursor: pointer; display: flex; align-items: center; 
-            justify-content: center; transition: all 0.3s ease; flex-shrink: 0;
+            justify-content: center; transition: var(--transition); flex-shrink: 0;
+            font-size: 1.2rem;
         }
-        .remove-button:hover { background: #dc2626; transform: scale(1.1); }
+        .remove-button:hover { color: var(--error-color); background: rgba(192, 108, 108, 0.1); }
         
+        /* Main Button */
         .process-button { 
-            width: 100%; background: linear-gradient(135deg, #ff6b6b, #e05555); 
-            color: white; border: none; padding: 16px; border-radius: 12px; 
-            font-size: 1.1rem; font-weight: 700; cursor: pointer; 
-            margin-top: 10px; transition: all 0.3s ease; display: flex; justify-content: center; align-items: center; gap: 10px;
+            width: 100%; background: var(--accent-color); 
+            color: white; border: none; padding: 18px; border-radius: var(--border-radius-lg); 
+            font-size: 1.15rem; font-weight: 700; cursor: pointer; 
+            margin-top: 16px; transition: var(--transition); 
+            display: flex; justify-content: center; align-items: center; gap: 12px;
+            box-shadow: 0 4px 12px rgba(196, 139, 97, 0.3);
         }
-        .process-button:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(224, 85, 85, 0.4); }
-        .process-button:disabled { background: #64748b; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7; }
+        .process-button:hover:not(:disabled) { 
+            background: var(--accent-hover); 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 16px rgba(196, 139, 97, 0.4); 
+        }
+        .process-button:disabled { 
+            background: #d6d3cd; 
+            cursor: not-allowed; 
+            box-shadow: none; 
+            color: #f7f5f0;
+        }
         
         .spinner {
-            display: none; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite;
+            display: none; width: 22px; height: 22px; border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%; border-top-color: #fff; animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         
         .status-message { 
-            text-align: center; margin-top: 16px; font-weight: 600; 
-            display: none; padding: 12px; border-radius: 10px;
+            text-align: center; margin-top: 20px; font-weight: 600; 
+            display: none; padding: 16px; border-radius: var(--border-radius-md);
+            font-size: 0.95rem;
         }
-        .success { color: #10b981; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25);} 
-        .error { color: #ef4444; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25);} 
-        .processing { color: #e05555; background: rgba(224,85,85,0.12); border: 1px solid rgba(224,85,85,0.25);} 
+        .success { color: var(--success-color); background: #f0f7f0; border: 1px solid #d1e5d1;} 
+        .error { color: var(--error-color); background: #fdf3f3; border: 1px solid #f6d8d8;} 
+        .processing { color: var(--accent-color); background: #fcf6f2; border: 1px solid #f5e3d7;} 
         
         .footer-credit { 
-            text-align: center; margin-top: 40px; padding-top: 20px; 
-            border-top: 1px solid #475569; font-size: 0.9rem; color: #94a3b8; 
+            text-align: center; margin-top: 40px; font-size: 0.9rem; color: var(--text-secondary); 
+            font-weight: 500;
         }
-        .footer-credit a { color: #94a3b8; font-weight: 600; text-decoration: none; transition: color 0.2s ease; }
-        .footer-credit a:hover { color: #e05555; text-decoration: underline; }
+        .footer-credit a { color: var(--accent-color); font-weight: 700; text-decoration: none; transition: var(--transition); }
+        .footer-credit a:hover { color: var(--accent-hover); text-decoration: underline; }
 
-        .time-shift-preview { font-size: 0.85rem; color: #10b981; margin-top: 4px; display: none; }
-        .checkbox-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
-        @media (min-width: 400px) { .checkbox-grid { grid-template-columns: 1fr 1fr; } }
+        .time-shift-preview { font-size: 0.85rem; font-weight: 500; margin-top: 8px; display: none; }
+        
+        hr {
+            border: none;
+            height: 1px;
+            background: var(--border-color);
+            margin: 24px 0;
+        }
     </style>
 </head>
 <body>
-    <div class="background-pattern"></div>
     
     <div class="lang-switch-container">
-        <span class="lang-en">English</span>
-        <span class="lang-ar">العربية</span>
+        <span class="lang-en">En</span>
+        <span class="lang-ar">عربي</span>
         <label class="lang-switch">
             <input type="checkbox" id="languageToggle">
             <span class="slider"></span>
@@ -437,8 +555,8 @@
                 <span class="lang-ar">ستوديو ترجمات Bruuhim</span>
             </h1>
             <p class="subtitle">
-                <span class="lang-en">Upload, fix, clean, and convert your subtitle files instantly</span>
-                <span class="lang-ar">ارفع ملفات الترجمة وأصلحها ونظفها وحول صيغتها فوراً</span>
+                <span class="lang-en">Upload, fix, clean, and convert your subtitle files seamlessly.</span>
+                <span class="lang-ar">ارفع ملفات الترجمة، أصلحها، نظفها وحول صيغتها في ثوانٍ.</span>
             </p>
         </div>
 
@@ -449,20 +567,20 @@
                 <div class="panel-column">
                     <div class="upload-area" id="uploadArea" role="button" tabindex="0">
                         <div class="upload-icon">
-                            <svg width="32" height="32" fill="white" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/></svg>
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
                         </div>
                         <div class="upload-text">
-                            <span class="lang-en">Drop your subtitle files here</span>
-                            <span class="lang-ar">اسحب ملفات الترجمة إلى هنا</span>
+                            <span class="lang-en">Drag & drop subtitle files here</span>
+                            <span class="lang-ar">اسحب وأفلت ملفات الترجمة هنا</span>
                         </div>
                         <div class="upload-subtext">
-                            <span class="lang-en">Supports SRT, ASS</span>
-                            <span class="lang-ar">يدعم صيغ SRT, ASS</span>
+                            <span class="lang-en">Supports SRT and ASS files</span>
+                            <span class="lang-ar">ندعم ملفات SRT و ASS</span>
                         </div>
                         <button type="button" class="browse-button" id="browseButton">
-                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/></svg>
+                            <i class="fa-solid fa-folder-open"></i>
                             <span class="lang-en">Browse Files</span>
-                            <span class="lang-ar">استعراض الملفات</span>
+                            <span class="lang-ar">تصفح الملفات</span>
                         </button>
                         <input type="file" id="fileInput" name="files" multiple accept=".ass,.srt" class="file-input">
                     </div>
@@ -473,7 +591,7 @@
                         <div class="form-group">
                             <label class="form-label">
                                 <span class="lang-en">Output Format</span>
-                                <span class="lang-ar">صيغة الإخراج</span>
+                                <span class="lang-ar">صيغة الملف الناتج</span>
                             </label>
                             <select name="output_format" class="form-select">
                                 <option value="srt">SRT (الافتراضي)</option>
@@ -485,7 +603,7 @@
                         <div class="form-group">
                             <label class="form-label">
                                 <span class="lang-en">Input Encoding</span>
-                                <span class="lang-ar">ترميز الإدخال</span>
+                                <span class="lang-ar">ترميز الملف الأصلي</span>
                             </label>
                             <select name="input_encoding" class="form-select">
                                 <option value="auto">تلقائي (الافتراضي)</option>
@@ -496,17 +614,18 @@
                         </div>
                     </div>
 
-                    <div class="form-group" style="margin-top: 4px;">
+                    <div class="form-group">
                         <label class="form-label">
                             <span class="lang-en">Translation</span>
-                            <span class="lang-ar">ترجمة</span>
+                            <span class="lang-ar">ترجمة النص</span>
                         </label>
                         <select class="form-select" disabled>
-                            <option>-- لا تُقم بالترجمة --</option>
+                            <option>-- بدون ترجمة --</option>
                         </select>
-                        <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 4px;">
-                            <span class="lang-en">Translation feature coming soon</span>
-                            <span class="lang-ar">ميزة الترجمة ستُضاف قريباً</span>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">
+                            <i class="fa-solid fa-language" style="margin: 0 4px;"></i>
+                            <span class="lang-en">AI Translation feature coming soon</span>
+                            <span class="lang-ar">ميزة الترجمة الذكية ستتوفر قريباً</span>
                         </div>
                     </div>
                 </div>
@@ -517,173 +636,167 @@
                     <!-- Repair Options -->
                     <div class="section-card">
                         <div class="section-title">
-                            <i class="fa-solid fa-wrench" style="color: #cbd5e1;"></i>
-                            <span class="lang-en">Repair Options</span>
-                            <span class="lang-ar">خيارات الإصلاح</span>
+                            <i class="fa-solid fa-wrench"></i>
+                            <span class="lang-en">Repair & Adjustments</span>
+                            <span class="lang-ar">خيارات الإصلاح والضبط</span>
                         </div>
                         
-                        <!-- Time Shift Collapsible -->
-                        <div class="collapsible-header" onclick="toggleCollapse('timeShiftPanel', 'tsIcon')">
-                            <span style="font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-                                🕐 
-                                <span class="lang-en">Time Shift</span>
-                                <span class="lang-ar">إزاحة توقيت الترجمات</span>
-                            </span>
-                            <button type="button" class="toggle-btn">
-                                <span class="lang-en">Show Options</span>
-                                <span class="lang-ar">إظهار الخيارات</span>
-                                <i id="tsIcon" class="fa-solid fa-caret-down toggle-icon"></i>
-                            </button>
-                        </div>
-                        <div id="timeShiftPanel" class="collapsible-content">
-                            <div class="form-row" style="margin-bottom: 12px;">
-                                <div class="form-group">
-                                    <label class="form-label" style="font-size: 0.85rem;">
-                                        <span class="lang-en">Shift (milliseconds)</span>
-                                        <span class="lang-ar">تأخير (مللي ثانية)</span>
-                                    </label>
-                                    <input type="number" id="timeShiftMs" name="time_shift_ms" class="form-input" value="0" step="100" placeholder="e.g. 1000 or -500">
-                                    <div id="timeShiftPreview" class="time-shift-preview"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" style="font-size: 0.85rem;">
-                                        <span class="lang-en">From Timestamp</span>
-                                        <span class="lang-ar">من الطابع الزمني</span>
-                                    </label>
-                                    <input type="text" name="time_shift_from" class="form-input" value="00:00:00,000" placeholder="00:00:00,000">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div style="height: 1px; background: rgba(71, 85, 105, 0.5); margin: 12px 0;"></div>
-
                         <!-- RTL Fix -->
                         <label class="checkbox-group">
                             <input type="checkbox" name="fix_rtl" value="true" checked>
                             <span class="checkbox-label" style="font-weight: 600;">
-                                ✨ <span class="lang-en">Fix Arabic RTL Direction</span><span class="lang-ar">إصلاح اتجاه اللغة العربية</span>
+                                ✨ <span class="lang-en">Fix Arabic RTL Direction</span><span class="lang-ar">إصلاح اتجاه النصوص العربية (RTL)</span>
                             </span>
                         </label>
                         <div class="radio-options">
                             <label class="radio-group">
                                 <input type="radio" name="fix_rtl_pdf" value="false" checked>
-                                <span>RLE (U+202B)</span>
+                                <span>RLE (U+202B) الافتراضي</span>
                             </label>
                             <label class="radio-group">
                                 <input type="radio" name="fix_rtl_pdf" value="true">
-                                <span>RLE + PDF (U+202B...U+202C)</span>
+                                <span>RLE + PDF للمشغلات المتقدمة</span>
                             </label>
+                        </div>
+
+                        <hr>
+                        
+                        <!-- Time Shift Collapsible -->
+                        <div class="collapsible-header" onclick="toggleCollapse('timeShiftPanel', 'tsIcon')">
+                            <div class="section-title" style="font-size: 1rem;">
+                                <i class="fa-regular fa-clock" style="color: var(--text-secondary);"></i>
+                                <span class="lang-en">Time Shift</span>
+                                <span class="lang-ar">ضبط التوقيت (تأخير/تقديم)</span>
+                            </div>
+                            <button type="button" class="toggle-btn">
+                                <span class="lang-en">Expand</span>
+                                <span class="lang-ar">إظهار</span>
+                                <i id="tsIcon" class="fa-solid fa-chevron-down toggle-icon"></i>
+                            </button>
+                        </div>
+                        <div id="timeShiftPanel" class="collapsible-content">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" style="font-size: 0.85rem;">
+                                        <span class="lang-en">Shift (milliseconds)</span>
+                                        <span class="lang-ar">مقدار الإزاحة (بالمللي ثانية)</span>
+                                    </label>
+                                    <input type="number" id="timeShiftMs" name="time_shift_ms" class="form-input" value="0" step="100" placeholder="مثال: 1000 أو -500">
+                                    <div id="timeShiftPreview" class="time-shift-preview"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="font-size: 0.85rem;">
+                                        <span class="lang-en">From Timestamp</span>
+                                        <span class="lang-ar">بدءاً من التوقيت</span>
+                                    </label>
+                                    <input type="text" name="time_shift_from" class="form-input" value="00:00:00,000" placeholder="00:00:00,000">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Cleanup Options -->
                     <div class="section-card">
                         <div class="section-title">
-                            <i class="fa-solid fa-broom" style="color: #cbd5e1;"></i>
+                            <i class="fa-solid fa-broom"></i>
                             <span class="lang-en">Cleanup Options</span>
                             <span class="lang-ar">خيارات التنظيف</span>
                         </div>
                         
-                        <div class="checkbox-grid">
-                            <div class="grid-col">
-                                <label class="checkbox-group">
-                                    <input type="checkbox" name="remove_music_lines" value="true">
-                                    <span class="checkbox-label">
-                                        <span class="lang-en">Remove Music Lines (♪ ♫...)</span>
-                                        <span class="lang-ar">حذف الأسطر الموسيقية (♪ ♫...)</span>
-                                    </span>
-                                </label>
-                                
-                                <label class="checkbox-group">
-                                    <input type="checkbox" id="removeAllTags" name="remove_all_tags" value="true">
-                                    <span class="checkbox-label">
-                                        <span class="lang-en">Remove All Tags</span>
-                                        <span class="lang-ar">حذف جميع التنسيقات (Tags)</span>
-                                    </span>
-                                </label>
-                                
-                                <div class="sub-checkboxes" id="tagKeepOptions">
-                                    <label class="checkbox-group disabled">
-                                        <input type="checkbox" name="keep_italic" value="true" disabled>
-                                        <span class="checkbox-label">
-                                            <span class="lang-en">Keep Italic &lt;i&gt;</span>
-                                            <span class="lang-ar">ابق المائل &lt;i&gt;</span>
-                                        </span>
-                                    </label>
-                                    <label class="checkbox-group disabled">
-                                        <input type="checkbox" name="keep_bold" value="true" disabled>
-                                        <span class="checkbox-label">
-                                            <span class="lang-en">Keep Bold &lt;b&gt;</span>
-                                            <span class="lang-ar">ابق العريض &lt;b&gt;</span>
-                                        </span>
-                                    </label>
-                                    <label class="checkbox-group disabled">
-                                        <input type="checkbox" name="keep_font_color" value="true" disabled>
-                                        <span class="checkbox-label">
-                                            <span class="lang-en">Keep Color &lt;font&gt;</span>
-                                            <span class="lang-ar">ابق اللون &lt;font&gt;</span>
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <div class="grid-col">
-                                <label class="checkbox-group">
-                                    <input type="checkbox" name="remove_tashkeel" value="true">
-                                    <span class="checkbox-label">
-                                        <span class="lang-en">Remove Arabic Diacritics</span>
-                                        <span class="lang-ar">إزالة التشكيل والتنوين</span>
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Clean Brackets -->
-                    <div class="section-card">
-                        <div class="collapsible-header" onclick="toggleCollapse('bracketsPanel', 'bracketsIcon')" style="margin-bottom: 0; padding-bottom: 0;">
-                            <span style="font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #f1f5f9;">
-                                <i class="fa-solid fa-code" style="color: #cbd5e1; font-size: 0.9rem;"></i>
-                                <span class="lang-en">Clean Brackets / Symbols</span>
-                                <span class="lang-ar">إزالة الأقواس / الرموز</span>
+                        <label class="checkbox-group">
+                            <input type="checkbox" name="remove_tashkeel" value="true">
+                            <span class="checkbox-label">
+                                <span class="lang-en">Remove Arabic Diacritics (Tashkeel)</span>
+                                <span class="lang-ar">إزالة التشكيل والحركات من النص</span>
                             </span>
+                        </label>
+
+                        <label class="checkbox-group">
+                            <input type="checkbox" name="remove_music_lines" value="true">
+                            <span class="checkbox-label">
+                                <span class="lang-en">Remove Music Lines (♪ ♫...)</span>
+                                <span class="lang-ar">إزالة العلامات والأسطر الموسيقية (♪ ♫...)</span>
+                            </span>
+                        </label>
+                        
+                        <label class="checkbox-group">
+                            <input type="checkbox" id="removeAllTags" name="remove_all_tags" value="true">
+                            <span class="checkbox-label">
+                                <span class="lang-en">Remove All HTML/ASS Tags</span>
+                                <span class="lang-ar">إزالة كافة التنسيقات (الألوان، الخطوط)</span>
+                            </span>
+                        </label>
+                        
+                        <div class="sub-checkboxes" id="tagKeepOptions">
+                            <label class="checkbox-group disabled">
+                                <input type="checkbox" name="keep_italic" value="true" disabled>
+                                <span class="checkbox-label">
+                                    <span class="lang-en">Keep Italic &lt;i&gt;</span>
+                                    <span class="lang-ar">الاحتفاظ بالخط المائل &lt;i&gt;</span>
+                                </span>
+                            </label>
+                            <label class="checkbox-group disabled">
+                                <input type="checkbox" name="keep_bold" value="true" disabled>
+                                <span class="checkbox-label">
+                                    <span class="lang-en">Keep Bold &lt;b&gt;</span>
+                                    <span class="lang-ar">الاحتفاظ بالخط العريض &lt;b&gt;</span>
+                                </span>
+                            </label>
+                            <label class="checkbox-group disabled">
+                                <input type="checkbox" name="keep_font_color" value="true" disabled>
+                                <span class="checkbox-label">
+                                    <span class="lang-en">Keep Colors &lt;font&gt;</span>
+                                    <span class="lang-ar">الاحتفاظ بالألوان &lt;font&gt;</span>
+                                </span>
+                            </label>
+                        </div>
+
+                        <hr>
+
+                        <!-- Clean Brackets -->
+                        <div class="collapsible-header" onclick="toggleCollapse('bracketsPanel', 'bracketsIcon')">
+                            <div class="section-title" style="font-size: 1rem;">
+                                <i class="fa-solid fa-code" style="color: var(--text-secondary); font-size: 0.9rem;"></i>
+                                <span class="lang-en">Clean Brackets / Symbols</span>
+                                <span class="lang-ar">إزالة الأقواس والرموز</span>
+                            </div>
                             <button type="button" class="toggle-btn">
-                                <span class="lang-en">Show Options</span>
-                                <span class="lang-ar">إظهار الخيارات</span>
-                                <i id="bracketsIcon" class="fa-solid fa-caret-down toggle-icon"></i>
+                                <span class="lang-en">Expand</span>
+                                <span class="lang-ar">إظهار</span>
+                                <i id="bracketsIcon" class="fa-solid fa-chevron-down toggle-icon"></i>
                             </button>
                         </div>
                         <div id="bracketsPanel" class="collapsible-content">
                             <input type="hidden" name="clean_brackets" id="cleanBracketsHidden" value="false">
                             <input type="hidden" name="bracket_options" id="bracketOptionsHidden" value="{}">
                             
-                            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
                                 <label class="checkbox-group">
                                     <input type="checkbox" class="bracket-opt" data-key="remove_square">
                                     <span class="checkbox-label">
-                                        <span class="lang-en">Remove content inside [] Square brackets</span>
-                                        <span class="lang-ar">إزالة المحتوى داخل [] الأقواس المربعة</span>
+                                        <span class="lang-en">Remove content inside Square brackets []</span>
+                                        <span class="lang-ar">حذف ما بداخل الأقواس المربعة []</span>
                                     </span>
                                 </label>
                                 <label class="checkbox-group">
                                     <input type="checkbox" class="bracket-opt" data-key="remove_round">
                                     <span class="checkbox-label">
-                                        <span class="lang-en">Remove content inside () Round brackets</span>
-                                        <span class="lang-ar">إزالة المحتوى داخل () الأقواس الدائرة</span>
+                                        <span class="lang-en">Remove content inside Round brackets ()</span>
+                                        <span class="lang-ar">حذف ما بداخل الأقواس الدائرية ()</span>
                                     </span>
                                 </label>
                                 <label class="checkbox-group">
                                     <input type="checkbox" class="bracket-opt" data-key="remove_curly_text">
                                     <span class="checkbox-label">
-                                        <span class="lang-en">Remove content inside {} Curly brackets</span>
-                                        <span class="lang-ar">إزالة المحتوى داخل {} الأقواس المعقوفة</span>
+                                        <span class="lang-en">Remove content inside Curly brackets {}</span>
+                                        <span class="lang-ar">حذف ما بداخل الأقواس المعقوفة {}</span>
                                     </span>
                                 </label>
                                 <label class="checkbox-group">
                                     <input type="checkbox" class="bracket-opt" data-key="remove_angle">
                                     <span class="checkbox-label">
-                                        <span class="lang-en">Remove content inside <> Angle brackets</span>
-                                        <span class="lang-ar">إزالة المحتوى داخل <> أقواس زاوية</span>
+                                        <span class="lang-en">Remove content inside Angle brackets &lt;&gt;</span>
+                                        <span class="lang-ar">حذف ما بداخل الأقواس الزاوية &lt;&gt;</span>
                                     </span>
                                 </label>
                             </div>
@@ -691,10 +804,10 @@
                     </div>
                     
                     <button type="submit" class="process-button" id="processButton" disabled>
-                        <i class="fa-solid fa-wand-magic-sparkles" id="processIcon"></i>
+                        <i class="fa-solid fa-bolt" id="processIcon"></i>
                         <div class="spinner" id="processSpinner"></div>
                         <span class="lang-en">Start Processing</span>
-                        <span class="lang-ar">ابدأ المعالجة</span>
+                        <span class="lang-ar">بدء المعالجة</span>
                     </button>
                     
                     <div class="status-message" id="statusMessage" aria-live="polite"></div>
@@ -703,19 +816,19 @@
         </form>
 
         <div class="footer-credit">
-            <span class="lang-en">Designed By</span>
-            <span class="lang-ar">تصميم</span>
-            <a href="https://x.com/bruuhim" target="_blank" rel="noopener noreferrer">@bruuhim</a>
+            <span class="lang-en">Crafted by</span>
+            <span class="lang-ar">تم التطوير بواسطة</span>
+            <a href="https://x.com/bruuhim" target="_blank" rel="noopener noreferrer">@Bruuhim</a>
         </div>
     </div>
 
     <script>
         const translations = {
-            error_select_files: { en: "Please select ASS or SRT subtitle files only.", ar: "يرجى تحديد ملفات ترجمة من نوع ASS أو SRT فقط." },
-            status_processing: { en: "🔄 Processing files...", ar: "🔄 جاري معالجة الملفات..." },
-            status_success: { en: "✅ Files processed successfully! Download started.", ar: "✅ تمت معالجة الملفات بنجاح! بدأ التنزيل." },
-            status_error: { en: "❌ Error processing files. Please try again.", ar: "❌ خطأ في معالجة الملفات. يرجى المحاولة مرة أخرى." },
-            time_shift_preview: { en: "Shift by {0} seconds", ar: "سيتم إزاحة التوقيت بمقدار {0} ثانية" }
+            error_select_files: { en: "Please select ASS or SRT subtitle files only.", ar: "يرجى اختيار ملفات ترجمة بصيغة ASS أو SRT فقط." },
+            status_processing: { en: "🔄 Processing files, please wait...", ar: "🔄 جاري معالجة الملفات، يرجى الانتظار..." },
+            status_success: { en: "✅ Processed successfully! Download starting.", ar: "✅ تمت المعالجة بنجاح! جاري التنزيل." },
+            status_error: { en: "❌ Error processing files. Please try again.", ar: "❌ حدث خطأ أثناء المعالجة. يرجى المحاولة مرة أخرى." },
+            time_shift_preview: { en: "Will shift by {0} seconds", ar: "سيتم تعديل التوقيت بمقدار {0} ثانية" }
         };
 
         const uploadArea = document.getElementById('uploadArea');
@@ -740,7 +853,6 @@
             localStorage.setItem('language', lang);
             languageToggle.checked = lang === 'en';
             
-            // update time shift preview text if visible
             const ms = parseInt(document.getElementById('timeShiftMs').value) || 0;
             updateTimeShiftPreview(ms);
         }
@@ -761,7 +873,7 @@
             }
         }
 
-        // Dependent Checkboxes (Remove Tags -> Keep specific)
+        // Dependent Checkboxes
         const removeAllTags = document.getElementById('removeAllTags');
         const tagKeepOptions = document.getElementById('tagKeepOptions');
         removeAllTags.addEventListener('change', (e) => {
@@ -783,7 +895,7 @@
                 const sec = (ms / 1000).toFixed(1);
                 timeShiftPreview.textContent = translations.time_shift_preview[currentLang].replace('{0}', sec);
                 timeShiftPreview.style.display = 'block';
-                timeShiftPreview.style.color = ms > 0 ? '#10b981' : '#ef4444'; // green forward, red backward
+                timeShiftPreview.style.color = ms > 0 ? 'var(--success-color)' : 'var(--error-color)';
             }
         }
         timeShiftMs.addEventListener('input', (e) => updateTimeShiftPreview(parseInt(e.target.value)));
@@ -815,11 +927,6 @@
         fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) addFiles(Array.from(e.target.files)); });
 
         function addFiles(newFiles) {
-            const subtitleFiles = newFiles.filter(file => {
-                const ln = file.name.toLowerCase();
-                return ln.endswith('.ass') || ln.endsWith('.srt') || ln.endsWith('.vtt') || ln.endsWith('.lrc'); // allow more? wait, only .ass/.srt accepted initially
-            });
-            // Fix: Actually we only accept .ass and .srt for now
             const validFiles = newFiles.filter(file => file.name.toLowerCase().endsWith('.ass') || file.name.toLowerCase().endsWith('.srt'));
             
             if (validFiles.length === 0 && selectedFiles.length === 0) {
@@ -848,7 +955,7 @@
                         <div class="file-size">${formatFileSize(file.size)}</div>
                     </div>
                     <button type="button" class="remove-button" onclick="removeFile(${index})" aria-label="Remove ${file.name}">
-                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>
+                        <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>`;
             }).join('');
@@ -872,8 +979,6 @@
             
             const formData = new FormData(uploadForm);
             selectedFiles.forEach(file => formData.append('files', file));
-            
-            // Set download mode
             formData.append('download_mode', selectedFiles.length === 1 ? 'single' : 'zip');
 
             try {
