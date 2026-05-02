@@ -501,7 +501,9 @@
         }
         
         .advanced-toggle { display: none !important; }
-            .advanced-content { display: contents !important; }
+            #uploadForm { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; flex: 1; min-height: 0; overflow: hidden; }
+            .panels-layout { display: contents; }
+            .advanced-content { display: contents; }
         
         
         @keyframes fadeIn {
@@ -561,18 +563,9 @@
             .title { margin-bottom: 2px; font-size: 1.8rem; }
             .subtitle { margin: 0; font-size: 0.95rem; }
 
-            #uploadForm {
-                display: flex;
-                flex-direction: column;
-                flex: 1;
-                min-height: 0;
-                overflow: hidden;
-            }
+            #uploadForm { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; flex: 1; min-height: 0; overflow: hidden; }
 
-            .panels-layout {
-                grid-template-columns: 1fr 1fr 1fr;
-                overflow: hidden;
-            }
+            .panels-layout { display: contents; }
 
             .panel-column {
                 overflow-y: auto;
