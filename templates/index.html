@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +12,7 @@
     
     <style>
         :root {
+            /* Dark Beige / Warm Dark Theme */
             --bg-color: #1a1817;
             --surface-color: #262321;
             --surface-color-alt: #2d2927;
@@ -39,15 +40,26 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Noto Kufi Arabic', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 60px 20px 20px 20px;
-            overflow-x: hidden;
+            padding: 20px;
         }
+        
+        html[dir="ltr"] body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Language Toggle System */
+        .lang-en { display: none; }
+        html[lang="en"] .lang-ar { display: none; }
+        html[lang="en"] .lang-en { display: inline; }
+        html[lang="en"] .lang-en-block { display: block; }
+        .lang-ar { display: inline; }
+        .lang-ar-block { display: block; }
 
         .top-bar {
             position: absolute;
@@ -59,22 +71,25 @@
         .lang-switch-container {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             background: var(--surface-color);
-            padding: 6px 12px;
-            border-radius: 20px;
+            padding: 8px 16px;
+            border-radius: 30px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-color);
-            font-size: 0.8rem;
-            font-weight: 600;
+        }
+
+        .lang-switch-container span {
+            font-size: 0.85rem;
+            font-weight: 500;
             color: var(--text-secondary);
         }
 
         .lang-switch {
             position: relative;
             display: inline-block;
-            width: 36px;
-            height: 20px;
+            width: 40px;
+            height: 22px;
         }
         .lang-switch input { opacity: 0; width: 0; height: 0; }
         .slider {
@@ -83,27 +98,28 @@
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: #4a4540;
             transition: .3s;
-            border-radius: 20px;
+            border-radius: 22px;
         }
         .slider:before {
             position: absolute;
             content: "";
-            height: 14px; width: 14px;
+            height: 16px; width: 16px;
             left: 3px; bottom: 3px;
             background-color: #f0ebe1;
             transition: .3s;
             border-radius: 50%;
         }
         input:checked + .slider { background-color: var(--accent-color); }
-        input:checked + .slider:before { transform: translateX(16px); }
+        input:checked + .slider:before { transform: translateX(18px); }
 
+        /* Main Container */
         .container { 
             background: var(--surface-color); 
             border-radius: var(--border-radius-lg); 
             box-shadow: var(--shadow-md); 
             padding: 24px; 
             width: 100%; 
-            max-width: 600px;
+            max-width: 600px; /* Mobile width */
             margin: 0 auto;
             border: 1px solid var(--border-color);
             display: flex;
@@ -111,6 +127,7 @@
             flex: 1;
         }
 
+        /* Typography */
         .header { 
             text-align: center; 
             margin-bottom: 24px; 
@@ -140,22 +157,26 @@
             color: var(--text-secondary); 
             font-size: 0.9rem; 
             font-weight: 400; 
-            max-width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
+        /* Layout */
         .panels-layout {
             display: grid;
             grid-template-columns: 1fr;
             gap: 20px;
             flex: 1;
+            min-height: 0;
         }
 
         .panel-column {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
         }
 
+        /* Forms */
         .form-row {
             display: flex;
             gap: 12px;
@@ -187,7 +208,17 @@
             font-size: 0.85rem;
             transition: var(--transition);
         }
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: var(--surface-color-alt);
+        }
+        .form-select:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
+        /* Section Cards */
         .section-card {
             background: var(--surface-color-alt);
             border-radius: var(--border-radius-md);
@@ -196,6 +227,7 @@
             border-top: 3px solid var(--accent-color);
             display: flex;
             flex-direction: column;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         .section-title {
@@ -207,8 +239,11 @@
             align-items: center;
             gap: 8px;
         }
-        .section-title i { color: var(--accent-color); }
+        .section-title i {
+            color: var(--accent-color);
+        }
 
+        /* Checkboxes */
         .checkbox-group {
             display: flex;
             align-items: flex-start;
@@ -218,6 +253,7 @@
         }
         .checkbox-group input[type="checkbox"] {
             appearance: none;
+            -webkit-appearance: none;
             width: 18px;
             height: 18px;
             background: var(--input-bg);
@@ -227,6 +263,7 @@
             position: relative;
             flex-shrink: 0;
             margin-top: 2px;
+            transition: var(--transition);
         }
         .checkbox-group input[type="checkbox"]:checked {
             background: var(--accent-color);
@@ -243,24 +280,40 @@
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
         }
-        .checkbox-label { font-size: 0.85rem; color: var(--text-primary); }
+        .checkbox-label {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            user-select: none;
+            line-height: 1.4;
+        }
         
         .sub-checkboxes {
-            margin-left: 28px;
+            margin-right: 28px;
             margin-top: -4px;
             margin-bottom: 12px;
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
-        .checkbox-group.disabled { opacity: 0.4; pointer-events: none; }
+        html[dir="ltr"] .sub-checkboxes {
+            margin-right: 0;
+            margin-left: 28px;
+        }
+        .checkbox-group.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
 
         .radio-options {
-            margin-left: 28px;
+            margin-right: 28px;
             margin-top: 4px;
             display: flex;
             flex-direction: column;
             gap: 8px;
+        }
+        html[dir="ltr"] .radio-options {
+            margin-right: 0;
+            margin-left: 28px;
         }
         .radio-group {
             display: flex;
@@ -279,7 +332,9 @@
             position: relative;
             cursor: pointer;
         }
-        .radio-group input[type="radio"]:checked { border-color: var(--accent-color); }
+        .radio-group input[type="radio"]:checked {
+            border-color: var(--accent-color);
+        }
         .radio-group input[type="radio"]:checked::after {
             content: '';
             position: absolute;
@@ -292,30 +347,44 @@
             transform: translate(-50%, -50%);
         }
 
+        /* Upload Area */
         .upload-area { 
             border: 2px dashed var(--border-color); 
             border-radius: var(--border-radius-md); 
-            padding: 24px; 
+            padding: 24px 16px; 
             text-align: center; 
+            transition: var(--transition); 
             background: var(--input-bg); 
             cursor: pointer; 
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+        }
+        .upload-area:hover, .upload-area:focus { 
+            outline: none; 
+            border-color: var(--accent-color); 
+            background: var(--surface-color-alt);
         }
         .upload-icon { 
-            width: 44px; height: 44px; margin-bottom: 12px; 
+            width: 44px; 
+            height: 44px; 
+            margin-bottom: 12px; 
             background: var(--surface-color);
             border: 1px solid var(--border-color);
             border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
             color: var(--accent-color);
+            font-size: 1.1rem;
         }
-        .upload-text { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+        .upload-text { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
         .upload-subtext { color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 16px; }
         .file-input { display: none; }
         
         .browse-button { 
+            display: inline-flex; align-items: center; gap: 8px; 
             background: var(--surface-color); 
             color: var(--text-primary);
             border: 1px solid var(--border-color); 
@@ -324,22 +393,89 @@
             font-weight: 600; cursor: pointer; 
             font-size: 0.85rem; 
         }
+        .browse-button:hover { 
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border-color: var(--accent-color);
+        }
         
-        .file-list { margin-top: 12px; display: none; max-height: 120px; overflow-y: auto; }
+        .file-list { margin-top: 12px; display: none; max-height: 120px; overflow-y: auto; padding-right: 4px; }
+        .file-list::-webkit-scrollbar { width: 4px; }
+        .file-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        
         .file-item { 
             display: flex; align-items: center; gap: 12px; padding: 10px; 
             background: var(--surface-color-alt); border-radius: var(--border-radius-sm); 
             margin-bottom: 8px; border: 1px solid var(--border-color); 
         }
+        /* ROUNDED FILE ICON HERE */
         .file-icon { 
-            width: 32px; height: 32px; background: var(--input-bg); 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            color: var(--accent-color); font-weight: 700; font-size: 0.7rem; 
+            width: 36px; height: 36px; background: var(--input-bg); 
+            border-radius: 50%; /* Fully rounded */
+            display: flex; align-items: center; justify-content: center; 
+            color: var(--accent-color); font-weight: 700; font-size: 0.75rem; 
+            border: 1px solid var(--border-color);
         }
         .file-info { flex: 1; overflow: hidden; }
-        .file-name { font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .remove-button { background: transparent; color: var(--text-secondary); border: none; cursor: pointer; }
+        .file-name { font-weight: 600; color: var(--text-primary); margin-bottom: 2px; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-size { font-size: 0.75rem; color: var(--text-secondary); }
+        .remove-button { 
+            background: transparent; color: var(--text-secondary); border: none; width: 28px; height: 28px; 
+            border-radius: 50%; cursor: pointer; display: flex; align-items: center; 
+            justify-content: center; transition: var(--transition);
+        }
+        .remove-button:hover { color: var(--error-color); background: rgba(209, 123, 123, 0.1); }
         
+        /* Main Button */
+        .process-button { 
+            width: 100%; background: var(--accent-color); 
+            color: var(--bg-color); border: none; padding: 14px; border-radius: var(--border-radius-md); 
+            font-size: 1rem; font-weight: 700; cursor: pointer; 
+            transition: var(--transition); 
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            margin-top: 16px;
+        }
+        .process-button:hover:not(:disabled) { 
+            background: var(--accent-hover); 
+        }
+        .process-button:disabled { 
+            background: var(--border-color); 
+            cursor: not-allowed; 
+            color: var(--text-secondary);
+        }
+        
+        .spinner {
+            display: none; width: 18px; height: 18px; border: 2px solid rgba(26,24,23,0.2);
+            border-radius: 50%; border-top-color: var(--bg-color); animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .status-message { 
+            text-align: center; margin-top: 12px; font-weight: 600; 
+            display: none; padding: 10px; border-radius: var(--border-radius-sm);
+            font-size: 0.85rem;
+        }
+        .success { color: var(--success-color); background: rgba(130, 168, 130, 0.1); border: 1px solid rgba(130, 168, 130, 0.2);} 
+        .error { color: var(--error-color); background: rgba(209, 123, 123, 0.1); border: 1px solid rgba(209, 123, 123, 0.2);} 
+        .processing { color: var(--accent-color); background: rgba(196, 139, 97, 0.1); border: 1px solid rgba(196, 139, 97, 0.2);} 
+        
+        .footer-credit { 
+            text-align: center; margin-top: 16px; font-size: 0.75rem; color: var(--text-secondary); 
+            font-weight: 500;
+        }
+        .footer-credit a { color: var(--accent-color); font-weight: 700; text-decoration: none; }
+        .footer-credit a:hover { text-decoration: underline; }
+
+        .time-shift-preview { font-size: 0.75rem; font-weight: 500; margin-top: 6px; display: none; }
+        
+        hr {
+            border: none;
+            height: 1px;
+            background: var(--border-color);
+            margin: 16px 0;
+        }
+
+        /* Accordion */
         .advanced-toggle {
             display: flex;
             align-items: center;
@@ -350,55 +486,131 @@
             border-radius: var(--border-radius-md);
             cursor: pointer;
             font-weight: 600;
+            color: var(--text-primary);
             margin-top: 16px;
+            transition: var(--transition);
         }
-        .advanced-content { display: none; margin-top: 16px; flex-direction: column; gap: 16px; }
-        .advanced-content.active { display: flex; }
-
-        .process-button { 
-            width: 100%; background: var(--accent-color); 
-            color: var(--bg-color); border: none; padding: 14px; border-radius: var(--border-radius-md); 
-            font-size: 1rem; font-weight: 700; cursor: pointer; 
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-            margin-top: 16px;
+        .advanced-toggle:hover {
+            border-color: var(--accent-color);
         }
-        .process-button:disabled { background: var(--border-color); cursor: not-allowed; }
-        .spinner { display: none; width: 18px; height: 18px; border: 2px solid rgba(0,0,0,0.1); border-radius: 50%; border-top-color: #000; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .advanced-toggle i {
+            transition: transform 0.3s ease;
+        }
+        .advanced-toggle.active i {
+            transform: rotate(180deg);
+        }
         
-        .status-message { text-align: center; margin-top: 12px; display: none; padding: 10px; border-radius: var(--border-radius-sm); font-size: 0.85rem; }
-        .success { color: var(--success-color); background: rgba(130, 168, 130, 0.1); }
-        .error { color: var(--error-color); background: rgba(209, 123, 123, 0.1); }
-        .processing { color: var(--accent-color); background: rgba(196, 139, 97, 0.1); }
+        .advanced-toggle { display: none !important; }
+            .advanced-content { display: contents !important; }
+        
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-        .footer-credit { text-align: center; margin-top: 16px; font-size: 0.75rem; color: var(--text-secondary); }
-        .footer-credit a { color: var(--accent-color); text-decoration: none; font-weight: 700; }
-
+        /* ----------------------------------------------------
+           PC Layout 
+           ---------------------------------------------------- */
         @media (min-width: 1024px) {
-            body { height: 100vh; overflow: hidden; padding: 0; display: flex; align-items: center; justify-content: center; }
-            .top-bar { position: fixed; }
-            .container { width: 95%; max-width: 1400px; height: 95vh; padding: 40px; }
-            .header { flex-direction: row; margin-bottom: 32px; }
-            #uploadForm { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
-            .panels-layout { grid-template-columns: 1fr 1fr 1fr; overflow: hidden; }
-            .panel-column { overflow-y: auto; padding-right: 8px; }
+            body {
+                height: 100vh;
+                overflow: hidden;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .top-bar {
+                position: fixed;
+            }
+
+            html[dir="ltr"] .top-bar {
+                right: auto;
+                left: 32px;
+            }
+
+            .container {
+                width: 95%; max-width: 1400px;
+                height: 95vh;
+                padding: 40px;
+                margin: 0 auto;
+                border-radius: 24px;
+            }
+
+            .header {
+                flex-direction: row;
+                margin-bottom: 32px;
+            }
+            html[dir="ltr"] .header { text-align: center; }
+
+            .logo {
+                width: 64px;
+                height: 64px;
+                margin-bottom: 0;
+            }
+
+            .header-text {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center; /* Center horizontally */
+            }
+
+            .title { margin-bottom: 2px; font-size: 1.8rem; }
+            .subtitle { margin: 0; font-size: 0.95rem; }
+
+            #uploadForm {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            .panels-layout {
+                grid-template-columns: 1fr 1fr 1fr;
+                overflow: hidden;
+            }
+
+            .panel-column {
+                overflow-y: auto;
+                padding-right: 8px;
+            }
             .panel-column::-webkit-scrollbar { width: 4px; }
             .panel-column::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
-            .advanced-toggle { display: none; }
-            .advanced-content { display: contents; }
-            .form-actions { margin-top: auto; }
+
+            .section-card {
+                padding: 20px; /* Use fixed px instead of vw for better control */
+            }
+
+            .upload-area {
+                padding: 24px 16px;
+                flex: 1; /* allow it to grow if there is space */
+            }
+
+            /* Move form actions into the third column layout nicely */
+            .form-actions {
+                margin-top: auto; /* Push to bottom */
+            }
+            
+            .process-button {
+                margin-top: 16px;
+            }
         }
     </style>
 </head>
 <body>
+    
     <div class="top-bar">
         <div class="lang-switch-container">
-            <span>EN</span>
+            <span class="lang-en">En</span>
+            <span class="lang-ar">عربي</span>
             <label class="lang-switch">
                 <input type="checkbox" id="languageToggle">
                 <span class="slider"></span>
             </label>
-            <span>ع</span>
         </div>
     </div>
     
@@ -406,37 +618,64 @@
         <div class="header">
             <img src="/static/Icon.jpg" alt="Logo" class="logo">
             <div class="header-text">
-                <h1 class="title">Bruuhim Subtitle Studio</h1>
-                <p class="subtitle">Upload, fix, clean, and convert your subtitle files seamlessly.</p>
+                <h1 class="title">
+                    <span class="lang-en">Bruuhim Subtitle Studio</span>
+                    <span class="lang-ar">ستوديو ترجمات Bruuhim</span>
+                </h1>
+                <p class="subtitle">
+                    <span class="lang-en">Upload, fix, clean, and convert your subtitle files seamlessly.</span>
+                    <span class="lang-ar">ارفع ملفات الترجمة، أصلحها، نظفها وحول صيغتها في ثوانٍ.</span>
+                </p>
             </div>
         </div>
 
-        <form id="uploadForm">
+        <form id="uploadForm" enctype="multipart/form-data">
             <div class="panels-layout">
+                
+                <!-- COLUMN 1: Files & Formats -->
                 <div class="panel-column">
-                    <div class="upload-area" id="uploadArea">
-                        <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
-                        <div class="upload-text">Drag & drop subtitle files</div>
-                        <div class="upload-subtext">Supports SRT and ASS files</div>
-                        <button type="button" class="browse-button" id="browseButton">Browse Files</button>
+                    <div class="upload-area" id="uploadArea" role="button" tabindex="0">
+                        <div class="upload-icon">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <div class="upload-text">
+                            <span class="lang-en">Drag & drop subtitle files</span>
+                            <span class="lang-ar">اسحب وأفلت ملفات الترجمة</span>
+                        </div>
+                        <div class="upload-subtext">
+                            <span class="lang-en">Supports SRT and ASS files</span>
+                            <span class="lang-ar">ندعم ملفات SRT و ASS</span>
+                        </div>
+                        <button type="button" class="browse-button" id="browseButton">
+                            <i class="fa-solid fa-folder-open"></i>
+                            <span class="lang-en">Browse Files</span>
+                            <span class="lang-ar">تصفح الملفات</span>
+                        </button>
                         <input type="file" id="fileInput" multiple accept=".ass,.srt" class="file-input">
                     </div>
+                    
                     <div class="file-list" id="fileList"></div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Output Format</label>
+                            <label class="form-label">
+                                <span class="lang-en">Output Format</span>
+                                <span class="lang-ar">صيغة الملف الناتج</span>
+                            </label>
                             <select name="output_format" class="form-select">
-                                <option value="srt">SRT (Default)</option>
+                                <option value="srt">SRT (الافتراضي)</option>
                                 <option value="ass">ASS</option>
                                 <option value="vtt">WebVTT</option>
                                 <option value="lrc">LRC</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Input Encoding</label>
+                            <label class="form-label">
+                                <span class="lang-en">Input Encoding</span>
+                                <span class="lang-ar">ترميز الملف الأصلي</span>
+                            </label>
                             <select name="input_encoding" class="form-select">
-                                <option value="auto">Auto (Default)</option>
+                                <option value="auto">تلقائي (الافتراضي)</option>
                                 <option value="utf-8">UTF-8</option>
                                 <option value="utf-16">UTF-16</option>
                                 <option value="latin-1">Latin-1</option>
@@ -444,93 +683,205 @@
                         </div>
                     </div>
 
-                    <div class="section-card">
-                        <label class="checkbox-group">
+                    <!-- Moved RTL Fix to Easy Settings -->
+                    <div class="section-card" style="margin-top: 16px;">
+                        <!-- RTL Fix -->
+                        <label class="checkbox-group" style="margin-bottom: 8px;">
                             <input type="checkbox" name="fix_rtl" value="true" checked>
-                            <span class="checkbox-label" style="font-weight: 700;">✨ Fix Arabic RTL Direction</span>
+                            <span class="checkbox-label" style="font-weight: 600; font-size: 0.95rem;">
+                                ✨ <span class="lang-en">Fix Arabic RTL Direction</span><span class="lang-ar">إصلاح اتجاه النصوص العربية (RTL)</span>
+                            </span>
                         </label>
-                        <div class="radio-options">
-                            <label class="radio-group"><input type="radio" name="fix_rtl_pdf" value="false" checked><span>RLE (U+202B) Default</span></label>
-                            <label class="radio-group"><input type="radio" name="fix_rtl_pdf" value="true"><span>RLE + PDF (Advanced)</span></label>
+                        <div class="radio-options" style="margin-bottom: 0;">
+                            <label class="radio-group">
+                                <input type="radio" name="fix_rtl_pdf" value="false" checked>
+                                <span>RLE (U+202B) الافتراضي</span>
+                            </label>
+                            <label class="radio-group">
+                                <input type="radio" name="fix_rtl_pdf" value="true">
+                                <span>RLE + PDF للمشغلات المتقدمة</span>
+                            </label>
                         </div>
                     </div>
                 </div>
 
                 <div class="advanced-toggle" id="advancedToggle">
-                    <span><i class="fa-solid fa-sliders" style="margin-right: 8px;"></i>Advanced Settings</span>
+                    <span>
+                        <i class="fa-solid fa-sliders" style="margin: 0 8px;"></i>
+                        <span class="lang-en">Advanced Settings</span>
+                        <span class="lang-ar">إعدادات متقدمة</span>
+                    </span>
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
 
                 <div class="advanced-content" id="advancedContent">
+                    <!-- COLUMN 2: Repair Options -->
                     <div class="panel-column">
                         <div class="section-card">
-                            <div class="section-title"><i class="fa-regular fa-clock"></i>Time Shift</div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" style="font-size: 0.75rem;">Shift (ms)</label>
-                                    <input type="number" id="timeShiftMs" name="time_shift_ms" class="form-input" value="0" step="100">
-                                    <div id="timeShiftPreview" style="font-size: 0.7rem; margin-top: 4px; display: none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" style="font-size: 0.75rem;">From Timestamp</label>
-                                    <input type="text" name="time_shift_from" class="form-input" value="00:00:00,000">
-                                </div>
+                            <!-- Time Shift -->
+                            <div class="section-title" style="font-size: 0.9rem; margin-bottom: 12px;">
+                                <i class="fa-regular fa-clock" style="color: var(--text-secondary);"></i>
+                                <span class="lang-en">Time Shift</span>
+                                <span class="lang-ar">ضبط التوقيت (تأخير/تقديم)</span>
                             </div>
-                            <hr style="margin: 16px 0; border: none; border-top: 1px solid var(--border-color);">
+                        <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Translation</label>
-                                <select class="form-select" disabled><option>-- Coming Soon --</option></select>
+                                <label class="form-label" style="font-size: 0.75rem;">
+                                    <span class="lang-en">Shift (ms)</span>
+                                    <span class="lang-ar">مقدار الإزاحة (ms)</span>
+                                </label>
+                                <input type="number" id="timeShiftMs" name="time_shift_ms" class="form-input" value="0" step="100" placeholder="مثال: 1000 أو -500">
+                                <div id="timeShiftPreview" class="time-shift-preview"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" style="font-size: 0.75rem;">
+                                    <span class="lang-en">From Timestamp</span>
+                                    <span class="lang-ar">بدءاً من التوقيت</span>
+                                </label>
+                                <input type="text" name="time_shift_from" class="form-input" value="00:00:00,000" placeholder="00:00:00,000">
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="lang-en">Translation</span>
+                                <span class="lang-ar">ترجمة النص</span>
+                            </label>
+                            <select class="form-select" disabled>
+                                <option>-- بدون ترجمة --</option>
+                            </select>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
+                                <i class="fa-solid fa-language" style="margin: 0 4px;"></i>
+                                <span class="lang-en">AI Translation coming soon</span>
+                                <span class="lang-ar">ميزة الترجمة الذكية ستتوفر قريباً</span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="panel-column">
-                        <div class="section-card">
-                            <div class="section-title"><i class="fa-solid fa-broom"></i>Cleanup Options</div>
-                            <label class="checkbox-group"><input type="checkbox" name="remove_tashkeel" value="true"><span class="checkbox-label">Remove Arabic Tashkeel</span></label>
-                            <label class="checkbox-group"><input type="checkbox" name="remove_music_lines" value="true"><span class="checkbox-label">Remove Music Lines</span></label>
-                            <label class="checkbox-group"><input type="checkbox" id="removeAllTags" name="remove_all_tags" value="true"><span class="checkbox-label">Remove All Tags</span></label>
-                            
-                            <div class="sub-checkboxes" id="tagKeepOptions">
-                                <label class="checkbox-group disabled"><input type="checkbox" name="keep_italic" value="true" disabled><span class="checkbox-label">Keep Italic</span></label>
-                                <label class="checkbox-group disabled"><input type="checkbox" name="keep_bold" value="true" disabled><span class="checkbox-label">Keep Bold</span></label>
-                            </div>
-
-                            <hr style="margin: 16px 0; border: none; border-top: 1px solid var(--border-color);">
-                            <div class="section-title" style="font-size: 0.9rem; margin-bottom: 12px;"><i class="fa-solid fa-code"></i>Clean Brackets</div>
-                            <input type="hidden" name="clean_brackets" id="cleanBracketsHidden" value="false">
-                            <input type="hidden" name="bracket_options" id="bracketOptionsHidden" value="{}">
-                            <div style="display: flex; flex-direction: column; gap: 8px;">
-                                <label class="checkbox-group"><input type="checkbox" class="bracket-opt" data-key="remove_square"><span class="checkbox-label">Square []</span></label>
-                                <label class="checkbox-group"><input type="checkbox" class="bracket-opt" data-key="remove_round"><span class="checkbox-label">Round ()</span></label>
-                                <label class="checkbox-group"><input type="checkbox" class="bracket-opt" data-key="remove_curly_text"><span class="checkbox-label">Curly {}</span></label>
-                            </div>
+                <!-- COLUMN 3: Cleanup Options -->
+                <div class="panel-column">
+                    <div class="section-card">
+                        <div class="section-title">
+                            <i class="fa-solid fa-broom"></i>
+                            <span class="lang-en">Cleanup Options</span>
+                            <span class="lang-ar">خيارات التنظيف</span>
                         </div>
                         
-                        <div class="form-actions">
-                            <button type="submit" class="process-button" id="processButton" disabled>
-                                <i class="fa-solid fa-bolt" id="processIcon"></i>
-                                <div class="spinner" id="processSpinner"></div>
-                                Start Processing
-                            </button>
-                            <div class="status-message" id="statusMessage"></div>
+                        <label class="checkbox-group">
+                            <input type="checkbox" name="remove_tashkeel" value="true">
+                            <span class="checkbox-label">
+                                <span class="lang-en">Remove Arabic Diacritics (Tashkeel)</span>
+                                <span class="lang-ar">إزالة التشكيل والحركات من النص</span>
+                            </span>
+                        </label>
+
+                        <label class="checkbox-group">
+                            <input type="checkbox" name="remove_music_lines" value="true">
+                            <span class="checkbox-label">
+                                <span class="lang-en">Remove Music Lines (♪ ♫...)</span>
+                                <span class="lang-ar">إزالة العلامات والأسطر الموسيقية (♪ ♫)</span>
+                            </span>
+                        </label>
+                        
+                        <label class="checkbox-group">
+                            <input type="checkbox" id="removeAllTags" name="remove_all_tags" value="true">
+                            <span class="checkbox-label">
+                                <span class="lang-en">Remove All HTML/ASS Tags</span>
+                                <span class="lang-ar">إزالة كافة التنسيقات (الألوان، الخطوط)</span>
+                            </span>
+                        </label>
+                        
+                        <div class="sub-checkboxes" id="tagKeepOptions">
+                            <label class="checkbox-group disabled">
+                                <input type="checkbox" name="keep_italic" value="true" disabled>
+                                <span class="checkbox-label">
+                                    <span class="lang-en">Keep Italic &lt;i&gt;</span>
+                                    <span class="lang-ar">الاحتفاظ بالخط المائل &lt;i&gt;</span>
+                                </span>
+                            </label>
+                            <label class="checkbox-group disabled">
+                                <input type="checkbox" name="keep_bold" value="true" disabled>
+                                <span class="checkbox-label">
+                                    <span class="lang-en">Keep Bold &lt;b&gt;</span>
+                                    <span class="lang-ar">الاحتفاظ بالخط العريض &lt;b&gt;</span>
+                                </span>
+                            </label>
+                            <label class="checkbox-group disabled">
+                                <input type="checkbox" name="keep_font_color" value="true" disabled>
+                                <span class="checkbox-label">
+                                    <span class="lang-en">Keep Colors &lt;font&gt;</span>
+                                    <span class="lang-ar">الاحتفاظ بالألوان &lt;font&gt;</span>
+                                </span>
+                            </label>
+                        </div>
+
+                        <hr>
+
+                        <!-- Clean Brackets -->
+                        <div class="section-title" style="font-size: 0.9rem; margin-bottom: 12px;">
+                            <i class="fa-solid fa-code" style="color: var(--text-secondary); font-size: 0.85rem;"></i>
+                            <span class="lang-en">Clean Brackets</span>
+                            <span class="lang-ar">إزالة الأقواس والرموز</span>
+                        </div>
+                        
+                        <input type="hidden" name="clean_brackets" id="cleanBracketsHidden" value="false">
+                        <input type="hidden" name="bracket_options" id="bracketOptionsHidden" value="{}">
+                        
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <label class="checkbox-group">
+                                <input type="checkbox" class="bracket-opt" data-key="remove_square">
+                                <span class="checkbox-label">
+                                    <span class="lang-en">Inside Square brackets []</span>
+                                    <span class="lang-ar">حذف المحتوى المربع []</span>
+                                </span>
+                            </label>
+                            <label class="checkbox-group">
+                                <input type="checkbox" class="bracket-opt" data-key="remove_round">
+                                <span class="checkbox-label">
+                                    <span class="lang-en">Inside Round brackets ()</span>
+                                    <span class="lang-ar">حذف المحتوى الدائري ()</span>
+                                </span>
+                            </label>
+                            <label class="checkbox-group">
+                                <input type="checkbox" class="bracket-opt" data-key="remove_curly_text">
+                                <span class="checkbox-label">
+                                    <span class="lang-en">Inside Curly brackets {}</span>
+                                    <span class="lang-ar">حذف المحتوى المعقوف {}</span>
+                                </span>
+                            </label>
                         </div>
                     </div>
+                </div> <!-- End advanced content -->
+                    
+                <div class="form-actions">
+                    <button type="submit" class="process-button" id="processButton" disabled>
+                        <i class="fa-solid fa-bolt" id="processIcon"></i>
+                        <div class="spinner" id="processSpinner"></div>
+                        <span class="lang-en">Start Processing</span>
+                        <span class="lang-ar">بدء المعالجة والتحميل</span>
+                    </button>
+                    <div class="status-message" id="statusMessage" aria-live="polite"></div>
                 </div>
             </div>
         </form>
 
         <div class="footer-credit">
-            Crafted by <a href="https://x.com/bruuhim" target="_blank">@Bruuhim</a>
+            <span class="lang-en">Crafted by</span>
+            <span class="lang-ar">تم التطوير بواسطة</span>
+            <a href="https://x.com/bruuhim" target="_blank" rel="noopener noreferrer">@Bruuhim</a>
         </div>
     </div>
 
     <script>
         const translations = {
-            error_select: "Please select subtitle files.",
-            processing: "Processing...",
-            success: "Done! Download starting.",
-            error: "Error occurred."
+            error_select_files: { en: "Please select ASS or SRT subtitle files only.", ar: "يرجى اختيار ملفات ترجمة بصيغة ASS أو SRT فقط." },
+            status_processing: { en: "🔄 Processing files, please wait...", ar: "🔄 جاري معالجة الملفات، يرجى الانتظار..." },
+            status_success: { en: "✅ Processed successfully! Download starting.", ar: "✅ تمت المعالجة بنجاح! جاري التنزيل." },
+            status_error: { en: "❌ Error processing files. Please try again.", ar: "❌ حدث خطأ أثناء المعالجة. يرجى المحاولة مرة أخرى." },
+            time_shift_preview: { en: "Will shift by {0} seconds", ar: "تعديل التوقيت: {0} ثانية" }
         };
 
         const uploadArea = document.getElementById('uploadArea');
@@ -543,102 +894,159 @@
         const browseButton = document.getElementById('browseButton');
         const statusMessage = document.getElementById('statusMessage');
         const languageToggle = document.getElementById('languageToggle');
+        
         const advancedToggle = document.getElementById('advancedToggle');
         const advancedContent = document.getElementById('advancedContent');
-
         advancedToggle.addEventListener('click', () => {
+            advancedToggle.classList.toggle('active');
             advancedContent.classList.toggle('active');
+            if (advancedContent.classList.contains('active')) {
+                advancedContent.style.display = 'flex';
+            } else {
+                advancedContent.style.display = 'none';
+            }
         });
 
         let selectedFiles = [];
+        let currentLang = 'ar';
 
+        // Language Logic
         function setLanguage(lang) {
             document.documentElement.lang = lang;
             document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            currentLang = lang;
             localStorage.setItem('language', lang);
-            languageToggle.checked = lang === 'ar';
+            languageToggle.checked = lang === 'en';
+            
+            const ms = parseInt(document.getElementById('timeShiftMs').value) || 0;
+            updateTimeShiftPreview(ms);
         }
 
-        languageToggle.addEventListener('change', (e) => setLanguage(e.target.checked ? 'ar' : 'en'));
-        setLanguage(localStorage.getItem('language') || 'en');
+        languageToggle.addEventListener('change', (e) => setLanguage(e.target.checked ? 'en' : 'ar'));
+        document.addEventListener('DOMContentLoaded', () => setLanguage(localStorage.getItem('language') || 'ar'));
 
+        // Dependent Checkboxes
         const removeAllTags = document.getElementById('removeAllTags');
         const tagKeepOptions = document.getElementById('tagKeepOptions');
         removeAllTags.addEventListener('change', (e) => {
             const isChecked = e.target.checked;
-            tagKeepOptions.querySelectorAll('input').forEach(i => {
-                i.disabled = !isChecked;
-                i.parentElement.classList.toggle('disabled', !isChecked);
-            });
+            const subs = tagKeepOptions.querySelectorAll('.checkbox-group');
+            const inputs = tagKeepOptions.querySelectorAll('input[type="checkbox"]');
+            
+            subs.forEach(sub => isChecked ? sub.classList.remove('disabled') : sub.classList.add('disabled'));
+            inputs.forEach(input => input.disabled = !isChecked);
         });
 
-        document.getElementById('timeShiftMs').addEventListener('input', (e) => {
-            const preview = document.getElementById('timeShiftPreview');
-            const ms = parseInt(e.target.value) || 0;
-            if (ms === 0) preview.style.display = 'none';
-            else {
-                preview.style.display = 'block';
-                preview.textContent = `Shift by ${(ms/1000).toFixed(1)}s`;
-                preview.style.color = ms > 0 ? 'var(--success-color)' : 'var(--error-color)';
+        // Time Shift Preview
+        const timeShiftMs = document.getElementById('timeShiftMs');
+        const timeShiftPreview = document.getElementById('timeShiftPreview');
+        function updateTimeShiftPreview(ms) {
+            if (ms === 0 || isNaN(ms)) {
+                timeShiftPreview.style.display = 'none';
+            } else {
+                const sec = (ms / 1000).toFixed(1);
+                timeShiftPreview.textContent = translations.time_shift_preview[currentLang].replace('{0}', sec);
+                timeShiftPreview.style.display = 'block';
+                timeShiftPreview.style.color = ms > 0 ? 'var(--success-color)' : 'var(--error-color)';
             }
-        });
+        }
+        timeShiftMs.addEventListener('input', (e) => updateTimeShiftPreview(parseInt(e.target.value)));
 
+        // Brackets JSON logic
         const bracketOpts = document.querySelectorAll('.bracket-opt');
+        const cleanBracketsHidden = document.getElementById('cleanBracketsHidden');
+        const bracketOptionsHidden = document.getElementById('bracketOptionsHidden');
+        
         bracketOpts.forEach(cb => {
             cb.addEventListener('change', () => {
                 let opts = {};
-                bracketOpts.forEach(b => opts[b.dataset.key] = b.checked);
-                document.getElementById('cleanBracketsHidden').value = "true";
-                document.getElementById('bracketOptionsHidden').value = JSON.stringify(opts);
+                let anyChecked = false;
+                bracketOpts.forEach(b => {
+                    opts[b.dataset.key] = b.checked;
+                    if(b.checked) anyChecked = true;
+                });
+                cleanBracketsHidden.value = anyChecked ? "true" : "false";
+                bracketOptionsHidden.value = JSON.stringify(opts);
             });
         });
 
-        browseButton.addEventListener('click', () => fileInput.click());
+        // File Upload Logic
+        browseButton.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
         uploadArea.addEventListener('click', () => fileInput.click());
-        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = 'var(--accent-color)'; });
-        uploadArea.addEventListener('dragleave', () => uploadArea.style.borderColor = 'var(--border-color)');
-        uploadArea.addEventListener('drop', (e) => { e.preventDefault(); addFiles(Array.from(e.dataTransfer.files)); });
-        fileInput.addEventListener('change', (e) => addFiles(Array.from(e.target.files)));
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.classList.remove('dragover'); addFiles(Array.from(e.dataTransfer.files)); });
+        fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) addFiles(Array.from(e.target.files)); });
 
-        function addFiles(files) {
-            const valid = files.filter(f => f.name.match(/\.(srt|ass)$/i));
-            selectedFiles = [...selectedFiles, ...valid];
-            renderFiles();
+        function addFiles(newFiles) {
+            const validFiles = newFiles.filter(file => file.name.toLowerCase().endsWith('.ass') || file.name.toLowerCase().endsWith('.srt'));
+            
+            if (validFiles.length === 0 && selectedFiles.length === 0) {
+                showStatus(translations.error_select_files[currentLang], 'error');
+                return;
+            }
+            const existingFileNames = new Set(selectedFiles.map(f => f.name));
+            const uniqueNewFiles = validFiles.filter(f => !existingFileNames.has(f.name));
+            selectedFiles = [...selectedFiles, ...uniqueNewFiles];
+            renderFileList();
+            processButton.disabled = selectedFiles.length === 0;
+            fileInput.value = null;
+            if(selectedFiles.length > 0) hideStatus();
+        }
+
+        function renderFileList() {
+            if (selectedFiles.length === 0) { fileList.style.display = 'none'; return; }
+            fileList.style.display = 'block';
+            fileList.innerHTML = selectedFiles.map((file, index) => {
+                const extension = file.name.split('.').pop().toUpperCase();
+                return `
+                <div class="file-item">
+                    <div class="file-icon">${extension}</div>
+                    <div class="file-info">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-size">${formatFileSize(file.size)}</div>
+                    </div>
+                    <button type="button" class="remove-button" onclick="removeFile(${index})" aria-label="Remove ${file.name}">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>`;
+            }).join('');
+        }
+
+        window.removeFile = function(index) {
+            selectedFiles.splice(index, 1);
+            renderFileList();
             processButton.disabled = selectedFiles.length === 0;
             fileInput.value = '';
         }
 
-        function renderFiles() {
-            fileList.style.display = selectedFiles.length ? 'block' : 'none';
-            fileList.innerHTML = selectedFiles.map((f, i) => `
-                <div class="file-item">
-                    <div class="file-icon">${f.name.split('.').pop().toUpperCase()}</div>
-                    <div class="file-info"><div class="file-name">${f.name}</div></div>
-                    <button type="button" class="remove-button" onclick="removeFile(${i})"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-            `).join('');
-        }
-
-        window.removeFile = (i) => { selectedFiles.splice(i, 1); renderFiles(); processButton.disabled = !selectedFiles.length; };
-
+        // Form Submit
         uploadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (selectedFiles.length === 0) return;
+            
             processButton.disabled = true;
             processIcon.style.display = 'none';
             processSpinner.style.display = 'block';
-            statusMessage.style.display = 'block';
-            statusMessage.className = 'status-message processing';
-            statusMessage.textContent = translations.processing;
-
+            showStatus(translations.status_processing[currentLang], 'processing');
+            
             const formData = new FormData(uploadForm);
-            selectedFiles.forEach(f => formData.append('files', f));
+            selectedFiles.forEach(file => formData.append('files', file));
+            formData.append('download_mode', selectedFiles.length === 1 ? 'single' : 'zip');
 
             try {
-                const res = await fetch('/process', { method: 'POST', body: formData });
-                if (!res.ok) throw new Error();
+                const response = await fetch('/process', {
+                    method: 'POST',
+                    body: formData
+                });
                 
-                let filename = selectedFiles.length === 1 ? selectedFiles[0].name.replace(/\.[^.]+$/, '') + '_Fixed.srt' : 'fixed_subtitles.zip';
-                const contentDisposition = res.headers.get('Content-Disposition');
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'Server error');
+                }
+                
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = selectedFiles.length === 1 ? 'fixed_subtitle.srt' : 'fixed_subtitles.zip';
                 if (contentDisposition) {
                     const matchUtf8 = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i);
                     const matchNormal = contentDisposition.match(/filename="?([^"]+)"?/);
@@ -648,31 +1056,46 @@
                         filename = matchNormal[1];
                     }
                 }
-
-                const blob = await res.blob();
-                const url = URL.createObjectURL(blob);
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
+                a.style.display = 'none';
                 a.href = url;
                 a.download = filename;
+                document.body.appendChild(a);
                 a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
                 
-                statusMessage.className = 'status-message success';
-                statusMessage.textContent = translations.success;
+                showStatus(translations.status_success[currentLang], 'success');
                 setTimeout(() => {
                     selectedFiles = [];
-                    renderFiles();
+                    renderFileList();
                     processButton.disabled = true;
-                    statusMessage.style.display = 'none';
+                    hideStatus();
                 }, 4000);
-            } catch (err) {
-                statusMessage.className = 'status-message error';
-                statusMessage.textContent = translations.error;
+            } catch (error) {
+                console.error('Processing Error:', error);
+                showStatus(translations.status_error[currentLang] + " " + (error.message || ""), 'error');
             } finally {
-                processButton.disabled = false;
-                processIcon.style.display = 'inline';
+                processButton.disabled = selectedFiles.length === 0;
+                processIcon.style.display = 'block';
                 processSpinner.style.display = 'none';
             }
         });
+
+        function formatFileSize(bytes) { 
+            if (bytes === 0) return '0 Bytes'; 
+            const k = 1024; const i = Math.floor(Math.log(bytes) / Math.log(k)); 
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + ['Bytes', 'KB', 'MB', 'GB', 'TB'][i]; 
+        }
+        function showStatus(message, type) { 
+            statusMessage.textContent = message; 
+            statusMessage.className = `status-message ${type}`; 
+            statusMessage.style.display = 'block'; 
+        }
+        function hideStatus() { statusMessage.style.display = 'none'; }
     </script>
 </body>
 </html>
