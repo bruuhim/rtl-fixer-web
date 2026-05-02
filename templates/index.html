@@ -474,8 +474,49 @@
             margin: 16px 0;
         }
 
+        /* Accordion */
+        .advanced-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface-color-alt);
+            border: 1px solid var(--border-color);
+            padding: 14px 20px;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 16px;
+            transition: var(--transition);
+        }
+        .advanced-toggle:hover {
+            border-color: var(--accent-color);
+        }
+        .advanced-toggle i {
+            transition: transform 0.3s ease;
+        }
+        .advanced-toggle.active i {
+            transform: rotate(180deg);
+        }
+        
+        .advanced-content {
+            display: none;
+            margin-top: 16px;
+            gap: 20px;
+        }
+        .advanced-content.active {
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* ----------------------------------------------------
-           PC Layout - NO SCROLL
+           PC Layout 
            ---------------------------------------------------- */
         @media (min-width: 1024px) {
             body {
@@ -497,7 +538,7 @@
             }
 
             .container {
-                max-width: 1200px; /* Tighter layout to fix stretching */
+                max-width: 650px; /* Slimmer for better UX */
                 height: 100%;
                 padding: 32px;
                 margin: 0 auto;
@@ -533,23 +574,21 @@
                 display: flex;
                 flex-direction: column;
                 flex: 1;
-                min-height: 0; /* Important for preventing overflow */
+                min-height: 0;
             }
 
             .panels-layout {
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 24px;
+                grid-template-columns: 1fr;
+                gap: 16px;
+                overflow-y: auto;
+                padding-right: 8px;
             }
+            .panels-layout::-webkit-scrollbar { width: 4px; }
+            .panels-layout::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
 
             .panel-column {
-                overflow-y: auto; /* allow inner scroll only if absolutely needed */
-                padding-right: 4px;
-                gap: 16px; /* slightly tighter gaps */
+                gap: 16px;
             }
-            
-            /* Custom scrollbar for inner columns if they ever overflow */
-            .panel-column::-webkit-scrollbar { width: 4px; }
-            .panel-column::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
 
             .section-card {
                 padding: 20px; /* Use fixed px instead of vw for better control */
@@ -654,8 +693,18 @@
                     </div>
                 </div>
 
-                <!-- COLUMN 2: Repair Options -->
-                <div class="panel-column">
+                <div class="advanced-toggle" id="advancedToggle">
+                    <span>
+                        <i class="fa-solid fa-sliders" style="margin: 0 8px;"></i>
+                        <span class="lang-en">Advanced Settings</span>
+                        <span class="lang-ar">إعدادات متقدمة</span>
+                    </span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+
+                <div class="advanced-content" id="advancedContent">
+                    <!-- COLUMN 2: Repair Options -->
+                    <div class="panel-column">
                     <div class="section-card">
                         <div class="section-title">
                             <i class="fa-solid fa-wrench"></i>
@@ -819,16 +868,16 @@
                             </label>
                         </div>
                     </div>
+                </div> <!-- End advanced content -->
                     
-                    <div class="form-actions">
-                        <button type="submit" class="process-button" id="processButton" disabled>
-                            <i class="fa-solid fa-bolt" id="processIcon"></i>
-                            <div class="spinner" id="processSpinner"></div>
-                            <span class="lang-en">Start Processing</span>
-                            <span class="lang-ar">بدء المعالجة والتحميل</span>
-                        </button>
-                        <div class="status-message" id="statusMessage" aria-live="polite"></div>
-                    </div>
+                <div class="form-actions">
+                    <button type="submit" class="process-button" id="processButton" disabled>
+                        <i class="fa-solid fa-bolt" id="processIcon"></i>
+                        <div class="spinner" id="processSpinner"></div>
+                        <span class="lang-en">Start Processing</span>
+                        <span class="lang-ar">بدء المعالجة والتحميل</span>
+                    </button>
+                    <div class="status-message" id="statusMessage" aria-live="polite"></div>
                 </div>
             </div>
         </form>
@@ -860,6 +909,18 @@
         const statusMessage = document.getElementById('statusMessage');
         const languageToggle = document.getElementById('languageToggle');
         
+        const advancedToggle = document.getElementById('advancedToggle');
+        const advancedContent = document.getElementById('advancedContent');
+        advancedToggle.addEventListener('click', () => {
+            advancedToggle.classList.toggle('active');
+            advancedContent.classList.toggle('active');
+            if (advancedContent.classList.contains('active')) {
+                advancedContent.style.display = 'flex';
+            } else {
+                advancedContent.style.display = 'none';
+            }
+        });
+
         let selectedFiles = [];
         let currentLang = 'ar';
 
