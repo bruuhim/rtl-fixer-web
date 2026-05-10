@@ -578,7 +578,7 @@
             #uploadForm {
                 display: grid;
                 grid-template-columns: 300px 1fr 1fr;
-                grid-template-rows: 1fr auto;
+                grid-template-rows: 1fr min-content;
                 gap: 12px;
                 flex: 1;
                 min-height: 0;
@@ -661,10 +661,11 @@
             .col-3-stack::-webkit-scrollbar { width: 3px; }
             .col-3-stack::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-            /* ---- Action bar spans cols 2-3 ---- */
+            /* ---- Action bar spans cols 2-3, row 2 ---- */
             .col-action {
                 grid-column: 2 / 4;
                 grid-row: 2;
+                align-self: end;
             }
 
             /* RTL section desktop overrides */
