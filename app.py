@@ -47,7 +47,7 @@ def remove_tags(text, keep_italic=False, keep_bold=False, keep_font_color=False)
 def is_music_line(text):
     # Strip tags to check just the text content
     clean_text = re.sub(r'<[^>]+>', '', re.sub(r'\{.*?\}', '', text)).strip()
-    return bool(re.match(r'^[\s♪♫♩♬\u266a\u266b\u266c\u266d~*\-\.]+$', clean_text))
+    return bool(re.match(r'^[\s\u266a\u266b\u266c\u266d~*\-\.]+$', clean_text))
 
 def clean_brackets(text, opts):
     if not opts:
@@ -129,10 +129,13 @@ def apply_text_filters(text, opts):
     if opts.get('clean_brackets'):
         text = clean_brackets(text, opts.get('bracket_options'))
     if opts.get('fix_rtl'):
-        if opts.get('fix_rtl_pdf'):
-            text = U202B + text.replace(U202B, '').replace(U202C, '') + U202C
-        else:
-            text = U202B + text.replace(U202B, '')
+        # FIX: only apply RTL marker to non-empty lines to avoid corrupting
+        # SRT block separators and timestamp lines with stray Unicode chars.
+        if text.strip():
+            if opts.get('fix_rtl_pdf'):
+                text = U202B + text.replace(U202B, '').replace(U202C, '') + U202C
+            else:
+                text = U202B + text.replace(U202B, '')
     return text
 
 def process_srt(content, opts):

@@ -36,7 +36,6 @@
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { -webkit-font-smoothing: antialiased; }
 
         body {
@@ -46,7 +45,8 @@
             min-height: 100dvh;
             display: flex;
             flex-direction: column;
-            padding: 16px;
+            /* mobile: normal scroll, no padding issues */
+            padding: 12px;
         }
         html[dir="ltr"] body { font-family: 'Inter', sans-serif; }
 
@@ -61,11 +61,11 @@
         /* --- Top bar --- */
         .top-bar {
             position: fixed;
-            top: 16px;
-            right: 20px;
+            top: 12px;
+            right: 16px;
             z-index: 100;
         }
-        html[dir="ltr"] .top-bar { right: auto; left: 20px; }
+        html[dir="ltr"] .top-bar { right: auto; left: 16px; }
 
         .lang-pill {
             display: flex;
@@ -80,6 +80,8 @@
             color: var(--text-2);
             cursor: pointer;
             transition: border-color 180ms var(--ease), color 180ms var(--ease);
+            /* ensure tap target is large enough */
+            min-height: 38px;
         }
         .lang-pill:hover { border-color: var(--border-hover); color: var(--text-1); }
         .lang-pill input { display: none; }
@@ -96,26 +98,24 @@
             display: flex;
             flex-direction: column;
             flex: 1;
-            gap: 0;
         }
 
         /* --- Header --- */
         .header {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 28px 4px 24px;
+            gap: 12px;
+            padding: 52px 4px 20px; /* top padding accounts for fixed top-bar */
         }
         .logo {
-            width: 48px; height: 48px;
+            width: 44px; height: 44px;
             border-radius: var(--r-md);
             object-fit: cover;
             border: 1px solid var(--border);
             flex-shrink: 0;
         }
-        .header-text {}
         .site-title {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--text-1);
             letter-spacing: -0.3px;
@@ -123,69 +123,78 @@
         }
         .site-title span { color: var(--accent); }
         .site-sub {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-2);
             margin-top: 2px;
         }
 
-        /* --- Grid --- */
-        #uploadForm {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            flex: 1;
-        }
-
-        @media (min-width: 900px) {
-            body { padding: 20px 28px; height: 100dvh; overflow: hidden; }
-            .header { padding: 16px 4px 20px; }
-            #uploadForm {
-                grid-template-columns: 320px 1fr 1fr;
-                grid-template-rows: 1fr auto;
-                gap: 12px;
-                overflow: hidden;
-            }
-            .col-1 { grid-column: 1; grid-row: 1 / 3; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
-            .col-2 { grid-column: 2; grid-row: 1; overflow-y: auto; }
-            .col-3 { grid-column: 3; grid-row: 1; overflow-y: auto; }
-            .col-action { grid-column: 2 / 4; grid-row: 2; }
-
-            .col-1::-webkit-scrollbar,
-            .col-2::-webkit-scrollbar,
-            .col-3::-webkit-scrollbar { width: 3px; }
-            .col-1::-webkit-scrollbar-thumb,
-            .col-2::-webkit-scrollbar-thumb,
-            .col-3::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-        }
-
-        /* --- Cards --- */
-        .card {
+        /* --- Accordion (mobile sections) --- */
+        .accordion-section {
             background: var(--surface-1);
             border: 1px solid var(--border);
             border-radius: var(--r-xl);
-            padding: 20px;
+            overflow: hidden;
             transition: border-color 200ms var(--ease);
         }
-        .card:hover { border-color: var(--border-hover); }
+        .accordion-section:hover { border-color: var(--border-hover); }
 
-        .card-title {
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            cursor: pointer;
+            /* min touch target */
+            min-height: 52px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .accordion-header-left {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 700;
             color: var(--text-2);
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            margin-bottom: 16px;
         }
-        .card-title i { color: var(--accent); font-size: 0.75rem; }
+        .accordion-header-left i { color: var(--accent); font-size: 0.75rem; }
+        .accordion-chevron {
+            color: var(--text-3);
+            font-size: 0.75rem;
+            transition: transform 250ms var(--ease);
+        }
+        .accordion-section.open .accordion-chevron { transform: rotate(180deg); }
+
+        /* badge showing active state count */
+        .acc-badge {
+            background: var(--accent-dim);
+            color: var(--accent);
+            border-radius: 100px;
+            padding: 1px 7px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            display: none;
+        }
+        .acc-badge.visible { display: inline-block; }
+
+        .accordion-body {
+            display: none;
+            padding: 0 18px 16px;
+            border-top: 1px solid var(--border);
+        }
+        .accordion-section.open .accordion-body { display: block; }
+        /* Files section always visible (no accordion toggle) */
+        .accordion-section.always-open .accordion-header { cursor: default; }
+        .accordion-section.always-open .accordion-chevron { display: none; }
+        .accordion-section.always-open .accordion-body { display: block; border-top: 1px solid var(--border); }
 
         /* --- Upload area --- */
         .upload-area {
             border: 1.5px dashed var(--border);
             border-radius: var(--r-lg);
-            padding: 28px 16px;
+            padding: 24px 16px;
             text-align: center;
             cursor: pointer;
             transition: border-color 200ms var(--ease), background 200ms var(--ease);
@@ -194,6 +203,7 @@
             align-items: center;
             gap: 10px;
             position: relative;
+            margin-top: 4px;
         }
         .upload-area:hover,
         .upload-area:focus { border-color: var(--accent); background: var(--accent-dim); outline: none; }
@@ -208,15 +218,8 @@
             color: var(--accent);
             font-size: 1rem;
         }
-        .upload-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-1);
-        }
-        .upload-hint {
-            font-size: 0.75rem;
-            color: var(--text-3);
-        }
+        .upload-title { font-size: 0.9rem; font-weight: 600; color: var(--text-1); }
+        .upload-hint { font-size: 0.75rem; color: var(--text-3); }
         .browse-btn {
             display: inline-flex;
             align-items: center;
@@ -224,15 +227,18 @@
             background: var(--surface-3);
             border: 1px solid var(--border);
             color: var(--text-1);
-            padding: 7px 16px;
+            padding: 10px 20px;
             border-radius: var(--r-sm);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             transition: border-color 180ms var(--ease), background 180ms var(--ease);
             font-family: inherit;
+            /* proper touch target */
+            min-height: 44px;
         }
         .browse-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
+        .browse-btn:active { background: var(--accent-glow); }
 
         /* --- File list --- */
         .file-list {
@@ -240,7 +246,7 @@
             display: none;
             flex-direction: column;
             gap: 6px;
-            max-height: 150px;
+            max-height: 180px;
             overflow-y: auto;
         }
         .file-list::-webkit-scrollbar { width: 3px; }
@@ -250,7 +256,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 8px 10px;
+            padding: 10px 12px;
             background: var(--surface-2);
             border: 1px solid var(--border);
             border-radius: var(--r-sm);
@@ -258,7 +264,7 @@
         }
         .file-item:hover { border-color: var(--border-hover); }
         .file-badge {
-            width: 30px; height: 30px; flex-shrink: 0;
+            width: 32px; height: 32px; flex-shrink: 0;
             background: var(--surface-3);
             border-radius: var(--r-sm);
             display: flex; align-items: center; justify-content: center;
@@ -271,11 +277,13 @@
         .file-name { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .file-size { font-size: 0.7rem; color: var(--text-3); margin-top: 1px; }
         .file-remove {
-            width: 26px; height: 26px; border-radius: 50%; border: none;
+            /* bigger tap target */
+            width: 36px; height: 36px; border-radius: 50%; border: none;
             background: transparent; color: var(--text-3);
             cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             transition: color 180ms, background 180ms;
+            flex-shrink: 0;
         }
         .file-remove:hover { color: var(--red); background: var(--red-dim); }
 
@@ -284,7 +292,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-top: 12px;
+            margin-top: 14px;
         }
 
         /* --- Form elements --- */
@@ -298,26 +306,28 @@
         }
         .field-select, .field-input {
             width: 100%;
-            padding: 8px 10px;
+            padding: 10px 12px;
             background: var(--surface-2);
             border: 1px solid var(--border);
             border-radius: var(--r-sm);
             color: var(--text-1);
             font-family: inherit;
-            font-size: 0.82rem;
+            font-size: 0.9rem; /* larger for mobile legibility */
             transition: border-color 180ms var(--ease), background 180ms var(--ease);
             -webkit-appearance: none;
+            /* ensure 44px min height for touch */
+            min-height: 44px;
         }
-        .field-select { 
+        .field-select {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238a847c' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: left 10px center;
-            padding-left: 28px;
+            background-position: left 12px center;
+            padding-left: 32px;
         }
         html[dir="ltr"] .field-select {
-            background-position: right 10px center;
-            padding-left: 10px;
-            padding-right: 28px;
+            background-position: right 12px center;
+            padding-left: 12px;
+            padding-right: 32px;
         }
         .field-select:focus, .field-input:focus {
             outline: none;
@@ -327,11 +337,7 @@
         .field-select:disabled { opacity: 0.4; cursor: not-allowed; }
 
         /* --- Divider --- */
-        .divider {
-            height: 1px;
-            background: var(--border);
-            margin: 16px 0;
-        }
+        .divider { height: 1px; background: var(--border); margin: 14px 0; }
 
         /* --- Inline row --- */
         .inline-row {
@@ -349,14 +355,14 @@
             display: none;
         }
 
-        /* --- Translation note --- */
+        /* --- Coming soon note --- */
         .coming-soon-note {
             display: flex;
             align-items: center;
             gap: 6px;
             font-size: 0.72rem;
             color: var(--text-3);
-            margin-top: 5px;
+            margin-top: 8px;
             font-weight: 500;
         }
         .coming-soon-note i { color: var(--accent); font-size: 0.65rem; }
@@ -364,19 +370,20 @@
         /* --- Checkboxes --- */
         .check-row {
             display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            padding: 6px 0;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
             cursor: pointer;
+            /* touch-friendly height */
+            min-height: 44px;
         }
         .check-row + .check-row { border-top: 1px solid var(--border); }
         .check-box {
-            width: 17px; height: 17px; flex-shrink: 0;
-            margin-top: 2px;
+            width: 20px; height: 20px; flex-shrink: 0;
             -webkit-appearance: none;
             background: var(--surface-2);
             border: 1.5px solid var(--text-3);
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             position: relative;
             transition: background 150ms, border-color 150ms;
@@ -388,43 +395,45 @@
         .check-box:checked::after {
             content: '';
             position: absolute;
-            left: 4px; top: 1.5px;
-            width: 4px; height: 8px;
+            left: 5px; top: 2px;
+            width: 5px; height: 9px;
             border: 2px solid var(--bg);
             border-top: none; border-left: none;
             transform: rotate(45deg);
         }
         .check-label {
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             color: var(--text-1);
             user-select: none;
             line-height: 1.4;
+            flex: 1;
         }
         .check-row.subdued { opacity: 0.4; pointer-events: none; }
         .sub-checks {
-            padding-right: 27px;
+            padding-right: 32px;
             border-top: 1px solid var(--border);
             padding-top: 2px;
         }
-        html[dir="ltr"] .sub-checks { padding-right: 0; padding-left: 27px; }
+        html[dir="ltr"] .sub-checks { padding-right: 0; padding-left: 32px; }
 
         /* --- Radio --- */
         .radio-stack {
-            padding-right: 27px;
+            padding-right: 32px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
             margin-top: 4px;
             border-top: 1px solid var(--border);
             padding-top: 8px;
         }
-        html[dir="ltr"] .radio-stack { padding-right: 0; padding-left: 27px; }
+        html[dir="ltr"] .radio-stack { padding-right: 0; padding-left: 32px; }
         .radio-row {
-            display: flex; align-items: center; gap: 8px;
+            display: flex; align-items: center; gap: 10px;
             cursor: pointer;
+            min-height: 40px;
         }
         .radio-btn {
-            width: 15px; height: 15px;
+            width: 18px; height: 18px; flex-shrink: 0;
             -webkit-appearance: none;
             border: 1.5px solid var(--text-3);
             border-radius: 50%;
@@ -436,24 +445,39 @@
         .radio-btn:checked::after {
             content: '';
             position: absolute;
-            width: 7px; height: 7px;
+            width: 8px; height: 8px;
             background: var(--accent);
             border-radius: 50%;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
         }
-        .radio-label { font-size: 0.78rem; color: var(--text-2); user-select: none; }
+        .radio-label { font-size: 0.8rem; color: var(--text-2); user-select: none; }
 
-        /* --- RTL fix card highlight --- */
-        .rtl-card {
+        /* --- RTL fix highlight --- */
+        .rtl-section {
             background: var(--surface-1);
             border: 1px solid var(--border);
             border-radius: var(--r-xl);
-            padding: 16px 20px;
+            overflow: hidden;
+            transition: border-color 200ms var(--ease);
         }
-        .rtl-card.active {
-            border-color: rgba(212,149,106,0.3);
-            background: linear-gradient(135deg, rgba(212,149,106,0.06), transparent);
+        .rtl-section.active {
+            border-color: rgba(212,149,106,0.35);
+            background: linear-gradient(135deg, rgba(212,149,106,0.07), transparent);
+        }
+        .rtl-section .accordion-body { display: block; }
+        .rtl-section .rtl-radio-wrap {
+            border-top: 1px solid var(--border);
+            padding-top: 4px;
+            display: none;
+        }
+        .rtl-section.active .rtl-radio-wrap { display: block; }
+        .rtl-header-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            min-height: 52px;
         }
 
         /* --- Process button --- */
@@ -463,26 +487,28 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 13px 24px;
+            padding: 15px 24px;
             background: var(--accent);
             color: var(--bg);
             border: none;
             border-radius: var(--r-lg);
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 700;
             font-family: inherit;
             cursor: pointer;
             transition: opacity 180ms, transform 120ms;
+            /* ensure proper touch target */
+            min-height: 52px;
         }
         .process-btn:hover:not(:disabled) { opacity: 0.88; }
-        .process-btn:active:not(:disabled) { transform: scale(0.99); }
+        .process-btn:active:not(:disabled) { transform: scale(0.98); }
         .process-btn:disabled {
             background: var(--surface-3);
             color: var(--text-3);
             cursor: not-allowed;
         }
         .spinner {
-            display: none; width: 16px; height: 16px;
+            display: none; width: 18px; height: 18px;
             border: 2px solid rgba(15,14,13,0.2);
             border-top-color: var(--bg);
             border-radius: 50%;
@@ -495,30 +521,38 @@
             display: none;
             align-items: center;
             gap: 8px;
-            padding: 10px 14px;
+            padding: 12px 14px;
             border-radius: var(--r-sm);
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            margin-top: 8px;
+            margin-top: 10px;
         }
         .status.success { color: var(--green); background: var(--green-dim); border: 1px solid rgba(111,175,130,0.2); }
         .status.error   { color: var(--red);   background: var(--red-dim);   border: 1px solid rgba(196,112,112,0.2); }
         .status.loading { color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(212,149,106,0.2); }
 
+        /* --- sticky action bar on mobile --- */
+        .action-bar {
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(to top, var(--bg) 70%, transparent);
+            padding: 12px 0 8px;
+            margin-top: 16px;
+            z-index: 10;
+        }
+
         /* --- Footer --- */
         .footer {
             text-align: center;
-            padding: 16px 0 4px;
+            padding: 12px 0 4px;
             font-size: 0.72rem;
             color: var(--text-3);
         }
         .footer a { color: var(--accent); text-decoration: none; font-weight: 700; }
         .footer a:hover { text-decoration: underline; }
 
-        /* --- File input hidden --- */
         #fileInput { display: none; }
 
-        /* --- Subtle tag chip --- */
         .tag-chip {
             display: inline-flex;
             align-items: center;
@@ -530,6 +564,100 @@
             font-size: 0.68rem;
             font-weight: 700;
             color: var(--text-2);
+        }
+
+        /* --- Section gap --- */
+        .sections {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        /* ======== DESKTOP (900px+) ======== */
+        @media (min-width: 900px) {
+            body { padding: 20px 28px; height: 100dvh; overflow: hidden; }
+            .header { padding: 16px 4px 20px; }
+
+            .sections { display: contents; } /* let form be the grid */
+
+            #uploadForm {
+                display: grid;
+                grid-template-columns: 320px 1fr 1fr;
+                grid-template-rows: 1fr auto;
+                gap: 12px;
+                overflow: hidden;
+                flex: 1;
+            }
+
+            /* hide accordion chrome on desktop, show raw cards */
+            .accordion-section {
+                border-radius: var(--r-xl);
+                overflow: visible;
+            }
+            .accordion-header { display: none !important; }
+            .accordion-body {
+                display: block !important;
+                border-top: none;
+                padding: 20px;
+                height: 100%;
+                overflow-y: auto;
+            }
+            .accordion-section.always-open .accordion-body {
+                border-top: none;
+            }
+
+            /* RTL section desktop */
+            .rtl-section .rtl-radio-wrap { display: block !important; }
+            .rtl-header-row { padding: 0 0 12px 0; }
+
+            /* card-title on desktop (was hidden in accordion header) */
+            .card-title-desktop {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 0.78rem;
+                font-weight: 700;
+                color: var(--text-2);
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                margin-bottom: 14px;
+            }
+            .card-title-desktop i { color: var(--accent); font-size: 0.75rem; }
+
+            .col-1 { grid-column: 1; grid-row: 1 / 3; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+            .col-2 { grid-column: 2; grid-row: 1; overflow-y: auto; }
+            .col-3 { grid-column: 3; grid-row: 1; overflow-y: auto; }
+            .col-action { grid-column: 2 / 4; grid-row: 2; }
+
+            .col-1::-webkit-scrollbar,
+            .col-2::-webkit-scrollbar,
+            .col-3::-webkit-scrollbar { width: 3px; }
+            .col-1::-webkit-scrollbar-thumb,
+            .col-2::-webkit-scrollbar-thumb,
+            .col-3::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+            /* action bar not sticky on desktop */
+            .action-bar {
+                position: static;
+                background: none;
+                padding: 0;
+                margin-top: 0;
+            }
+
+            .field-select, .field-input {
+                font-size: 0.82rem;
+                min-height: 36px;
+                padding: 8px 10px;
+            }
+            .field-select { padding-left: 28px; }
+            html[dir="ltr"] .field-select { padding-left: 10px; padding-right: 28px; }
+
+            .check-row { min-height: unset; padding: 6px 0; }
+            .check-box { width: 17px; height: 17px; }
+            .check-label { font-size: 0.82rem; }
+            .process-btn { font-size: 0.9rem; padding: 13px 24px; min-height: unset; }
+            .browse-btn { padding: 7px 16px; min-height: unset; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -547,8 +675,8 @@
 <div class="app">
 
     <header class="header">
-        <img src="/static/Icon.jpg" alt="Bruuhim logo" class="logo">
-        <div class="header-text">
+        <img src="/static/Icon.jpg" alt="Bruuhim logo" class="logo" width="44" height="44" loading="lazy">
+        <div>
             <h1 class="site-title">
                 <span class="lang-en"><span>Bruuhim</span> Subtitle Studio</span>
                 <span class="lang-ar">ستوديو ترجمات <span>Bruuhim</span></span>
@@ -562,12 +690,19 @@
 
     <form id="uploadForm" enctype="multipart/form-data">
 
-        <!-- ====== COL 1: FILES + FORMAT ====== -->
-        <div class="col-1">
+        <div class="sections">
 
-            <!-- Upload -->
-            <div class="card" style="flex:1; display:flex; flex-direction:column;">
-                <div class="card-title">
+        <!-- ====== FILES ====== -->
+        <div class="accordion-section col-1 always-open" style="flex:1; display:flex; flex-direction:column;">
+            <div class="accordion-header">
+                <div class="accordion-header-left">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span class="lang-en">Files</span>
+                    <span class="lang-ar">الملفات</span>
+                </div>
+            </div>
+            <div class="accordion-body" style="flex:1; display:flex; flex-direction:column;">
+                <div class="card-title-desktop">
                     <i class="fa-solid fa-file-lines"></i>
                     <span class="lang-en">Files</span>
                     <span class="lang-ar">الملفات</span>
@@ -595,10 +730,8 @@
                 </div>
 
                 <div class="file-list" id="fileList"></div>
-            </div>
 
-            <!-- Format + Encoding -->
-            <div class="card">
+                <!-- Format + Encoding — shown inline under files on mobile -->
                 <div class="format-row">
                     <div class="field">
                         <label class="field-label" for="outputFormat">
@@ -618,10 +751,7 @@
                             <span class="lang-ar">الترميز</span>
                         </label>
                         <select class="field-select" id="inputEncoding" name="input_encoding">
-                            <option value="auto">
-                                <span class="lang-en">Auto</span>
-                                <span class="lang-ar">تلقائي</span>
-                            </option>
+                            <option value="auto">Auto / تلقائي</option>
                             <option value="utf-8">UTF-8</option>
                             <option value="utf-8-sig">UTF-8 BOM</option>
                             <option value="utf-16">UTF-16</option>
@@ -630,20 +760,55 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-        </div><!-- /col-1 -->
+        <!-- ====== RTL FIX (always visible, prominent) ====== -->
+        <div class="rtl-section col-2" id="rtlCard">
+            <div class="rtl-header-row">
+                <input type="checkbox" class="check-box" id="fixRtlCheck" name="fix_rtl" value="true" checked style="flex-shrink:0;">
+                <label for="fixRtlCheck" class="check-label" style="font-weight:700; cursor:pointer;">
+                    <span style="color:var(--accent);">✦</span>
+                    <span class="lang-en"> Fix Arabic RTL Direction</span>
+                    <span class="lang-ar"> إصلاح اتجاه النصوص العربية (RTL)</span>
+                </label>
+            </div>
+            <div class="rtl-radio-wrap" id="rtlRadioStack" style="padding: 0 18px 14px;">
+                <label class="radio-row">
+                    <input type="radio" class="radio-btn" name="rtl_mode" value="rle" checked>
+                    <span class="radio-label">
+                        <span class="tag-chip">U+202B</span>
+                        <span class="lang-en"> RLE only — Default</span>
+                        <span class="lang-ar"> RLE الافتراضي</span>
+                    </span>
+                </label>
+                <label class="radio-row">
+                    <input type="radio" class="radio-btn" name="rtl_mode" value="rle_pdf">
+                    <span class="radio-label">
+                        <span class="tag-chip">RLE + PDF</span>
+                        <span class="lang-en"> For advanced players</span>
+                        <span class="lang-ar"> للمشغلات المتقدمة</span>
+                    </span>
+                </label>
+            </div>
+        </div>
 
-        <!-- ====== COL 2: TIME SHIFT + TRANSLATION + RTL ====== -->
-        <div class="col-2">
-
-            <!-- Time Shift -->
-            <div class="card">
-                <div class="card-title">
+        <!-- ====== TIME SHIFT ====== -->
+        <div class="accordion-section col-2">
+            <div class="accordion-header" data-target="timeShiftBody">
+                <div class="accordion-header-left">
+                    <i class="fa-regular fa-clock"></i>
+                    <span class="lang-en">Time Shift</span>
+                    <span class="lang-ar">ضبط التوقيت</span>
+                    <span class="acc-badge" id="timeShiftBadge">ON</span>
+                </div>
+                <i class="fa-solid fa-chevron-down accordion-chevron"></i>
+            </div>
+            <div class="accordion-body" id="timeShiftBody">
+                <div class="card-title-desktop">
                     <i class="fa-regular fa-clock"></i>
                     <span class="lang-en">Time Shift</span>
                     <span class="lang-ar">ضبط التوقيت (تأخير / تقديم)</span>
                 </div>
-
                 <div class="inline-row">
                     <div class="field">
                         <label class="field-label" for="timeShiftMs">
@@ -651,7 +816,7 @@
                             <span class="lang-ar">مقدار الإزاحة (ms)</span>
                         </label>
                         <input type="number" class="field-input" id="timeShiftMs" name="time_shift_ms"
-                               value="0" step="100" placeholder="0">
+                               value="0" step="100" placeholder="0" inputmode="numeric">
                         <div class="shift-preview" id="shiftPreview"></div>
                     </div>
                     <div class="field">
@@ -660,71 +825,25 @@
                             <span class="lang-ar">بدءاً من</span>
                         </label>
                         <input type="text" class="field-input" id="timeShiftFrom" name="time_shift_from"
-                               value="00:00:00,000" placeholder="00:00:00,000">
+                               value="00:00:00,000" placeholder="00:00:00,000" inputmode="text">
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Translation -->
-            <div class="card" style="margin-top:12px;">
-                <div class="card-title">
-                    <i class="fa-solid fa-language"></i>
-                    <span class="lang-en">Translation</span>
-                    <span class="lang-ar">ترجمة النص</span>
+        <!-- ====== CLEANUP ====== -->
+        <div class="accordion-section col-3">
+            <div class="accordion-header" data-target="cleanupBody">
+                <div class="accordion-header-left">
+                    <i class="fa-solid fa-broom"></i>
+                    <span class="lang-en">Cleanup</span>
+                    <span class="lang-ar">التنظيف</span>
+                    <span class="acc-badge" id="cleanupBadge">ON</span>
                 </div>
-                <div class="field">
-                    <select class="field-select" disabled>
-                        <option>
-                            <span class="lang-en">-- No Translation --</span>
-                            <span class="lang-ar">-- بدون ترجمة --</span>
-                        </option>
-                    </select>
-                </div>
-                <div class="coming-soon-note">
-                    <i class="fa-solid fa-sparkles"></i>
-                    <span class="lang-en">AI Translation coming soon</span>
-                    <span class="lang-ar">ميزة الترجمة الذكية ستتوفر قريباً</span>
-                </div>
+                <i class="fa-solid fa-chevron-down accordion-chevron"></i>
             </div>
-
-            <!-- RTL Fix -->
-            <div class="rtl-card" id="rtlCard" style="margin-top:12px;">
-                <label class="check-row" style="border-top:none; padding-top:0;">
-                    <input type="checkbox" class="check-box" id="fixRtlCheck" name="fix_rtl" value="true" checked>
-                    <span class="check-label" style="font-weight:700;">
-                        <span style="color:var(--accent);">✦</span>
-                        <span class="lang-en"> Fix Arabic RTL Direction</span>
-                        <span class="lang-ar"> إصلاح اتجاه النصوص العربية (RTL)</span>
-                    </span>
-                </label>
-                <div class="radio-stack" id="rtlRadioStack">
-                    <label class="radio-row">
-                        <input type="radio" class="radio-btn" name="rtl_mode" value="rle" checked>
-                        <span class="radio-label">
-                            <span class="tag-chip">U+202B</span>
-                            <span class="lang-en"> RLE only — Default</span>
-                            <span class="lang-ar"> RLE الافتراضي</span>
-                        </span>
-                    </label>
-                    <label class="radio-row">
-                        <input type="radio" class="radio-btn" name="rtl_mode" value="rle_pdf">
-                        <span class="radio-label">
-                            <span class="tag-chip">RLE + PDF</span>
-                            <span class="lang-en"> For advanced players</span>
-                            <span class="lang-ar"> للمشغلات المتقدمة</span>
-                        </span>
-                    </label>
-                </div>
-            </div>
-
-        </div><!-- /col-2 -->
-
-        <!-- ====== COL 3: CLEANUP + BRACKETS ====== -->
-        <div class="col-3">
-
-            <!-- Cleanup -->
-            <div class="card">
-                <div class="card-title">
+            <div class="accordion-body" id="cleanupBody">
+                <div class="card-title-desktop">
                     <i class="fa-solid fa-broom"></i>
                     <span class="lang-en">Cleanup Options</span>
                     <span class="lang-ar">خيارات التنظيف</span>
@@ -734,54 +853,62 @@
                     <input type="checkbox" class="check-box" name="remove_tashkeel" value="true">
                     <span class="check-label">
                         <span class="lang-en">Remove Arabic Diacritics (Tashkeel)</span>
-                        <span class="lang-ar">إزالة التشكيل والحركات من النص</span>
+                        <span class="lang-ar">إزالة التشكيل والحركات</span>
                     </span>
                 </label>
-
                 <label class="check-row">
                     <input type="checkbox" class="check-box" name="remove_music_lines" value="true">
                     <span class="check-label">
                         <span class="lang-en">Remove Music Lines (♪ ♫)</span>
-                        <span class="lang-ar">إزالة العلامات والأسطر الموسيقية (♪ ♫)</span>
+                        <span class="lang-ar">إزالة الأسطر الموسيقية (♪ ♫)</span>
                     </span>
                 </label>
-
                 <label class="check-row">
                     <input type="checkbox" class="check-box" id="removeAllTags" name="remove_all_tags" value="true">
                     <span class="check-label">
                         <span class="lang-en">Remove All Tags (Colors, Fonts)</span>
-                        <span class="lang-ar">إزالة كافة التنسيقات (الألوان، الخطوط)</span>
+                        <span class="lang-ar">إزالة كافة التنسيقات</span>
                     </span>
                 </label>
-
                 <div class="sub-checks" id="tagKeepOptions">
                     <label class="check-row subdued" style="border-top:none; padding-top:4px;">
                         <input type="checkbox" class="check-box" name="keep_italic" value="true" disabled>
                         <span class="check-label">
-                            <span class="lang-en">Keep Italic &lt;i&gt;</span>
-                            <span class="lang-ar">الاحتفاظ بالخط المائل &lt;i&gt;</span>
+                            <span class="lang-en">Keep &lt;i&gt;</span>
+                            <span class="lang-ar">الاحتفاظ بـ &lt;i&gt;</span>
                         </span>
                     </label>
                     <label class="check-row subdued">
                         <input type="checkbox" class="check-box" name="keep_bold" value="true" disabled>
                         <span class="check-label">
-                            <span class="lang-en">Keep Bold &lt;b&gt;</span>
-                            <span class="lang-ar">الاحتفاظ بالخط العريض &lt;b&gt;</span>
+                            <span class="lang-en">Keep &lt;b&gt;</span>
+                            <span class="lang-ar">الاحتفاظ بـ &lt;b&gt;</span>
                         </span>
                     </label>
                     <label class="check-row subdued" style="margin-bottom:4px;">
                         <input type="checkbox" class="check-box" name="keep_font_color" value="true" disabled>
                         <span class="check-label">
-                            <span class="lang-en">Keep Colors &lt;font&gt;</span>
+                            <span class="lang-en">Keep &lt;font&gt; colors</span>
                             <span class="lang-ar">الاحتفاظ بالألوان &lt;font&gt;</span>
                         </span>
                     </label>
                 </div>
             </div>
+        </div>
 
-            <!-- Brackets -->
-            <div class="card" style="margin-top:12px;">
-                <div class="card-title">
+        <!-- ====== BRACKETS ====== -->
+        <div class="accordion-section col-3">
+            <div class="accordion-header" data-target="bracketsBody">
+                <div class="accordion-header-left">
+                    <i class="fa-solid fa-code"></i>
+                    <span class="lang-en">Brackets</span>
+                    <span class="lang-ar">الأقواس</span>
+                    <span class="acc-badge" id="bracketsBadge">ON</span>
+                </div>
+                <i class="fa-solid fa-chevron-down accordion-chevron"></i>
+            </div>
+            <div class="accordion-body" id="bracketsBody">
+                <div class="card-title-desktop">
                     <i class="fa-solid fa-code"></i>
                     <span class="lang-en">Clean Brackets &amp; Symbols</span>
                     <span class="lang-ar">إزالة الأقواس والرموز</span>
@@ -793,30 +920,52 @@
                 <label class="check-row" style="border-top:none; padding-top:0;">
                     <input type="checkbox" class="check-box bracket-opt" data-key="remove_square">
                     <span class="check-label">
-                        <span class="lang-en">Remove content inside [ ]</span>
-                        <span class="lang-ar">حذف المحتوى المربع [ ]</span>
+                        <span class="lang-en">Remove [ ] content</span>
+                        <span class="lang-ar">حذف محتوى [ ]</span>
                     </span>
                 </label>
                 <label class="check-row">
                     <input type="checkbox" class="check-box bracket-opt" data-key="remove_round">
                     <span class="check-label">
-                        <span class="lang-en">Remove content inside ( )</span>
-                        <span class="lang-ar">حذف المحتوى الدائري ( )</span>
+                        <span class="lang-en">Remove ( ) content</span>
+                        <span class="lang-ar">حذف محتوى ( )</span>
                     </span>
                 </label>
                 <label class="check-row">
                     <input type="checkbox" class="check-box bracket-opt" data-key="remove_curly_text">
                     <span class="check-label">
-                        <span class="lang-en">Remove content inside { }</span>
-                        <span class="lang-ar">حذف المحتوى المعقوف { }</span>
+                        <span class="lang-en">Remove { } content</span>
+                        <span class="lang-ar">حذف محتوى { }</span>
                     </span>
                 </label>
+
+                <!-- Translation (moved here to avoid an extra section) -->
+                <div class="divider"></div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                    <span style="font-size:0.75rem; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:0.05em;">
+                        <i class="fa-solid fa-language" style="color:var(--accent); margin-left:4px;"></i>
+                        <span class="lang-en">Translation</span>
+                        <span class="lang-ar">الترجمة</span>
+                    </span>
+                </div>
+                <select class="field-select" disabled style="margin-bottom:6px;">
+                    <option>
+                        <span class="lang-en">-- No Translation --</span>
+                        <span class="lang-ar">-- بدون ترجمة --</span>
+                    </option>
+                </select>
+                <div class="coming-soon-note">
+                    <i class="fa-solid fa-sparkles"></i>
+                    <span class="lang-en">AI Translation coming soon</span>
+                    <span class="lang-ar">ميزة الترجمة الذكية ستتوفر قريباً</span>
+                </div>
             </div>
+        </div>
 
-        </div><!-- /col-3 -->
+        </div><!-- /sections -->
 
-        <!-- ====== ACTION ROW ====== -->
-        <div class="col-action">
+        <!-- ====== STICKY ACTION BAR ====== -->
+        <div class="action-bar col-action">
             <button type="submit" class="process-btn" id="processButton" disabled>
                 <i class="fa-solid fa-bolt" id="processIcon"></i>
                 <div class="spinner" id="processSpinner"></div>
@@ -826,7 +975,7 @@
             <div class="status" id="statusMessage" aria-live="polite"></div>
         </div>
 
-    </form><!-- /uploadForm -->
+    </form>
 
     <footer class="footer">
         <span class="lang-en">Built by</span>
@@ -834,7 +983,7 @@
         <a href="https://x.com/bruuhim" target="_blank" rel="noopener noreferrer">@Bruuhim</a>
     </footer>
 
-</div><!-- /app -->
+</div>
 
 <script>
 (function() {
@@ -849,6 +998,14 @@
             html.setAttribute('lang', 'ar');
             html.setAttribute('dir', 'rtl');
         }
+    });
+
+    /* --- Accordion --- */
+    document.querySelectorAll('.accordion-header[data-target]').forEach(header => {
+        header.addEventListener('click', () => {
+            const section = header.closest('.accordion-section');
+            section.classList.toggle('open');
+        });
     });
 
     /* --- File handling --- */
@@ -916,24 +1073,49 @@
         });
     }
 
-    /* --- Time shift preview --- */
+    /* --- Time shift preview + badge --- */
     const shiftInput   = document.getElementById('timeShiftMs');
     const shiftPreview = document.getElementById('shiftPreview');
+    const timeShiftBadge = document.getElementById('timeShiftBadge');
     shiftInput.addEventListener('input', () => {
         const ms = parseInt(shiftInput.value) || 0;
+        timeShiftBadge.classList.toggle('visible', ms !== 0);
         if (ms === 0) { shiftPreview.style.display = 'none'; return; }
         const abs = Math.abs(ms);
-        const dir = html.getAttribute('lang') === 'en'
+        const isEn = html.getAttribute('lang') === 'en';
+        const dir = isEn
             ? (ms > 0 ? `Forward by ${abs}ms (${(abs/1000).toFixed(2)}s)` : `Back by ${abs}ms (${(abs/1000).toFixed(2)}s)`)
             : (ms > 0 ? `تقديم بمقدار ${abs}ms (${(abs/1000).toFixed(2)}ث)` : `تأخير بمقدار ${abs}ms (${(abs/1000).toFixed(2)}ث)`);
         shiftPreview.textContent = dir;
         shiftPreview.style.display = 'block';
     });
 
+    /* --- Cleanup badge --- */
+    const cleanupBadge = document.getElementById('cleanupBadge');
+    document.querySelectorAll('#cleanupBody .check-box').forEach(cb => {
+        cb.addEventListener('change', () => {
+            const any = [...document.querySelectorAll('#cleanupBody .check-box:not([disabled])')].some(c => c.checked);
+            cleanupBadge.classList.toggle('visible', any);
+        });
+    });
+
+    /* --- Brackets badge --- */
+    const bracketsBadge = document.getElementById('bracketsBadge');
+    function syncBracketOpts() {
+        const opts = {};
+        document.querySelectorAll('.bracket-opt').forEach(cb => {
+            if (cb.checked) opts[cb.dataset.key] = true;
+        });
+        const hasAny = Object.keys(opts).length > 0;
+        bracketsBadge.classList.toggle('visible', hasAny);
+        document.getElementById('cleanBracketsHidden').value = hasAny ? 'true' : 'false';
+        document.getElementById('bracketOptionsHidden').value = JSON.stringify(opts);
+    }
+    document.querySelectorAll('.bracket-opt').forEach(cb => cb.addEventListener('change', syncBracketOpts));
+
     /* --- RTL card styling --- */
     const fixRtlCheck = document.getElementById('fixRtlCheck');
     const rtlCard     = document.getElementById('rtlCard');
-    const rtlRadio    = document.getElementById('rtlRadioStack');
     function syncRtlCard() {
         rtlCard.classList.toggle('active', fixRtlCheck.checked);
     }
@@ -951,18 +1133,6 @@
     }
     removeAllTags.addEventListener('change', syncTagOpts);
     syncTagOpts();
-
-    /* --- Bracket options --- */
-    function syncBracketOpts() {
-        const opts = {};
-        document.querySelectorAll('.bracket-opt').forEach(cb => {
-            if (cb.checked) opts[cb.dataset.key] = true;
-        });
-        const hasAny = Object.keys(opts).length > 0;
-        document.getElementById('cleanBracketsHidden').value = hasAny ? 'true' : 'false';
-        document.getElementById('bracketOptionsHidden').value = JSON.stringify(opts);
-    }
-    document.querySelectorAll('.bracket-opt').forEach(cb => cb.addEventListener('change', syncBracketOpts));
 
     /* --- Submit --- */
     document.getElementById('uploadForm').addEventListener('submit', async e => {
@@ -983,13 +1153,12 @@
             }
         });
 
-        // RTL mode
         const rtlMode = document.querySelector('[name="rtl_mode"]:checked')?.value || 'rle';
         formData.append('fix_rtl', fixRtlCheck.checked ? 'true' : 'false');
         formData.append('fix_rtl_pdf', rtlMode === 'rle_pdf' ? 'true' : 'false');
 
         setLoading(true);
-        showStatus('loading', html.getAttribute('lang') === 'en' ? 'Processing…' : 'جارٍ المعالجة…');
+        showStatus('loading', html.getAttribute('lang') === 'en' ? 'Processing\u2026' : '\u062c\u0627\u0631\u064d \u0627\u0644\u0645\u0639\u0627\u0644\u062c\u0629\u2026');
 
         try {
             const res = await fetch('/process', { method: 'POST', body: formData });
@@ -1000,25 +1169,28 @@
             const blob = await res.blob();
             const url  = URL.createObjectURL(blob);
             const a    = document.createElement('a');
-            const isZip = selectedFiles.length > 1;
             a.href     = url;
-            a.download = isZip ? 'subtitles_fixed.zip' : (selectedFiles[0].name.replace(/\.(srt|ass)$/i, '') + '_fixed.' + (document.getElementById('outputFormat').value || 'srt'));
+            a.download = selectedFiles.length > 1
+                ? 'subtitles_fixed.zip'
+                : (selectedFiles[0].name.replace(/\.(srt|ass)$/i, '') + '_fixed.' + (document.getElementById('outputFormat').value || 'srt'));
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showStatus('success', html.getAttribute('lang') === 'en'
-                ? `✓ ${selectedFiles.length} file(s) processed successfully`
-                : `✓ تمت معالجة ${selectedFiles.length} ملف بنجاح`);
+            const isEn = html.getAttribute('lang') === 'en';
+            showStatus('success', isEn
+                ? `\u2713 ${selectedFiles.length} file(s) processed successfully`
+                : `\u2713 \u062a\u0645\u062a \u0645\u0639\u0627\u0644\u062c\u0629 ${selectedFiles.length} \u0645\u0644\u0641 \u0628\u0646\u062c\u0627\u062d`);
         } catch (err) {
-            showStatus('error', (html.getAttribute('lang') === 'en' ? '✕ Error: ' : '✕ خطأ: ') + err.message);
+            const isEn = html.getAttribute('lang') === 'en';
+            showStatus('error', (isEn ? '\u2715 Error: ' : '\u2715 \u062e\u0637\u0623: ') + err.message);
         } finally {
             setLoading(false);
         }
     });
 
     function setLoading(on) {
-        processBtn.disabled = on;
+        processBtn.disabled = on || selectedFiles.length === 0;
         processIcon.style.display = on ? 'none' : '';
         processSpin.style.display = on ? 'block' : 'none';
     }
