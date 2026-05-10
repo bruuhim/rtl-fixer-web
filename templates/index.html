@@ -45,7 +45,6 @@
             min-height: 100dvh;
             display: flex;
             flex-direction: column;
-            /* mobile: normal scroll, no padding issues */
             padding: 12px;
         }
         html[dir="ltr"] body { font-family: 'Inter', sans-serif; }
@@ -80,7 +79,6 @@
             color: var(--text-2);
             cursor: pointer;
             transition: border-color 180ms var(--ease), color 180ms var(--ease);
-            /* ensure tap target is large enough */
             min-height: 38px;
         }
         .lang-pill:hover { border-color: var(--border-hover); color: var(--text-1); }
@@ -105,7 +103,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 52px 4px 20px; /* top padding accounts for fixed top-bar */
+            padding: 52px 4px 20px;
         }
         .logo {
             width: 44px; height: 44px;
@@ -144,7 +142,6 @@
             justify-content: space-between;
             padding: 14px 18px;
             cursor: pointer;
-            /* min touch target */
             min-height: 52px;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
@@ -167,7 +164,6 @@
         }
         .accordion-section.open .accordion-chevron { transform: rotate(180deg); }
 
-        /* badge showing active state count */
         .acc-badge {
             background: var(--accent-dim);
             color: var(--accent);
@@ -185,7 +181,6 @@
             border-top: 1px solid var(--border);
         }
         .accordion-section.open .accordion-body { display: block; }
-        /* Files section always visible (no accordion toggle) */
         .accordion-section.always-open .accordion-header { cursor: default; }
         .accordion-section.always-open .accordion-chevron { display: none; }
         .accordion-section.always-open .accordion-body { display: block; border-top: 1px solid var(--border); }
@@ -234,7 +229,6 @@
             cursor: pointer;
             transition: border-color 180ms var(--ease), background 180ms var(--ease);
             font-family: inherit;
-            /* proper touch target */
             min-height: 44px;
         }
         .browse-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
@@ -277,7 +271,6 @@
         .file-name { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .file-size { font-size: 0.7rem; color: var(--text-3); margin-top: 1px; }
         .file-remove {
-            /* bigger tap target */
             width: 36px; height: 36px; border-radius: 50%; border: none;
             background: transparent; color: var(--text-3);
             cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -312,10 +305,9 @@
             border-radius: var(--r-sm);
             color: var(--text-1);
             font-family: inherit;
-            font-size: 0.9rem; /* larger for mobile legibility */
+            font-size: 0.9rem;
             transition: border-color 180ms var(--ease), background 180ms var(--ease);
             -webkit-appearance: none;
-            /* ensure 44px min height for touch */
             min-height: 44px;
         }
         .field-select {
@@ -374,7 +366,6 @@
             gap: 12px;
             padding: 12px 0;
             cursor: pointer;
-            /* touch-friendly height */
             min-height: 44px;
         }
         .check-row + .check-row { border-top: 1px solid var(--border); }
@@ -407,6 +398,7 @@
             user-select: none;
             line-height: 1.4;
             flex: 1;
+            min-width: 0;
         }
         .check-row.subdued { opacity: 0.4; pointer-events: none; }
         .sub-checks {
@@ -497,7 +489,6 @@
             font-family: inherit;
             cursor: pointer;
             transition: opacity 180ms, transform 120ms;
-            /* ensure proper touch target */
             min-height: 52px;
         }
         .process-btn:hover:not(:disabled) { opacity: 0.88; }
@@ -566,7 +557,7 @@
             color: var(--text-2);
         }
 
-        /* --- Section gap --- */
+        /* --- Section gap (mobile) --- */
         .sections {
             display: flex;
             flex-direction: column;
@@ -576,66 +567,112 @@
 
         /* ======== DESKTOP (900px+) ======== */
         @media (min-width: 900px) {
-            body { padding: 20px 28px; height: 100dvh; overflow: hidden; }
+            body {
+                padding: 20px 28px;
+                height: 100dvh;
+                overflow: hidden;
+            }
             .header { padding: 16px 4px 20px; }
 
-            .sections { display: contents; } /* let form be the grid */
-
+            /* form = 3-col grid: files | middle | right */
             #uploadForm {
                 display: grid;
-                grid-template-columns: 320px 1fr 1fr;
+                grid-template-columns: 300px 1fr 1fr;
                 grid-template-rows: 1fr auto;
                 gap: 12px;
-                overflow: hidden;
                 flex: 1;
+                min-height: 0;
+                overflow: hidden;
             }
 
-            /* hide accordion chrome on desktop, show raw cards */
-            .accordion-section {
-                border-radius: var(--r-xl);
-                overflow: visible;
-            }
+            /* sections wrapper dissolves on desktop */
+            .sections { display: contents; }
+
+            /* hide accordion chrome, show raw cards */
             .accordion-header { display: none !important; }
             .accordion-body {
-                display: block !important;
-                border-top: none;
-                padding: 20px;
-                height: 100%;
+                display: flex !important;
+                flex-direction: column;
+                gap: 0;
+                border-top: none !important;
+                padding: 18px !important;
                 overflow-y: auto;
+                height: 100%;
             }
-            .accordion-section.always-open .accordion-body {
-                border-top: none;
+            .accordion-section {
+                border-radius: var(--r-xl);
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
             }
 
-            /* RTL section desktop */
-            .rtl-section .rtl-radio-wrap { display: block !important; }
-            .rtl-header-row { padding: 0 0 12px 0; }
-
-            /* card-title on desktop (was hidden in accordion header) */
+            /* card-title on desktop */
             .card-title-desktop {
                 display: flex;
                 align-items: center;
                 gap: 8px;
-                font-size: 0.78rem;
+                font-size: 0.75rem;
                 font-weight: 700;
                 color: var(--text-2);
                 text-transform: uppercase;
                 letter-spacing: 0.06em;
-                margin-bottom: 14px;
+                margin-bottom: 12px;
+                flex-shrink: 0;
             }
             .card-title-desktop i { color: var(--accent); font-size: 0.75rem; }
 
-            .col-1 { grid-column: 1; grid-row: 1 / 3; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
-            .col-2 { grid-column: 2; grid-row: 1; overflow-y: auto; }
-            .col-3 { grid-column: 3; grid-row: 1; overflow-y: auto; }
-            .col-action { grid-column: 2 / 4; grid-row: 2; }
+            /* ---- Column 1: Files (spans both grid rows) ---- */
+            .col-1 {
+                grid-column: 1;
+                grid-row: 1 / 3;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                min-height: 0;
+                overflow-y: auto;
+            }
+            .col-1::-webkit-scrollbar { width: 3px; }
+            .col-1::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-            .col-1::-webkit-scrollbar,
-            .col-2::-webkit-scrollbar,
-            .col-3::-webkit-scrollbar { width: 3px; }
-            .col-1::-webkit-scrollbar-thumb,
-            .col-2::-webkit-scrollbar-thumb,
-            .col-3::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+            /* ---- Column 2: middle cards stacked ---- */
+            .col-2-stack {
+                grid-column: 2;
+                grid-row: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                min-height: 0;
+                overflow-y: auto;
+            }
+            .col-2-stack::-webkit-scrollbar { width: 3px; }
+            .col-2-stack::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+            /* ---- Column 3: right cards stacked ---- */
+            .col-3-stack {
+                grid-column: 3;
+                grid-row: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                min-height: 0;
+                overflow-y: auto;
+            }
+            .col-3-stack::-webkit-scrollbar { width: 3px; }
+            .col-3-stack::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+            /* ---- Action bar spans cols 2-3 ---- */
+            .col-action {
+                grid-column: 2 / 4;
+                grid-row: 2;
+            }
+
+            /* RTL section desktop overrides */
+            .rtl-section .rtl-radio-wrap { display: block !important; }
+            .rtl-header-row { padding: 0 0 10px 0; }
+            .rtl-section .accordion-body {
+                padding-top: 18px !important;
+            }
 
             /* action bar not sticky on desktop */
             .action-bar {
@@ -645,19 +682,33 @@
                 margin-top: 0;
             }
 
+            /* tighter form controls on desktop */
             .field-select, .field-input {
                 font-size: 0.82rem;
                 min-height: 36px;
                 padding: 8px 10px;
             }
-            .field-select { padding-left: 28px; }
-            html[dir="ltr"] .field-select { padding-left: 10px; padding-right: 28px; }
-
-            .check-row { min-height: unset; padding: 6px 0; }
-            .check-box { width: 17px; height: 17px; }
+            .field-select {
+                padding-left: 28px;
+                background-position: left 10px center;
+            }
+            html[dir="ltr"] .field-select {
+                padding-left: 10px;
+                padding-right: 28px;
+                background-position: right 10px center;
+            }
+            .check-row { min-height: unset; padding: 7px 0; }
+            .check-row + .check-row { border-top: 1px solid var(--border); }
+            .check-box { width: 16px; height: 16px; }
+            .check-box:checked::after { left: 4px; top: 1px; width: 4px; height: 8px; }
             .check-label { font-size: 0.82rem; }
-            .process-btn { font-size: 0.9rem; padding: 13px 24px; min-height: unset; }
+            .radio-row { min-height: 34px; }
+            .radio-label { font-size: 0.79rem; }
+            .process-btn { font-size: 0.9rem; padding: 12px 24px; min-height: unset; }
             .browse-btn { padding: 7px 16px; min-height: unset; font-size: 0.8rem; }
+            .upload-area { padding: 18px 12px; }
+            .field-label { font-size: 0.7rem; }
+            .divider { margin: 10px 0; }
         }
     </style>
 </head>
@@ -692,7 +743,7 @@
 
         <div class="sections">
 
-        <!-- ====== FILES ====== -->
+        <!-- ====== FILES (col 1) ====== -->
         <div class="accordion-section col-1 always-open" style="flex:1; display:flex; flex-direction:column;">
             <div class="accordion-header">
                 <div class="accordion-header-left">
@@ -731,7 +782,6 @@
 
                 <div class="file-list" id="fileList"></div>
 
-                <!-- Format + Encoding — shown inline under files on mobile -->
                 <div class="format-row">
                     <div class="field">
                         <label class="field-label" for="outputFormat">
@@ -762,209 +812,227 @@
             </div>
         </div>
 
-        <!-- ====== RTL FIX (always visible, prominent) ====== -->
-        <div class="rtl-section col-2" id="rtlCard">
-            <div class="rtl-header-row">
-                <input type="checkbox" class="check-box" id="fixRtlCheck" name="fix_rtl" value="true" checked style="flex-shrink:0;">
-                <label for="fixRtlCheck" class="check-label" style="font-weight:700; cursor:pointer;">
-                    <span style="color:var(--accent);">✦</span>
-                    <span class="lang-en"> Fix Arabic RTL Direction</span>
-                    <span class="lang-ar"> إصلاح اتجاه النصوص العربية (RTL)</span>
-                </label>
-            </div>
-            <div class="rtl-radio-wrap" id="rtlRadioStack" style="padding: 0 18px 14px;">
-                <label class="radio-row">
-                    <input type="radio" class="radio-btn" name="rtl_mode" value="rle" checked>
-                    <span class="radio-label">
-                        <span class="tag-chip">U+202B</span>
-                        <span class="lang-en"> RLE only — Default</span>
-                        <span class="lang-ar"> RLE الافتراضي</span>
-                    </span>
-                </label>
-                <label class="radio-row">
-                    <input type="radio" class="radio-btn" name="rtl_mode" value="rle_pdf">
-                    <span class="radio-label">
-                        <span class="tag-chip">RLE + PDF</span>
-                        <span class="lang-en"> For advanced players</span>
-                        <span class="lang-ar"> للمشغلات المتقدمة</span>
-                    </span>
-                </label>
-            </div>
-        </div>
+        <!-- ====== MIDDLE COLUMN WRAPPER (col 2) ====== -->
+        <div class="col-2-stack">
 
-        <!-- ====== TIME SHIFT ====== -->
-        <div class="accordion-section col-2">
-            <div class="accordion-header" data-target="timeShiftBody">
-                <div class="accordion-header-left">
-                    <i class="fa-regular fa-clock"></i>
-                    <span class="lang-en">Time Shift</span>
-                    <span class="lang-ar">ضبط التوقيت</span>
-                    <span class="acc-badge" id="timeShiftBadge">ON</span>
-                </div>
-                <i class="fa-solid fa-chevron-down accordion-chevron"></i>
-            </div>
-            <div class="accordion-body" id="timeShiftBody">
-                <div class="card-title-desktop">
-                    <i class="fa-regular fa-clock"></i>
-                    <span class="lang-en">Time Shift</span>
-                    <span class="lang-ar">ضبط التوقيت (تأخير / تقديم)</span>
-                </div>
-                <div class="inline-row">
-                    <div class="field">
-                        <label class="field-label" for="timeShiftMs">
-                            <span class="lang-en">Shift (ms)</span>
-                            <span class="lang-ar">مقدار الإزاحة (ms)</span>
-                        </label>
-                        <input type="number" class="field-input" id="timeShiftMs" name="time_shift_ms"
-                               value="0" step="100" placeholder="0" inputmode="numeric">
-                        <div class="shift-preview" id="shiftPreview"></div>
+            <!-- RTL FIX -->
+            <div class="rtl-section" id="rtlCard">
+                <div class="accordion-header">
+                    <div class="accordion-header-left">
+                        <i class="fa-solid fa-align-right"></i>
+                        <span class="lang-en">RTL Fix</span>
+                        <span class="lang-ar">إصلاح RTL</span>
                     </div>
-                    <div class="field">
-                        <label class="field-label" for="timeShiftFrom">
-                            <span class="lang-en">From Timestamp</span>
-                            <span class="lang-ar">بدءاً من</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="rtl-header-row" style="padding-right:0; padding-left:0;">
+                        <input type="checkbox" class="check-box" id="fixRtlCheck" name="fix_rtl" value="true" checked style="flex-shrink:0;">
+                        <label for="fixRtlCheck" class="check-label" style="font-weight:700; cursor:pointer;">
+                            <span style="color:var(--accent);">✦</span>
+                            <span class="lang-en"> Fix Arabic RTL Direction</span>
+                            <span class="lang-ar"> إصلاح اتجاه النصوص العربية (RTL)</span>
                         </label>
-                        <input type="text" class="field-input" id="timeShiftFrom" name="time_shift_from"
-                               value="00:00:00,000" placeholder="00:00:00,000" inputmode="text">
+                    </div>
+                    <div class="rtl-radio-wrap" id="rtlRadioStack" style="padding: 0;">
+                        <label class="radio-row">
+                            <input type="radio" class="radio-btn" name="rtl_mode" value="rle" checked>
+                            <span class="radio-label">
+                                <span class="tag-chip">U+202B</span>
+                                <span class="lang-en"> RLE only — Default</span>
+                                <span class="lang-ar"> RLE الافتراضي</span>
+                            </span>
+                        </label>
+                        <label class="radio-row">
+                            <input type="radio" class="radio-btn" name="rtl_mode" value="rle_pdf">
+                            <span class="radio-label">
+                                <span class="tag-chip">RLE + PDF</span>
+                                <span class="lang-en"> For advanced players</span>
+                                <span class="lang-ar"> للمشغلات المتقدمة</span>
+                            </span>
+                        </label>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ====== CLEANUP ====== -->
-        <div class="accordion-section col-3">
-            <div class="accordion-header" data-target="cleanupBody">
-                <div class="accordion-header-left">
-                    <i class="fa-solid fa-broom"></i>
-                    <span class="lang-en">Cleanup</span>
-                    <span class="lang-ar">التنظيف</span>
-                    <span class="acc-badge" id="cleanupBadge">ON</span>
+            <!-- TIME SHIFT -->
+            <div class="accordion-section">
+                <div class="accordion-header" data-target="timeShiftBody">
+                    <div class="accordion-header-left">
+                        <i class="fa-regular fa-clock"></i>
+                        <span class="lang-en">Time Shift</span>
+                        <span class="lang-ar">ضبط التوقيت</span>
+                        <span class="acc-badge" id="timeShiftBadge">ON</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron"></i>
                 </div>
-                <i class="fa-solid fa-chevron-down accordion-chevron"></i>
+                <div class="accordion-body" id="timeShiftBody">
+                    <div class="card-title-desktop">
+                        <i class="fa-regular fa-clock"></i>
+                        <span class="lang-en">Time Shift</span>
+                        <span class="lang-ar">ضبط التوقيت (تأخير / تقديم)</span>
+                    </div>
+                    <div class="inline-row">
+                        <div class="field">
+                            <label class="field-label" for="timeShiftMs">
+                                <span class="lang-en">Shift (ms)</span>
+                                <span class="lang-ar">مقدار الإزاحة (ms)</span>
+                            </label>
+                            <input type="number" class="field-input" id="timeShiftMs" name="time_shift_ms"
+                                   value="0" step="100" placeholder="0" inputmode="numeric">
+                            <div class="shift-preview" id="shiftPreview"></div>
+                        </div>
+                        <div class="field">
+                            <label class="field-label" for="timeShiftFrom">
+                                <span class="lang-en">From Timestamp</span>
+                                <span class="lang-ar">بدءاً من</span>
+                            </label>
+                            <input type="text" class="field-input" id="timeShiftFrom" name="time_shift_from"
+                                   value="00:00:00,000" placeholder="00:00:00,000" inputmode="text">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="accordion-body" id="cleanupBody">
-                <div class="card-title-desktop">
-                    <i class="fa-solid fa-broom"></i>
-                    <span class="lang-en">Cleanup Options</span>
-                    <span class="lang-ar">خيارات التنظيف</span>
-                </div>
 
-                <label class="check-row" style="border-top:none; padding-top:0;">
-                    <input type="checkbox" class="check-box" name="remove_tashkeel" value="true">
-                    <span class="check-label">
-                        <span class="lang-en">Remove Arabic Diacritics (Tashkeel)</span>
-                        <span class="lang-ar">إزالة التشكيل والحركات</span>
-                    </span>
-                </label>
-                <label class="check-row">
-                    <input type="checkbox" class="check-box" name="remove_music_lines" value="true">
-                    <span class="check-label">
-                        <span class="lang-en">Remove Music Lines (♪ ♫)</span>
-                        <span class="lang-ar">إزالة الأسطر الموسيقية (♪ ♫)</span>
-                    </span>
-                </label>
-                <label class="check-row">
-                    <input type="checkbox" class="check-box" id="removeAllTags" name="remove_all_tags" value="true">
-                    <span class="check-label">
-                        <span class="lang-en">Remove All Tags (Colors, Fonts)</span>
-                        <span class="lang-ar">إزالة كافة التنسيقات</span>
-                    </span>
-                </label>
-                <div class="sub-checks" id="tagKeepOptions">
-                    <label class="check-row subdued" style="border-top:none; padding-top:4px;">
-                        <input type="checkbox" class="check-box" name="keep_italic" value="true" disabled>
+        </div><!-- /col-2-stack -->
+
+        <!-- ====== RIGHT COLUMN WRAPPER (col 3) ====== -->
+        <div class="col-3-stack">
+
+            <!-- CLEANUP -->
+            <div class="accordion-section">
+                <div class="accordion-header" data-target="cleanupBody">
+                    <div class="accordion-header-left">
+                        <i class="fa-solid fa-broom"></i>
+                        <span class="lang-en">Cleanup</span>
+                        <span class="lang-ar">التنظيف</span>
+                        <span class="acc-badge" id="cleanupBadge">ON</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron"></i>
+                </div>
+                <div class="accordion-body" id="cleanupBody">
+                    <div class="card-title-desktop">
+                        <i class="fa-solid fa-broom"></i>
+                        <span class="lang-en">Cleanup Options</span>
+                        <span class="lang-ar">خيارات التنظيف</span>
+                    </div>
+
+                    <label class="check-row" style="border-top:none; padding-top:0;">
+                        <input type="checkbox" class="check-box" name="remove_tashkeel" value="true">
                         <span class="check-label">
-                            <span class="lang-en">Keep &lt;i&gt;</span>
-                            <span class="lang-ar">الاحتفاظ بـ &lt;i&gt;</span>
+                            <span class="lang-en">Remove Arabic Diacritics (Tashkeel)</span>
+                            <span class="lang-ar">إزالة التشكيل والحركات</span>
                         </span>
                     </label>
-                    <label class="check-row subdued">
-                        <input type="checkbox" class="check-box" name="keep_bold" value="true" disabled>
+                    <label class="check-row">
+                        <input type="checkbox" class="check-box" name="remove_music_lines" value="true">
                         <span class="check-label">
-                            <span class="lang-en">Keep &lt;b&gt;</span>
-                            <span class="lang-ar">الاحتفاظ بـ &lt;b&gt;</span>
+                            <span class="lang-en">Remove Music Lines (♪ ♫)</span>
+                            <span class="lang-ar">إزالة الأسطر الموسيقية (♪ ♫)</span>
                         </span>
                     </label>
-                    <label class="check-row subdued" style="margin-bottom:4px;">
-                        <input type="checkbox" class="check-box" name="keep_font_color" value="true" disabled>
+                    <label class="check-row">
+                        <input type="checkbox" class="check-box" id="removeAllTags" name="remove_all_tags" value="true">
                         <span class="check-label">
-                            <span class="lang-en">Keep &lt;font&gt; colors</span>
-                            <span class="lang-ar">الاحتفاظ بالألوان &lt;font&gt;</span>
+                            <span class="lang-en">Remove All Tags (Colors, Fonts)</span>
+                            <span class="lang-ar">إزالة كافة التنسيقات</span>
                         </span>
                     </label>
+                    <div class="sub-checks" id="tagKeepOptions">
+                        <label class="check-row subdued" style="border-top:none; padding-top:4px;">
+                            <input type="checkbox" class="check-box" name="keep_italic" value="true" disabled>
+                            <span class="check-label">
+                                <span class="lang-en">Keep &lt;i&gt;</span>
+                                <span class="lang-ar">الاحتفاظ بـ &lt;i&gt;</span>
+                            </span>
+                        </label>
+                        <label class="check-row subdued">
+                            <input type="checkbox" class="check-box" name="keep_bold" value="true" disabled>
+                            <span class="check-label">
+                                <span class="lang-en">Keep &lt;b&gt;</span>
+                                <span class="lang-ar">الاحتفاظ بـ &lt;b&gt;</span>
+                            </span>
+                        </label>
+                        <label class="check-row subdued" style="margin-bottom:4px;">
+                            <input type="checkbox" class="check-box" name="keep_font_color" value="true" disabled>
+                            <span class="check-label">
+                                <span class="lang-en">Keep &lt;font&gt; colors</span>
+                                <span class="lang-ar">الاحتفاظ بالألوان &lt;font&gt;</span>
+                            </span>
+                        </label>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ====== BRACKETS ====== -->
-        <div class="accordion-section col-3">
-            <div class="accordion-header" data-target="bracketsBody">
-                <div class="accordion-header-left">
-                    <i class="fa-solid fa-code"></i>
-                    <span class="lang-en">Brackets</span>
-                    <span class="lang-ar">الأقواس</span>
-                    <span class="acc-badge" id="bracketsBadge">ON</span>
+            <!-- BRACKETS -->
+            <div class="accordion-section">
+                <div class="accordion-header" data-target="bracketsBody">
+                    <div class="accordion-header-left">
+                        <i class="fa-solid fa-code"></i>
+                        <span class="lang-en">Brackets</span>
+                        <span class="lang-ar">الأقواس</span>
+                        <span class="acc-badge" id="bracketsBadge">ON</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down accordion-chevron"></i>
                 </div>
-                <i class="fa-solid fa-chevron-down accordion-chevron"></i>
+                <div class="accordion-body" id="bracketsBody">
+                    <div class="card-title-desktop">
+                        <i class="fa-solid fa-code"></i>
+                        <span class="lang-en">Clean Brackets &amp; Symbols</span>
+                        <span class="lang-ar">إزالة الأقواس والرموز</span>
+                    </div>
+
+                    <input type="hidden" name="clean_brackets" id="cleanBracketsHidden" value="false">
+                    <input type="hidden" name="bracket_options" id="bracketOptionsHidden" value="{}">
+
+                    <label class="check-row" style="border-top:none; padding-top:0;">
+                        <input type="checkbox" class="check-box bracket-opt" data-key="remove_square">
+                        <span class="check-label">
+                            <span class="lang-en">Remove [ ] content</span>
+                            <span class="lang-ar">حذف محتوى [ ]</span>
+                        </span>
+                    </label>
+                    <label class="check-row">
+                        <input type="checkbox" class="check-box bracket-opt" data-key="remove_round">
+                        <span class="check-label">
+                            <span class="lang-en">Remove ( ) content</span>
+                            <span class="lang-ar">حذف محتوى ( )</span>
+                        </span>
+                    </label>
+                    <label class="check-row">
+                        <input type="checkbox" class="check-box bracket-opt" data-key="remove_curly_text">
+                        <span class="check-label">
+                            <span class="lang-en">Remove { } content</span>
+                            <span class="lang-ar">حذف محتوى { }</span>
+                        </span>
+                    </label>
+
+                    <div class="divider"></div>
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                        <span style="font-size:0.75rem; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:0.05em;">
+                            <i class="fa-solid fa-language" style="color:var(--accent); margin-left:4px;"></i>
+                            <span class="lang-en">Translation</span>
+                            <span class="lang-ar">الترجمة</span>
+                        </span>
+                    </div>
+                    <select class="field-select" disabled style="margin-bottom:6px;">
+                        <option>
+                            <span class="lang-en">-- No Translation --</span>
+                            <span class="lang-ar">-- بدون ترجمة --</span>
+                        </option>
+                    </select>
+                    <div class="coming-soon-note">
+                        <i class="fa-solid fa-sparkles"></i>
+                        <span class="lang-en">AI Translation coming soon</span>
+                        <span class="lang-ar">ميزة الترجمة الذكية ستتوفر قريباً</span>
+                    </div>
+                </div>
             </div>
-            <div class="accordion-body" id="bracketsBody">
-                <div class="card-title-desktop">
-                    <i class="fa-solid fa-code"></i>
-                    <span class="lang-en">Clean Brackets &amp; Symbols</span>
-                    <span class="lang-ar">إزالة الأقواس والرموز</span>
-                </div>
 
-                <input type="hidden" name="clean_brackets" id="cleanBracketsHidden" value="false">
-                <input type="hidden" name="bracket_options" id="bracketOptionsHidden" value="{}">
-
-                <label class="check-row" style="border-top:none; padding-top:0;">
-                    <input type="checkbox" class="check-box bracket-opt" data-key="remove_square">
-                    <span class="check-label">
-                        <span class="lang-en">Remove [ ] content</span>
-                        <span class="lang-ar">حذف محتوى [ ]</span>
-                    </span>
-                </label>
-                <label class="check-row">
-                    <input type="checkbox" class="check-box bracket-opt" data-key="remove_round">
-                    <span class="check-label">
-                        <span class="lang-en">Remove ( ) content</span>
-                        <span class="lang-ar">حذف محتوى ( )</span>
-                    </span>
-                </label>
-                <label class="check-row">
-                    <input type="checkbox" class="check-box bracket-opt" data-key="remove_curly_text">
-                    <span class="check-label">
-                        <span class="lang-en">Remove { } content</span>
-                        <span class="lang-ar">حذف محتوى { }</span>
-                    </span>
-                </label>
-
-                <!-- Translation (moved here to avoid an extra section) -->
-                <div class="divider"></div>
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                    <span style="font-size:0.75rem; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:0.05em;">
-                        <i class="fa-solid fa-language" style="color:var(--accent); margin-left:4px;"></i>
-                        <span class="lang-en">Translation</span>
-                        <span class="lang-ar">الترجمة</span>
-                    </span>
-                </div>
-                <select class="field-select" disabled style="margin-bottom:6px;">
-                    <option>
-                        <span class="lang-en">-- No Translation --</span>
-                        <span class="lang-ar">-- بدون ترجمة --</span>
-                    </option>
-                </select>
-                <div class="coming-soon-note">
-                    <i class="fa-solid fa-sparkles"></i>
-                    <span class="lang-en">AI Translation coming soon</span>
-                    <span class="lang-ar">ميزة الترجمة الذكية ستتوفر قريباً</span>
-                </div>
-            </div>
-        </div>
+        </div><!-- /col-3-stack -->
 
         </div><!-- /sections -->
 
-        <!-- ====== STICKY ACTION BAR ====== -->
+        <!-- ====== ACTION BAR ====== -->
         <div class="action-bar col-action">
             <button type="submit" class="process-btn" id="processButton" disabled>
                 <i class="fa-solid fa-bolt" id="processIcon"></i>
