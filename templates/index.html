@@ -1,1274 +1,1006 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bruuhim Subtitle Studio</title>
-    <link rel="icon" type="image/jpeg" href="/static/Icon.jpg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bruuhim Subtitle Studio</title>
+<link rel="icon" type="image/jpeg" href="/static/Icon.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --bg:          #0f0e0d;
+  --s1:          #161513;
+  --s2:          #1d1b19;
+  --s3:          #252220;
+  --border:      rgba(255,255,255,0.07);
+  --bh:          rgba(255,255,255,0.14);
+  --t1:          #f2ede6;
+  --t2:          #8a847c;
+  --t3:          #524e49;
+  --accent:      #d4956a;
+  --adim:        rgba(212,149,106,0.12);
+  --aglow:       rgba(212,149,106,0.25);
+  --green:       #6faf82;
+  --gdim:        rgba(111,175,130,0.12);
+  --red:         #c47070;
+  --rdim:        rgba(196,112,112,0.12);
+  --rsm: 8px; --rmd: 12px; --rlg: 16px; --rxl: 20px;
+  --ease: cubic-bezier(0.16,1,0.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+body{
+  font-family:'Noto Kufi Arabic',sans-serif;
+  background:var(--bg);
+  color:var(--t1);
+  min-height:100dvh;
+}
+html[dir=ltr] body{font-family:'Inter',sans-serif}
 
-    <style>
-        :root {
-            --bg:           #0f0e0d;
-            --surface-1:    #161513;
-            --surface-2:    #1d1b19;
-            --surface-3:    #252220;
-            --border:       rgba(255,255,255,0.07);
-            --border-hover: rgba(255,255,255,0.14);
-            --text-1:       #f2ede6;
-            --text-2:       #8a847c;
-            --text-3:       #524e49;
-            --accent:       #d4956a;
-            --accent-dim:   rgba(212,149,106,0.12);
-            --accent-glow:  rgba(212,149,106,0.25);
-            --green:        #6faf82;
-            --green-dim:    rgba(111,175,130,0.12);
-            --red:          #c47070;
-            --red-dim:      rgba(196,112,112,0.12);
-            --r-sm: 8px;
-            --r-md: 12px;
-            --r-lg: 16px;
-            --r-xl: 20px;
-            --ease: cubic-bezier(0.16,1,0.3,1);
-        }
+/* lang */
+.le{display:none}
+html[lang=en] .la{display:none}
+html[lang=en] .le{display:inline}
+.la{display:inline}
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { -webkit-font-smoothing: antialiased; }
+/* top bar */
+.top-bar{position:fixed;top:12px;right:16px;z-index:200}
+html[dir=ltr] .top-bar{right:auto;left:16px}
+.lang-pill{
+  display:flex;align-items:center;gap:8px;
+  background:var(--s2);border:1px solid var(--border);
+  padding:6px 14px;border-radius:100px;
+  font-size:.8rem;font-weight:600;color:var(--t2);
+  cursor:pointer;min-height:38px;
+  transition:border-color 180ms var(--ease),color 180ms var(--ease);
+}
+.lang-pill:hover{border-color:var(--bh);color:var(--t1)}
+.lang-pill input{display:none}
+.lpd{width:8px;height:8px;border-radius:50%;background:var(--accent)}
 
-        body {
-            font-family: 'Noto Kufi Arabic', sans-serif;
-            background: var(--bg);
-            color: var(--text-1);
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            padding: 12px;
-        }
-        html[dir="ltr"] body { font-family: 'Inter', sans-serif; }
+/* cards */
+.card{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:var(--rxl);overflow:hidden;
+  transition:border-color 200ms var(--ease);
+}
+.card:hover{border-color:var(--bh)}
+.card-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;min-height:52px;
+  font-size:.78rem;font-weight:700;color:var(--t2);
+  text-transform:uppercase;letter-spacing:.06em;
+  cursor:pointer;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.card-head i.icon{color:var(--accent);font-size:.75rem;margin-left:6px}
+html[dir=ltr] .card-head i.icon{margin-left:0;margin-right:6px}
+.chev{color:var(--t3);font-size:.75rem;transition:transform 250ms var(--ease)}
+.card.open .chev{transform:rotate(180deg)}
+.acc-badge{
+  background:var(--adim);color:var(--accent);
+  border-radius:100px;padding:1px 7px;
+  font-size:.65rem;font-weight:800;display:none;
+}
+.acc-badge.on{display:inline-block}
+.card-body{
+  display:none;padding:0 18px 16px;
+  border-top:1px solid var(--border);
+}
+.card.open .card-body{display:block}
+.card.always .card-head{cursor:default}
+.card.always .card-body{display:block;border-top:1px solid var(--border)}
 
-        /* --- Lang toggle --- */
-        .lang-en { display: none; }
-        html[lang="en"] .lang-ar { display: none; }
-        html[lang="en"] .lang-en { display: inline; }
-        html[lang="en"] .lang-en-block { display: block; }
-        .lang-ar { display: inline; }
-        .lang-ar-block { display: block; }
+/* upload */
+.upload-zone{
+  border:1.5px dashed var(--border);border-radius:var(--rlg);
+  padding:24px 16px;text-align:center;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  transition:border-color 200ms,background 200ms;
+  margin-top:4px;
+}
+.upload-zone:hover,.upload-zone:focus{border-color:var(--accent);background:var(--adim);outline:none}
+.upload-zone.drag{border-color:var(--accent);background:var(--aglow)}
+.uiw{
+  width:44px;height:44px;background:var(--s3);
+  border-radius:var(--rmd);display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);color:var(--accent);font-size:1rem;
+}
+.utitle{font-size:.9rem;font-weight:600;color:var(--t1)}
+.uhint{font-size:.75rem;color:var(--t3)}
+.browse-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--s3);border:1px solid var(--border);
+  color:var(--t1);padding:10px 20px;border-radius:var(--rsm);
+  font-size:.85rem;font-weight:600;cursor:pointer;
+  font-family:inherit;min-height:44px;
+  transition:border-color 180ms,background 180ms;
+}
+.browse-btn:hover{border-color:var(--accent);background:var(--adim)}
+.browse-btn:active{background:var(--aglow)}
 
-        /* --- Top bar --- */
-        .top-bar {
-            position: fixed;
-            top: 12px;
-            right: 16px;
-            z-index: 100;
-        }
-        html[dir="ltr"] .top-bar { right: auto; left: 16px; }
+/* file list */
+.flist{
+  margin-top:10px;display:none;
+  flex-direction:column;gap:6px;
+  max-height:180px;overflow-y:auto;
+}
+.flist::-webkit-scrollbar{width:3px}
+.flist::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+.fitem{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;background:var(--s2);
+  border:1px solid var(--border);border-radius:var(--rsm);
+  transition:border-color 180ms;
+}
+.fitem:hover{border-color:var(--bh)}
+.fbadge{
+  width:32px;height:32px;flex-shrink:0;
+  background:var(--s3);border-radius:var(--rsm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:800;color:var(--accent);
+  text-transform:uppercase;border:1px solid var(--border);
+}
+.finfo{flex:1;min-width:0}
+.fname{font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fsize{font-size:.7rem;color:var(--t3);margin-top:1px}
+.fremove{
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:transparent;color:var(--t3);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;flex-shrink:0;
+  transition:color 180ms,background 180ms;
+}
+.fremove:hover{color:var(--red);background:var(--rdim)}
 
-        .lang-pill {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-2);
-            cursor: pointer;
-            transition: border-color 180ms var(--ease), color 180ms var(--ease);
-            min-height: 38px;
-        }
-        .lang-pill:hover { border-color: var(--border-hover); color: var(--text-1); }
-        .lang-pill input { display: none; }
-        .lang-pill-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            background: var(--accent);
-        }
+/* format row */
+.fmt-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
 
-        /* --- Main layout --- */
-        .app {
-            width: 100%;
-            max-width: 1280px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
+/* fields */
+.field{display:flex;flex-direction:column;gap:5px}
+.flabel{
+  font-size:.72rem;font-weight:700;color:var(--t2);
+  text-transform:uppercase;letter-spacing:.05em;
+}
+.fselect,.finput{
+  width:100%;padding:10px 12px;
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:var(--rsm);color:var(--t1);
+  font-family:inherit;font-size:.9rem;
+  transition:border-color 180ms,background 180ms;
+  -webkit-appearance:none;min-height:44px;
+}
+.fselect{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238a847c' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:left 12px center;
+  padding-left:32px;
+}
+html[dir=ltr] .fselect{background-position:right 12px center;padding-left:12px;padding-right:32px}
+.fselect:focus,.finput:focus{outline:none;border-color:var(--accent);background:var(--s3)}
+.fselect:disabled{opacity:.4;cursor:not-allowed}
+.divider{height:1px;background:var(--border);margin:14px 0}
+.irow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.shift-prev{font-size:.72rem;font-weight:600;color:var(--accent);margin-top:4px;display:none}
+.cs-note{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--t3);margin-top:8px;font-weight:500}
+.cs-note i{color:var(--accent);font-size:.65rem}
 
-        /* --- Header --- */
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 52px 4px 20px;
-        }
-        .logo {
-            width: 44px; height: 44px;
-            border-radius: var(--r-md);
-            object-fit: cover;
-            border: 1px solid var(--border);
-            flex-shrink: 0;
-        }
-        .site-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-1);
-            letter-spacing: -0.3px;
-            line-height: 1.2;
-        }
-        .site-title span { color: var(--accent); }
-        .site-sub {
-            font-size: 0.75rem;
-            color: var(--text-2);
-            margin-top: 2px;
-        }
+/* checkboxes */
+.crow{display:flex;align-items:center;gap:12px;padding:12px 0;cursor:pointer;min-height:44px}
+.crow+.crow{border-top:1px solid var(--border)}
+.cbox{
+  width:20px;height:20px;flex-shrink:0;
+  -webkit-appearance:none;
+  background:var(--s2);border:1.5px solid var(--t3);
+  border-radius:5px;cursor:pointer;position:relative;
+  transition:background 150ms,border-color 150ms;
+}
+.cbox:checked{background:var(--accent);border-color:var(--accent)}
+.cbox:checked::after{
+  content:'';position:absolute;
+  left:5px;top:2px;width:5px;height:9px;
+  border:2px solid var(--bg);border-top:none;border-left:none;
+  transform:rotate(45deg);
+}
+.clabel{font-size:.85rem;color:var(--t1);user-select:none;line-height:1.4;flex:1;min-width:0}
+.crow.dim{opacity:.4;pointer-events:none}
+.sub-checks{padding-right:32px;border-top:1px solid var(--border);padding-top:2px}
+html[dir=ltr] .sub-checks{padding-right:0;padding-left:32px}
 
-        /* --- Accordion (mobile sections) --- */
-        .accordion-section {
-            background: var(--surface-1);
-            border: 1px solid var(--border);
-            border-radius: var(--r-xl);
-            overflow: hidden;
-            transition: border-color 200ms var(--ease);
-        }
-        .accordion-section:hover { border-color: var(--border-hover); }
+/* radios */
+.rrow{display:flex;align-items:center;gap:10px;cursor:pointer;min-height:40px}
+.rbtn{
+  width:18px;height:18px;flex-shrink:0;
+  -webkit-appearance:none;
+  border:1.5px solid var(--t3);border-radius:50%;
+  cursor:pointer;position:relative;transition:border-color 150ms;
+}
+.rbtn:checked{border-color:var(--accent)}
+.rbtn:checked::after{
+  content:'';position:absolute;
+  width:8px;height:8px;background:var(--accent);
+  border-radius:50%;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+}
+.rlabel{font-size:.8rem;color:var(--t2);user-select:none}
+.tag-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--s3);border:1px solid var(--border);
+  border-radius:100px;padding:2px 8px;
+  font-size:.68rem;font-weight:700;color:var(--t2);
+}
 
-        .accordion-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 18px;
-            cursor: pointer;
-            min-height: 52px;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .accordion-header-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: var(--text-2);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-        }
-        .accordion-header-left i { color: var(--accent); font-size: 0.75rem; }
-        .accordion-chevron {
-            color: var(--text-3);
-            font-size: 0.75rem;
-            transition: transform 250ms var(--ease);
-        }
-        .accordion-section.open .accordion-chevron { transform: rotate(180deg); }
+/* RTL card */
+.rtl-card.lit{
+  border-color:rgba(212,149,106,.35);
+  background:linear-gradient(135deg,rgba(212,149,106,.07),transparent);
+}
+.rtl-card .card-body{display:block}
+.rtl-radio-wrap{border-top:1px solid var(--border);padding-top:4px;display:none}
+.rtl-card.lit .rtl-radio-wrap{display:block}
+.rth-row{display:flex;align-items:center;gap:12px;padding:14px 18px;min-height:52px}
 
-        .acc-badge {
-            background: var(--accent-dim);
-            color: var(--accent);
-            border-radius: 100px;
-            padding: 1px 7px;
-            font-size: 0.65rem;
-            font-weight: 800;
-            display: none;
-        }
-        .acc-badge.visible { display: inline-block; }
+/* process button */
+.proc-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:15px 24px;background:var(--accent);color:var(--bg);
+  border:none;border-radius:var(--rlg);
+  font-size:1rem;font-weight:700;font-family:inherit;
+  cursor:pointer;min-height:52px;
+  transition:opacity 180ms,transform 120ms;
+}
+.proc-btn:hover:not(:disabled){opacity:.88}
+.proc-btn:active:not(:disabled){transform:scale(.98)}
+.proc-btn:disabled{background:var(--s3);color:var(--t3);cursor:not-allowed}
+.spinner{
+  display:none;width:18px;height:18px;
+  border:2px solid rgba(15,14,13,.2);border-top-color:var(--bg);
+  border-radius:50%;animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.status{
+  display:none;align-items:center;gap:8px;
+  padding:12px 14px;border-radius:var(--rsm);
+  font-size:.85rem;font-weight:600;margin-top:10px;
+}
+.status.ok{color:var(--green);background:var(--gdim);border:1px solid rgba(111,175,130,.2)}
+.status.err{color:var(--red);background:var(--rdim);border:1px solid rgba(196,112,112,.2)}
+.status.wait{color:var(--accent);background:var(--adim);border:1px solid rgba(212,149,106,.2)}
 
-        .accordion-body {
-            display: none;
-            padding: 0 18px 16px;
-            border-top: 1px solid var(--border);
-        }
-        .accordion-section.open .accordion-body { display: block; }
-        .accordion-section.always-open .accordion-header { cursor: default; }
-        .accordion-section.always-open .accordion-chevron { display: none; }
-        .accordion-section.always-open .accordion-body { display: block; border-top: 1px solid var(--border); }
+/* footer */
+.footer{text-align:center;padding:12px 0 4px;font-size:.72rem;color:var(--t3)}
+.footer a{color:var(--accent);text-decoration:none;font-weight:700}
+.footer a:hover{text-decoration:underline}
+#fileInput{display:none}
 
-        /* --- Upload area --- */
-        .upload-area {
-            border: 1.5px dashed var(--border);
-            border-radius: var(--r-lg);
-            padding: 24px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 200ms var(--ease), background 200ms var(--ease);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-            margin-top: 4px;
-        }
-        .upload-area:hover,
-        .upload-area:focus { border-color: var(--accent); background: var(--accent-dim); outline: none; }
-        .upload-area.dragover { border-color: var(--accent); background: var(--accent-glow); transform: scale(1.005); }
+/* =====================
+   MOBILE LAYOUT (default)
+   ===================== */
+.mobile-wrap{
+  display:flex;flex-direction:column;
+  min-height:100dvh;padding:12px;
+}
+.mobile-header{
+  display:flex;align-items:center;gap:12px;
+  padding:52px 4px 16px;
+}
+.logo{width:44px;height:44px;border-radius:var(--rmd);object-fit:cover;border:1px solid var(--border);flex-shrink:0}
+.site-title{font-size:1.1rem;font-weight:700;color:var(--t1);letter-spacing:-.3px;line-height:1.2}
+.site-title span{color:var(--accent)}
+.site-sub{font-size:.75rem;color:var(--t2);margin-top:2px}
+.mobile-sections{display:flex;flex-direction:column;gap:10px;flex:1}
+.mobile-action{
+  position:sticky;bottom:0;
+  background:linear-gradient(to top,var(--bg) 70%,transparent);
+  padding:12px 0 8px;margin-top:16px;z-index:10;
+}
 
-        .upload-icon-wrap {
-            width: 44px; height: 44px;
-            background: var(--surface-3);
-            border-radius: var(--r-md);
-            display: flex; align-items: center; justify-content: center;
-            border: 1px solid var(--border);
-            color: var(--accent);
-            font-size: 1rem;
-        }
-        .upload-title { font-size: 0.9rem; font-weight: 600; color: var(--text-1); }
-        .upload-hint { font-size: 0.75rem; color: var(--text-3); }
-        .browse-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--surface-3);
-            border: 1px solid var(--border);
-            color: var(--text-1);
-            padding: 10px 20px;
-            border-radius: var(--r-sm);
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: border-color 180ms var(--ease), background 180ms var(--ease);
-            font-family: inherit;
-            min-height: 44px;
-        }
-        .browse-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
-        .browse-btn:active { background: var(--accent-glow); }
+/* desktop hidden on mobile */
+.desktop-wrap{display:none}
 
-        /* --- File list --- */
-        .file-list {
-            margin-top: 10px;
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            max-height: 180px;
-            overflow-y: auto;
-        }
-        .file-list::-webkit-scrollbar { width: 3px; }
-        .file-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+/* =====================
+   DESKTOP LAYOUT (900px+)
+   ===================== */
+@media(min-width:900px){
+  /* hide mobile, show desktop */
+  .mobile-wrap{display:none}
+  .desktop-wrap{
+    display:flex;flex-direction:column;
+    height:100dvh;overflow:hidden;
+    padding:20px 28px;
+  }
 
-        .file-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: var(--r-sm);
-            transition: border-color 180ms var(--ease);
-        }
-        .file-item:hover { border-color: var(--border-hover); }
-        .file-badge {
-            width: 32px; height: 32px; flex-shrink: 0;
-            background: var(--surface-3);
-            border-radius: var(--r-sm);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.65rem; font-weight: 800;
-            color: var(--accent);
-            text-transform: uppercase;
-            border: 1px solid var(--border);
-        }
-        .file-info { flex: 1; min-width: 0; }
-        .file-name { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .file-size { font-size: 0.7rem; color: var(--text-3); margin-top: 1px; }
-        .file-remove {
-            width: 36px; height: 36px; border-radius: 50%; border: none;
-            background: transparent; color: var(--text-3);
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 0.8rem;
-            transition: color 180ms, background 180ms;
-            flex-shrink: 0;
-        }
-        .file-remove:hover { color: var(--red); background: var(--red-dim); }
+  .desk-header{
+    display:flex;align-items:center;gap:12px;
+    padding:8px 4px 16px;flex-shrink:0;
+  }
 
-        /* --- Format row --- */
-        .format-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 14px;
-        }
+  /* 3-col grid, fills remaining height */
+  .desk-grid{
+    display:grid;
+    grid-template-columns:300px 1fr 1fr;
+    grid-template-rows:1fr;
+    gap:12px;
+    flex:1;
+    min-height:0;
+  }
 
-        /* --- Form elements --- */
-        .field { display: flex; flex-direction: column; gap: 5px; }
-        .field-label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--text-2);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .field-select, .field-input {
-            width: 100%;
-            padding: 10px 12px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: var(--r-sm);
-            color: var(--text-1);
-            font-family: inherit;
-            font-size: 0.9rem;
-            transition: border-color 180ms var(--ease), background 180ms var(--ease);
-            -webkit-appearance: none;
-            min-height: 44px;
-        }
-        .field-select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238a847c' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: left 12px center;
-            padding-left: 32px;
-        }
-        html[dir="ltr"] .field-select {
-            background-position: right 12px center;
-            padding-left: 12px;
-            padding-right: 32px;
-        }
-        .field-select:focus, .field-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            background: var(--surface-3);
-        }
-        .field-select:disabled { opacity: 0.4; cursor: not-allowed; }
+  /* col 1: files card, full height */
+  .desk-col1{
+    display:flex;flex-direction:column;
+    min-height:0;
+  }
+  .desk-col1 .card{
+    flex:1;display:flex;flex-direction:column;min-height:0;
+  }
+  .desk-col1 .card-body{
+    display:flex !important;flex-direction:column;
+    flex:1;min-height:0;padding:18px !important;
+    border-top:1px solid var(--border);
+    overflow-y:auto;
+  }
+  .desk-col1 .card-head{cursor:default}
 
-        /* --- Divider --- */
-        .divider { height: 1px; background: var(--border); margin: 14px 0; }
+  /* col 2 & 3: stacked cards + action bar at bottom */
+  .desk-col2,.desk-col3{
+    display:flex;flex-direction:column;
+    gap:12px;min-height:0;
+  }
+  .desk-col2 .cards-stack,
+  .desk-col3 .cards-stack{
+    display:flex;flex-direction:column;
+    gap:12px;flex:1;min-height:0;overflow-y:auto;
+  }
+  .desk-col2 .cards-stack::-webkit-scrollbar,
+  .desk-col3 .cards-stack::-webkit-scrollbar{width:3px}
+  .desk-col2 .cards-stack::-webkit-scrollbar-thumb,
+  .desk-col3 .cards-stack::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
 
-        /* --- Inline row --- */
-        .inline-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
+  /* action bar sits at bottom of col2 */
+  .desk-action{flex-shrink:0}
 
-        /* --- Time shift preview --- */
-        .shift-preview {
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: var(--accent);
-            margin-top: 4px;
-            display: none;
-        }
+  /* desktop card bodies always open */
+  .desk-col2 .card-body,
+  .desk-col3 .card-body{
+    display:block !important;
+    padding:18px !important;
+    border-top:1px solid var(--border);
+  }
+  .desk-col2 .card-head,
+  .desk-col3 .card-head{
+    display:none !important;
+  }
+  .desk-col2 .card,
+  .desk-col3 .card{
+    flex-shrink:0;
+  }
 
-        /* --- Coming soon note --- */
-        .coming-soon-note {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.72rem;
-            color: var(--text-3);
-            margin-top: 8px;
-            font-weight: 500;
-        }
-        .coming-soon-note i { color: var(--accent); font-size: 0.65rem; }
+  /* card title (desktop only) */
+  .ctitle-desk{
+    display:flex;align-items:center;gap:8px;
+    font-size:.75rem;font-weight:700;color:var(--t2);
+    text-transform:uppercase;letter-spacing:.06em;
+    margin-bottom:12px;flex-shrink:0;
+  }
+  .ctitle-desk i{color:var(--accent);font-size:.75rem}
 
-        /* --- Checkboxes --- */
-        .check-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 0;
-            cursor: pointer;
-            min-height: 44px;
-        }
-        .check-row + .check-row { border-top: 1px solid var(--border); }
-        .check-box {
-            width: 20px; height: 20px; flex-shrink: 0;
-            -webkit-appearance: none;
-            background: var(--surface-2);
-            border: 1.5px solid var(--text-3);
-            border-radius: 5px;
-            cursor: pointer;
-            position: relative;
-            transition: background 150ms, border-color 150ms;
-        }
-        .check-box:checked {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-        .check-box:checked::after {
-            content: '';
-            position: absolute;
-            left: 5px; top: 2px;
-            width: 5px; height: 9px;
-            border: 2px solid var(--bg);
-            border-top: none; border-left: none;
-            transform: rotate(45deg);
-        }
-        .check-label {
-            font-size: 0.85rem;
-            color: var(--text-1);
-            user-select: none;
-            line-height: 1.4;
-            flex: 1;
-            min-width: 0;
-        }
-        .check-row.subdued { opacity: 0.4; pointer-events: none; }
-        .sub-checks {
-            padding-right: 32px;
-            border-top: 1px solid var(--border);
-            padding-top: 2px;
-        }
-        html[dir="ltr"] .sub-checks { padding-right: 0; padding-left: 32px; }
+  /* RTL card desktop */
+  .rtl-card .card-head{display:none !important}
+  .rtl-card .card-body{display:block !important;padding:18px !important;border-top:1px solid var(--border)}
+  .rtl-card .rth-row{padding:0 0 10px}
+  .rtl-radio-wrap{display:block !important}
 
-        /* --- Radio --- */
-        .radio-stack {
-            padding-right: 32px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-top: 4px;
-            border-top: 1px solid var(--border);
-            padding-top: 8px;
-        }
-        html[dir="ltr"] .radio-stack { padding-right: 0; padding-left: 32px; }
-        .radio-row {
-            display: flex; align-items: center; gap: 10px;
-            cursor: pointer;
-            min-height: 40px;
-        }
-        .radio-btn {
-            width: 18px; height: 18px; flex-shrink: 0;
-            -webkit-appearance: none;
-            border: 1.5px solid var(--text-3);
-            border-radius: 50%;
-            cursor: pointer;
-            position: relative;
-            transition: border-color 150ms;
-        }
-        .radio-btn:checked { border-color: var(--accent); }
-        .radio-btn:checked::after {
-            content: '';
-            position: absolute;
-            width: 8px; height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .radio-label { font-size: 0.8rem; color: var(--text-2); user-select: none; }
-
-        /* --- RTL fix highlight --- */
-        .rtl-section {
-            background: var(--surface-1);
-            border: 1px solid var(--border);
-            border-radius: var(--r-xl);
-            overflow: hidden;
-            transition: border-color 200ms var(--ease);
-        }
-        .rtl-section.active {
-            border-color: rgba(212,149,106,0.35);
-            background: linear-gradient(135deg, rgba(212,149,106,0.07), transparent);
-        }
-        .rtl-section .accordion-body { display: block; }
-        .rtl-section .rtl-radio-wrap {
-            border-top: 1px solid var(--border);
-            padding-top: 4px;
-            display: none;
-        }
-        .rtl-section.active .rtl-radio-wrap { display: block; }
-        .rtl-header-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 18px;
-            min-height: 52px;
-        }
-
-        /* --- Process button --- */
-        .process-btn {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 15px 24px;
-            background: var(--accent);
-            color: var(--bg);
-            border: none;
-            border-radius: var(--r-lg);
-            font-size: 1rem;
-            font-weight: 700;
-            font-family: inherit;
-            cursor: pointer;
-            transition: opacity 180ms, transform 120ms;
-            min-height: 52px;
-        }
-        .process-btn:hover:not(:disabled) { opacity: 0.88; }
-        .process-btn:active:not(:disabled) { transform: scale(0.98); }
-        .process-btn:disabled {
-            background: var(--surface-3);
-            color: var(--text-3);
-            cursor: not-allowed;
-        }
-        .spinner {
-            display: none; width: 18px; height: 18px;
-            border: 2px solid rgba(15,14,13,0.2);
-            border-top-color: var(--bg);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* --- Status --- */
-        .status {
-            display: none;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 14px;
-            border-radius: var(--r-sm);
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-        .status.success { color: var(--green); background: var(--green-dim); border: 1px solid rgba(111,175,130,0.2); }
-        .status.error   { color: var(--red);   background: var(--red-dim);   border: 1px solid rgba(196,112,112,0.2); }
-        .status.loading { color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(212,149,106,0.2); }
-
-        /* --- sticky action bar on mobile --- */
-        .action-bar {
-            position: sticky;
-            bottom: 0;
-            background: linear-gradient(to top, var(--bg) 70%, transparent);
-            padding: 12px 0 8px;
-            margin-top: 16px;
-            z-index: 10;
-        }
-
-        /* --- Footer --- */
-        .footer {
-            text-align: center;
-            padding: 12px 0 4px;
-            font-size: 0.72rem;
-            color: var(--text-3);
-        }
-        .footer a { color: var(--accent); text-decoration: none; font-weight: 700; }
-        .footer a:hover { text-decoration: underline; }
-
-        #fileInput { display: none; }
-
-        .tag-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: var(--surface-3);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            padding: 2px 8px;
-            font-size: 0.68rem;
-            font-weight: 700;
-            color: var(--text-2);
-        }
-
-        /* --- Section gap (mobile) --- */
-        .sections {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            flex: 1;
-        }
-
-        /* ======== DESKTOP (900px+) ======== */
-        @media (min-width: 900px) {
-            body {
-                padding: 20px 28px;
-                height: 100dvh;
-                overflow: hidden;
-            }
-            .header { padding: 16px 4px 20px; }
-
-            /* form = 3-col grid: files | middle | right */
-            #uploadForm {
-                display: grid;
-                grid-template-columns: 300px 1fr 1fr;
-                grid-template-rows: 1fr min-content;
-                gap: 12px;
-                flex: 1;
-                min-height: 0;
-                overflow: hidden;
-            }
-
-            /* sections wrapper dissolves on desktop */
-            .sections { display: contents; }
-
-            /* hide accordion chrome, show raw cards */
-            .accordion-header { display: none !important; }
-            .accordion-body {
-                display: flex !important;
-                flex-direction: column;
-                gap: 0;
-                border-top: none !important;
-                padding: 18px !important;
-                overflow-y: auto;
-                height: 100%;
-            }
-            .accordion-section {
-                border-radius: var(--r-xl);
-                overflow: hidden;
-                display: flex;
-                flex-direction: column;
-                min-height: 0;
-            }
-
-            /* card-title on desktop */
-            .card-title-desktop {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                font-size: 0.75rem;
-                font-weight: 700;
-                color: var(--text-2);
-                text-transform: uppercase;
-                letter-spacing: 0.06em;
-                margin-bottom: 12px;
-                flex-shrink: 0;
-            }
-            .card-title-desktop i { color: var(--accent); font-size: 0.75rem; }
-
-            /* ---- Column 1: Files (spans both grid rows) ---- */
-            .col-1 {
-                grid-column: 1;
-                grid-row: 1 / 3;
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-                min-height: 0;
-                overflow-y: auto;
-            }
-            .col-1::-webkit-scrollbar { width: 3px; }
-            .col-1::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-
-            /* ---- Column 2: middle cards stacked ---- */
-            .col-2-stack {
-                grid-column: 2;
-                grid-row: 1;
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-                min-height: 0;
-                overflow-y: auto;
-            }
-            .col-2-stack::-webkit-scrollbar { width: 3px; }
-            .col-2-stack::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-
-            /* ---- Column 3: right cards stacked ---- */
-            .col-3-stack {
-                grid-column: 3;
-                grid-row: 1;
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-                min-height: 0;
-                overflow-y: auto;
-            }
-            .col-3-stack::-webkit-scrollbar { width: 3px; }
-            .col-3-stack::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-
-            /* ---- Action bar spans cols 2-3, row 2 ---- */
-            .col-action {
-                grid-column: 2 / 4;
-                grid-row: 2;
-                align-self: end;
-            }
-
-            /* RTL section desktop overrides */
-            .rtl-section .rtl-radio-wrap { display: block !important; }
-            .rtl-header-row { padding: 0 0 10px 0; }
-            .rtl-section .accordion-body {
-                padding-top: 18px !important;
-            }
-
-            /* action bar not sticky on desktop */
-            .action-bar {
-                position: static;
-                background: none;
-                padding: 0;
-                margin-top: 0;
-            }
-
-            /* tighter form controls on desktop */
-            .field-select, .field-input {
-                font-size: 0.82rem;
-                min-height: 36px;
-                padding: 8px 10px;
-            }
-            .field-select {
-                padding-left: 28px;
-                background-position: left 10px center;
-            }
-            html[dir="ltr"] .field-select {
-                padding-left: 10px;
-                padding-right: 28px;
-                background-position: right 10px center;
-            }
-            .check-row { min-height: unset; padding: 7px 0; }
-            .check-row + .check-row { border-top: 1px solid var(--border); }
-            .check-box { width: 16px; height: 16px; }
-            .check-box:checked::after { left: 4px; top: 1px; width: 4px; height: 8px; }
-            .check-label { font-size: 0.82rem; }
-            .radio-row { min-height: 34px; }
-            .radio-label { font-size: 0.79rem; }
-            .process-btn { font-size: 0.9rem; padding: 12px 24px; min-height: unset; }
-            .browse-btn { padding: 7px 16px; min-height: unset; font-size: 0.8rem; }
-            .upload-area { padding: 18px 12px; }
-            .field-label { font-size: 0.7rem; }
-            .divider { margin: 10px 0; }
-        }
-    </style>
+  /* tighter controls */
+  .fselect,.finput{font-size:.82rem;min-height:36px;padding:8px 10px}
+  .fselect{padding-left:28px;background-position:left 10px center}
+  html[dir=ltr] .fselect{padding-left:10px;padding-right:28px;background-position:right 10px center}
+  .crow{min-height:unset;padding:7px 0}
+  .cbox{width:16px;height:16px}
+  .cbox:checked::after{left:4px;top:1px;width:4px;height:8px}
+  .clabel{font-size:.82rem}
+  .rrow{min-height:34px}
+  .rlabel{font-size:.79rem}
+  .proc-btn{font-size:.9rem;padding:12px 24px;min-height:unset}
+  .browse-btn{padding:7px 16px;min-height:unset;font-size:.8rem}
+  .upload-zone{padding:18px 12px}
+  .flabel{font-size:.7rem}
+  .divider{margin:10px 0}
+  .desk-footer{text-align:center;padding:8px 0 2px;font-size:.72rem;color:var(--t3);flex-shrink:0}
+  .desk-footer a{color:var(--accent);text-decoration:none;font-weight:700}
+}
+</style>
 </head>
 <body>
 
 <div class="top-bar">
-    <label class="lang-pill" id="langToggleLabel">
-        <input type="checkbox" id="languageToggle">
-        <span class="lang-pill-dot"></span>
-        <span class="lang-en">AR</span>
-        <span class="lang-ar">EN</span>
-    </label>
+  <label class="lang-pill">
+    <input type="checkbox" id="langToggle">
+    <span class="lpd"></span>
+    <span class="le">AR</span>
+    <span class="la">EN</span>
+  </label>
 </div>
 
-<div class="app">
+<!-- ===================== MOBILE ===================== -->
+<div class="mobile-wrap">
+  <header class="mobile-header">
+    <img src="/static/Icon.jpg" alt="logo" class="logo" width="44" height="44" loading="lazy">
+    <div>
+      <h1 class="site-title">
+        <span class="le"><span>Bruuhim</span> Subtitle Studio</span>
+        <span class="la">ستوديو ترجمات <span>Bruuhim</span></span>
+      </h1>
+      <p class="site-sub">
+        <span class="le">Upload, fix, clean, and convert subtitle files in seconds.</span>
+        <span class="la">ارفع ملفات الترجمة، أصلحها، نظفها وحول صيغتها في ثوانٍ.</span>
+      </p>
+    </div>
+  </header>
 
-    <header class="header">
-        <img src="/static/Icon.jpg" alt="Bruuhim logo" class="logo" width="44" height="44" loading="lazy">
-        <div>
-            <h1 class="site-title">
-                <span class="lang-en"><span>Bruuhim</span> Subtitle Studio</span>
-                <span class="lang-ar">ستوديو ترجمات <span>Bruuhim</span></span>
-            </h1>
-            <p class="site-sub">
-                <span class="lang-en">Upload, fix, clean, and convert subtitle files in seconds.</span>
-                <span class="lang-ar">ارفع ملفات الترجمة، أصلحها، نظفها وحول صيغتها في ثوانٍ.</span>
-            </p>
+  <form id="mForm" enctype="multipart/form-data">
+    <div class="mobile-sections">
+
+      <!-- Files -->
+      <div class="card always">
+        <div class="card-head">
+          <span><i class="fa-solid fa-file-lines icon"></i><span class="le">Files</span><span class="la">الملفات</span></span>
         </div>
-    </header>
-
-    <form id="uploadForm" enctype="multipart/form-data">
-
-        <div class="sections">
-
-        <!-- ====== FILES (col 1) ====== -->
-        <div class="accordion-section col-1 always-open" style="flex:1; display:flex; flex-direction:column;">
-            <div class="accordion-header">
-                <div class="accordion-header-left">
-                    <i class="fa-solid fa-file-lines"></i>
-                    <span class="lang-en">Files</span>
-                    <span class="lang-ar">الملفات</span>
-                </div>
-            </div>
-            <div class="accordion-body" style="flex:1; display:flex; flex-direction:column;">
-                <div class="card-title-desktop">
-                    <i class="fa-solid fa-file-lines"></i>
-                    <span class="lang-en">Files</span>
-                    <span class="lang-ar">الملفات</span>
-                </div>
-
-                <div class="upload-area" id="uploadArea" tabindex="0" role="button"
-                     aria-label="Upload subtitle files">
-                    <div class="upload-icon-wrap">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                    </div>
-                    <div class="upload-title">
-                        <span class="lang-en">Drop subtitle files here</span>
-                        <span class="lang-ar">اسحب وأفلت ملفات الترجمة</span>
-                    </div>
-                    <div class="upload-hint">
-                        <span class="lang-en">SRT &amp; ASS supported</span>
-                        <span class="lang-ar">يدعم ملفات SRT و ASS</span>
-                    </div>
-                    <button type="button" class="browse-btn" id="browseButton">
-                        <i class="fa-solid fa-folder-open"></i>
-                        <span class="lang-en">Browse</span>
-                        <span class="lang-ar">تصفح الملفات</span>
-                    </button>
-                    <input type="file" id="fileInput" name="files" multiple accept=".srt,.ass">
-                </div>
-
-                <div class="file-list" id="fileList"></div>
-
-                <div class="format-row">
-                    <div class="field">
-                        <label class="field-label" for="outputFormat">
-                            <span class="lang-en">Output</span>
-                            <span class="lang-ar">صيغة الناتج</span>
-                        </label>
-                        <select class="field-select" id="outputFormat" name="output_format">
-                            <option value="srt">SRT</option>
-                            <option value="ass">ASS</option>
-                            <option value="vtt">WebVTT</option>
-                            <option value="lrc">LRC</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label class="field-label" for="inputEncoding">
-                            <span class="lang-en">Encoding</span>
-                            <span class="lang-ar">الترميز</span>
-                        </label>
-                        <select class="field-select" id="inputEncoding" name="input_encoding">
-                            <option value="auto">Auto / تلقائي</option>
-                            <option value="utf-8">UTF-8</option>
-                            <option value="utf-8-sig">UTF-8 BOM</option>
-                            <option value="utf-16">UTF-16</option>
-                            <option value="latin-1">Latin-1</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ====== MIDDLE COLUMN WRAPPER (col 2) ====== -->
-        <div class="col-2-stack">
-
-            <!-- RTL FIX -->
-            <div class="rtl-section" id="rtlCard">
-                <div class="accordion-header">
-                    <div class="accordion-header-left">
-                        <i class="fa-solid fa-align-right"></i>
-                        <span class="lang-en">RTL Fix</span>
-                        <span class="lang-ar">إصلاح RTL</span>
-                    </div>
-                </div>
-                <div class="accordion-body">
-                    <div class="rtl-header-row" style="padding-right:0; padding-left:0;">
-                        <input type="checkbox" class="check-box" id="fixRtlCheck" name="fix_rtl" value="true" checked style="flex-shrink:0;">
-                        <label for="fixRtlCheck" class="check-label" style="font-weight:700; cursor:pointer;">
-                            <span style="color:var(--accent);">✦</span>
-                            <span class="lang-en"> Fix Arabic RTL Direction</span>
-                            <span class="lang-ar"> إصلاح اتجاه النصوص العربية (RTL)</span>
-                        </label>
-                    </div>
-                    <div class="rtl-radio-wrap" id="rtlRadioStack" style="padding: 0;">
-                        <label class="radio-row">
-                            <input type="radio" class="radio-btn" name="rtl_mode" value="rle" checked>
-                            <span class="radio-label">
-                                <span class="tag-chip">U+202B</span>
-                                <span class="lang-en"> RLE only — Default</span>
-                                <span class="lang-ar"> RLE الافتراضي</span>
-                            </span>
-                        </label>
-                        <label class="radio-row">
-                            <input type="radio" class="radio-btn" name="rtl_mode" value="rle_pdf">
-                            <span class="radio-label">
-                                <span class="tag-chip">RLE + PDF</span>
-                                <span class="lang-en"> For advanced players</span>
-                                <span class="lang-ar"> للمشغلات المتقدمة</span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TIME SHIFT -->
-            <div class="accordion-section">
-                <div class="accordion-header" data-target="timeShiftBody">
-                    <div class="accordion-header-left">
-                        <i class="fa-regular fa-clock"></i>
-                        <span class="lang-en">Time Shift</span>
-                        <span class="lang-ar">ضبط التوقيت</span>
-                        <span class="acc-badge" id="timeShiftBadge">ON</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-down accordion-chevron"></i>
-                </div>
-                <div class="accordion-body" id="timeShiftBody">
-                    <div class="card-title-desktop">
-                        <i class="fa-regular fa-clock"></i>
-                        <span class="lang-en">Time Shift</span>
-                        <span class="lang-ar">ضبط التوقيت (تأخير / تقديم)</span>
-                    </div>
-                    <div class="inline-row">
-                        <div class="field">
-                            <label class="field-label" for="timeShiftMs">
-                                <span class="lang-en">Shift (ms)</span>
-                                <span class="lang-ar">مقدار الإزاحة (ms)</span>
-                            </label>
-                            <input type="number" class="field-input" id="timeShiftMs" name="time_shift_ms"
-                                   value="0" step="100" placeholder="0" inputmode="numeric">
-                            <div class="shift-preview" id="shiftPreview"></div>
-                        </div>
-                        <div class="field">
-                            <label class="field-label" for="timeShiftFrom">
-                                <span class="lang-en">From Timestamp</span>
-                                <span class="lang-ar">بدءاً من</span>
-                            </label>
-                            <input type="text" class="field-input" id="timeShiftFrom" name="time_shift_from"
-                                   value="00:00:00,000" placeholder="00:00:00,000" inputmode="text">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div><!-- /col-2-stack -->
-
-        <!-- ====== RIGHT COLUMN WRAPPER (col 3) ====== -->
-        <div class="col-3-stack">
-
-            <!-- CLEANUP -->
-            <div class="accordion-section">
-                <div class="accordion-header" data-target="cleanupBody">
-                    <div class="accordion-header-left">
-                        <i class="fa-solid fa-broom"></i>
-                        <span class="lang-en">Cleanup</span>
-                        <span class="lang-ar">التنظيف</span>
-                        <span class="acc-badge" id="cleanupBadge">ON</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-down accordion-chevron"></i>
-                </div>
-                <div class="accordion-body" id="cleanupBody">
-                    <div class="card-title-desktop">
-                        <i class="fa-solid fa-broom"></i>
-                        <span class="lang-en">Cleanup Options</span>
-                        <span class="lang-ar">خيارات التنظيف</span>
-                    </div>
-
-                    <label class="check-row" style="border-top:none; padding-top:0;">
-                        <input type="checkbox" class="check-box" name="remove_tashkeel" value="true">
-                        <span class="check-label">
-                            <span class="lang-en">Remove Arabic Diacritics (Tashkeel)</span>
-                            <span class="lang-ar">إزالة التشكيل والحركات</span>
-                        </span>
-                    </label>
-                    <label class="check-row">
-                        <input type="checkbox" class="check-box" name="remove_music_lines" value="true">
-                        <span class="check-label">
-                            <span class="lang-en">Remove Music Lines (♪ ♫)</span>
-                            <span class="lang-ar">إزالة الأسطر الموسيقية (♪ ♫)</span>
-                        </span>
-                    </label>
-                    <label class="check-row">
-                        <input type="checkbox" class="check-box" id="removeAllTags" name="remove_all_tags" value="true">
-                        <span class="check-label">
-                            <span class="lang-en">Remove All Tags (Colors, Fonts)</span>
-                            <span class="lang-ar">إزالة كافة التنسيقات</span>
-                        </span>
-                    </label>
-                    <div class="sub-checks" id="tagKeepOptions">
-                        <label class="check-row subdued" style="border-top:none; padding-top:4px;">
-                            <input type="checkbox" class="check-box" name="keep_italic" value="true" disabled>
-                            <span class="check-label">
-                                <span class="lang-en">Keep &lt;i&gt;</span>
-                                <span class="lang-ar">الاحتفاظ بـ &lt;i&gt;</span>
-                            </span>
-                        </label>
-                        <label class="check-row subdued">
-                            <input type="checkbox" class="check-box" name="keep_bold" value="true" disabled>
-                            <span class="check-label">
-                                <span class="lang-en">Keep &lt;b&gt;</span>
-                                <span class="lang-ar">الاحتفاظ بـ &lt;b&gt;</span>
-                            </span>
-                        </label>
-                        <label class="check-row subdued" style="margin-bottom:4px;">
-                            <input type="checkbox" class="check-box" name="keep_font_color" value="true" disabled>
-                            <span class="check-label">
-                                <span class="lang-en">Keep &lt;font&gt; colors</span>
-                                <span class="lang-ar">الاحتفاظ بالألوان &lt;font&gt;</span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BRACKETS -->
-            <div class="accordion-section">
-                <div class="accordion-header" data-target="bracketsBody">
-                    <div class="accordion-header-left">
-                        <i class="fa-solid fa-code"></i>
-                        <span class="lang-en">Brackets</span>
-                        <span class="lang-ar">الأقواس</span>
-                        <span class="acc-badge" id="bracketsBadge">ON</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-down accordion-chevron"></i>
-                </div>
-                <div class="accordion-body" id="bracketsBody">
-                    <div class="card-title-desktop">
-                        <i class="fa-solid fa-code"></i>
-                        <span class="lang-en">Clean Brackets &amp; Symbols</span>
-                        <span class="lang-ar">إزالة الأقواس والرموز</span>
-                    </div>
-
-                    <input type="hidden" name="clean_brackets" id="cleanBracketsHidden" value="false">
-                    <input type="hidden" name="bracket_options" id="bracketOptionsHidden" value="{}">
-
-                    <label class="check-row" style="border-top:none; padding-top:0;">
-                        <input type="checkbox" class="check-box bracket-opt" data-key="remove_square">
-                        <span class="check-label">
-                            <span class="lang-en">Remove [ ] content</span>
-                            <span class="lang-ar">حذف محتوى [ ]</span>
-                        </span>
-                    </label>
-                    <label class="check-row">
-                        <input type="checkbox" class="check-box bracket-opt" data-key="remove_round">
-                        <span class="check-label">
-                            <span class="lang-en">Remove ( ) content</span>
-                            <span class="lang-ar">حذف محتوى ( )</span>
-                        </span>
-                    </label>
-                    <label class="check-row">
-                        <input type="checkbox" class="check-box bracket-opt" data-key="remove_curly_text">
-                        <span class="check-label">
-                            <span class="lang-en">Remove { } content</span>
-                            <span class="lang-ar">حذف محتوى { }</span>
-                        </span>
-                    </label>
-
-                    <div class="divider"></div>
-                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                        <span style="font-size:0.75rem; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:0.05em;">
-                            <i class="fa-solid fa-language" style="color:var(--accent); margin-left:4px;"></i>
-                            <span class="lang-en">Translation</span>
-                            <span class="lang-ar">الترجمة</span>
-                        </span>
-                    </div>
-                    <select class="field-select" disabled style="margin-bottom:6px;">
-                        <option>
-                            <span class="lang-en">-- No Translation --</span>
-                            <span class="lang-ar">-- بدون ترجمة --</span>
-                        </option>
-                    </select>
-                    <div class="coming-soon-note">
-                        <i class="fa-solid fa-sparkles"></i>
-                        <span class="lang-en">AI Translation coming soon</span>
-                        <span class="lang-ar">ميزة الترجمة الذكية ستتوفر قريباً</span>
-                    </div>
-                </div>
-            </div>
-
-        </div><!-- /col-3-stack -->
-
-        </div><!-- /sections -->
-
-        <!-- ====== ACTION BAR ====== -->
-        <div class="action-bar col-action">
-            <button type="submit" class="process-btn" id="processButton" disabled>
-                <i class="fa-solid fa-bolt" id="processIcon"></i>
-                <div class="spinner" id="processSpinner"></div>
-                <span class="lang-en">Process &amp; Download</span>
-                <span class="lang-ar">بدء المعالجة والتحميل</span>
+        <div class="card-body" style="padding:18px">
+          <div class="upload-zone" id="mUpload" tabindex="0" role="button">
+            <div class="uiw"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+            <div class="utitle"><span class="le">Drop subtitle files here</span><span class="la">اسحب وأفلت ملفات الترجمة</span></div>
+            <div class="uhint"><span class="le">SRT &amp; ASS supported</span><span class="la">يدعم ملفات SRT و ASS</span></div>
+            <button type="button" class="browse-btn" id="mBrowse">
+              <i class="fa-solid fa-folder-open"></i>
+              <span class="le">Browse</span><span class="la">تصفح الملفات</span>
             </button>
-            <div class="status" id="statusMessage" aria-live="polite"></div>
+            <input type="file" id="mFileInput" name="files" multiple accept=".srt,.ass">
+          </div>
+          <div class="flist" id="mFileList"></div>
+          <div class="fmt-row">
+            <div class="field">
+              <label class="flabel" for="mOut"><span class="le">Output</span><span class="la">صيغة الناتج</span></label>
+              <select class="fselect" id="mOut" name="output_format">
+                <option value="srt">SRT</option><option value="ass">ASS</option>
+                <option value="vtt">WebVTT</option><option value="lrc">LRC</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="flabel" for="mEnc"><span class="le">Encoding</span><span class="la">الترميز</span></label>
+              <select class="fselect" id="mEnc" name="input_encoding">
+                <option value="auto">Auto / تلقائي</option>
+                <option value="utf-8">UTF-8</option>
+                <option value="utf-8-sig">UTF-8 BOM</option>
+                <option value="utf-16">UTF-16</option>
+                <option value="latin-1">Latin-1</option>
+              </select>
+            </div>
+          </div>
         </div>
+      </div>
 
-    </form>
+      <!-- RTL -->
+      <div class="card rtl-card" id="mRtlCard">
+        <div class="card-head" data-acc="mRtlBody">
+          <span><i class="fa-solid fa-align-right icon"></i><span class="le">RTL Fix</span><span class="la">إصلاح RTL</span></span>
+          <i class="fa-solid fa-chevron-down chev"></i>
+        </div>
+        <div class="card-body" id="mRtlBody">
+          <div class="rth-row" style="padding-right:0;padding-left:0">
+            <input type="checkbox" class="cbox" id="mRtlCheck" name="fix_rtl" value="true" checked style="flex-shrink:0">
+            <label for="mRtlCheck" class="clabel" style="font-weight:700;cursor:pointer">
+              <span style="color:var(--accent)">✦</span>
+              <span class="le"> Fix Arabic RTL Direction</span>
+              <span class="la"> إصلاح اتجاه النصوص العربية (RTL)</span>
+            </label>
+          </div>
+          <div class="rtl-radio-wrap" style="padding:0">
+            <label class="rrow">
+              <input type="radio" class="rbtn" name="rtl_mode" value="rle" checked>
+              <span class="rlabel"><span class="tag-chip">U+202B</span><span class="le"> RLE only — Default</span><span class="la"> RLE الافتراضي</span></span>
+            </label>
+            <label class="rrow">
+              <input type="radio" class="rbtn" name="rtl_mode" value="rle_pdf">
+              <span class="rlabel"><span class="tag-chip">RLE + PDF</span><span class="le"> For advanced players</span><span class="la"> للمشغلات المتقدمة</span></span>
+            </label>
+          </div>
+        </div>
+      </div>
 
-    <footer class="footer">
-        <span class="lang-en">Built by</span>
-        <span class="lang-ar">تم التطوير بواسطة</span>
-        <a href="https://x.com/bruuhim" target="_blank" rel="noopener noreferrer">@Bruuhim</a>
-    </footer>
+      <!-- Time Shift -->
+      <div class="card" id="mTsCard">
+        <div class="card-head" data-acc="mTsBody">
+          <span><i class="fa-regular fa-clock icon"></i><span class="le">Time Shift</span><span class="la">ضبط التوقيت</span><span class="acc-badge" id="mTsBadge">ON</span></span>
+          <i class="fa-solid fa-chevron-down chev"></i>
+        </div>
+        <div class="card-body" id="mTsBody">
+          <div class="irow">
+            <div class="field">
+              <label class="flabel" for="mShiftMs"><span class="le">Shift (ms)</span><span class="la">مقدار الإزاحة (MS)</span></label>
+              <input type="number" class="finput" id="mShiftMs" name="time_shift_ms" value="0" step="100" placeholder="0" inputmode="numeric">
+              <div class="shift-prev" id="mShiftPrev"></div>
+            </div>
+            <div class="field">
+              <label class="flabel" for="mShiftFrom"><span class="le">From Timestamp</span><span class="la">بدءاً من</span></label>
+              <input type="text" class="finput" id="mShiftFrom" name="time_shift_from" value="00:00:00,000" placeholder="00:00:00,000">
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <!-- Cleanup -->
+      <div class="card" id="mClnCard">
+        <div class="card-head" data-acc="mClnBody">
+          <span><i class="fa-solid fa-broom icon"></i><span class="le">Cleanup</span><span class="la">التنظيف</span><span class="acc-badge" id="mClnBadge">ON</span></span>
+          <i class="fa-solid fa-chevron-down chev"></i>
+        </div>
+        <div class="card-body" id="mClnBody">
+          <label class="crow" style="border-top:none;padding-top:0">
+            <input type="checkbox" class="cbox" name="remove_tashkeel" value="true">
+            <span class="clabel"><span class="le">Remove Arabic Diacritics (Tashkeel)</span><span class="la">إزالة التشكيل والحركات</span></span>
+          </label>
+          <label class="crow">
+            <input type="checkbox" class="cbox" name="remove_music_lines" value="true">
+            <span class="clabel"><span class="le">Remove Music Lines (♪ ♫)</span><span class="la">إزالة الأسطر الموسيقية (♪ ♫)</span></span>
+          </label>
+          <label class="crow">
+            <input type="checkbox" class="cbox" id="mRmTags" name="remove_all_tags" value="true">
+            <span class="clabel"><span class="le">Remove All Tags</span><span class="la">إزالة كافة التنسيقات</span></span>
+          </label>
+          <div class="sub-checks" id="mTagOpts">
+            <label class="crow dim" style="border-top:none;padding-top:4px">
+              <input type="checkbox" class="cbox" name="keep_italic" value="true" disabled>
+              <span class="clabel"><span class="le">Keep &lt;i&gt;</span><span class="la">الاحتفاظ بـ &lt;i&gt;</span></span>
+            </label>
+            <label class="crow dim">
+              <input type="checkbox" class="cbox" name="keep_bold" value="true" disabled>
+              <span class="clabel"><span class="le">Keep &lt;b&gt;</span><span class="la">الاحتفاظ بـ &lt;b&gt;</span></span>
+            </label>
+            <label class="crow dim" style="margin-bottom:4px">
+              <input type="checkbox" class="cbox" name="keep_font_color" value="true" disabled>
+              <span class="clabel"><span class="le">Keep &lt;font&gt; colors</span><span class="la">الاحتفاظ بالألوان &lt;font&gt;</span></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Brackets -->
+      <div class="card" id="mBrkCard">
+        <div class="card-head" data-acc="mBrkBody">
+          <span><i class="fa-solid fa-code icon"></i><span class="le">Brackets</span><span class="la">الأقواس</span><span class="acc-badge" id="mBrkBadge">ON</span></span>
+          <i class="fa-solid fa-chevron-down chev"></i>
+        </div>
+        <div class="card-body" id="mBrkBody">
+          <input type="hidden" name="clean_brackets" id="mClnBrk" value="false">
+          <input type="hidden" name="bracket_options" id="mBrkOpts" value="{}">
+          <label class="crow" style="border-top:none;padding-top:0">
+            <input type="checkbox" class="cbox bracket-opt" data-key="remove_square">
+            <span class="clabel"><span class="le">Remove [ ] content</span><span class="la">حذف محتوى [ ]</span></span>
+          </label>
+          <label class="crow">
+            <input type="checkbox" class="cbox bracket-opt" data-key="remove_round">
+            <span class="clabel"><span class="le">Remove ( ) content</span><span class="la">حذف محتوى ( )</span></span>
+          </label>
+          <label class="crow">
+            <input type="checkbox" class="cbox bracket-opt" data-key="remove_curly_text">
+            <span class="clabel"><span class="le">Remove { } content</span><span class="la">حذف محتوى { }</span></span>
+          </label>
+          <div class="divider"></div>
+          <div style="font-size:.75rem;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">
+            <i class="fa-solid fa-language" style="color:var(--accent);margin-left:4px"></i>
+            <span class="le">Translation</span><span class="la">الترجمة</span>
+          </div>
+          <select class="fselect" disabled style="margin-bottom:6px">
+            <option><span class="le">-- No Translation --</span><span class="la">-- بدون ترجمة --</span></option>
+          </select>
+          <div class="cs-note"><i class="fa-solid fa-sparkles"></i><span class="le">AI Translation coming soon</span><span class="la">ميزة الترجمة الذكية ستتوفر قريباً</span></div>
+        </div>
+      </div>
+
+    </div><!-- /mobile-sections -->
+
+    <div class="mobile-action">
+      <button type="submit" class="proc-btn" id="mProcBtn" disabled>
+        <i class="fa-solid fa-bolt" id="mProcIcon"></i>
+        <div class="spinner" id="mSpinner"></div>
+        <span class="le">Process &amp; Download</span><span class="la">بدء المعالجة والتحميل</span>
+      </button>
+      <div class="status" id="mStatus" aria-live="polite"></div>
+    </div>
+  </form>
+
+  <footer class="footer">
+    <span class="le">Built by</span><span class="la">تم التطوير بواسطة</span>
+    <a href="https://x.com/bruuhim" target="_blank" rel="noopener noreferrer">@Bruuhim</a>
+  </footer>
+</div>
+
+<!-- ===================== DESKTOP ===================== -->
+<div class="desktop-wrap">
+  <header class="desk-header">
+    <img src="/static/Icon.jpg" alt="logo" class="logo" width="44" height="44" loading="lazy">
+    <div>
+      <h1 class="site-title">
+        <span class="le"><span>Bruuhim</span> Subtitle Studio</span>
+        <span class="la">ستوديو ترجمات <span>Bruuhim</span></span>
+      </h1>
+      <p class="site-sub">
+        <span class="le">Upload, fix, clean, and convert subtitle files in seconds.</span>
+        <span class="la">ارفع ملفات الترجمة، أصلحها، نظفها وحول صيغتها في ثوانٍ.</span>
+      </p>
+    </div>
+  </header>
+
+  <form id="dForm" enctype="multipart/form-data">
+    <div class="desk-grid">
+
+      <!-- COL 1: Files -->
+      <div class="desk-col1">
+        <div class="card always">
+          <div class="card-head">
+            <span class="ctitle-desk"><i class="fa-solid fa-file-lines"></i><span class="le">Files</span><span class="la">الملفات</span></span>
+          </div>
+          <div class="card-body">
+            <div class="upload-zone" id="dUpload" tabindex="0" role="button">
+              <div class="uiw"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+              <div class="utitle"><span class="le">Drop subtitle files here</span><span class="la">اسحب وأفلت ملفات الترجمة</span></div>
+              <div class="uhint"><span class="le">SRT &amp; ASS supported</span><span class="la">يدعم ملفات SRT و ASS</span></div>
+              <button type="button" class="browse-btn" id="dBrowse">
+                <i class="fa-solid fa-folder-open"></i>
+                <span class="le">Browse</span><span class="la">تصفح الملفات</span>
+              </button>
+              <input type="file" id="dFileInput" name="files" multiple accept=".srt,.ass">
+            </div>
+            <div class="flist" id="dFileList"></div>
+            <div class="fmt-row">
+              <div class="field">
+                <label class="flabel" for="dOut"><span class="le">Output</span><span class="la">صيغة الناتج</span></label>
+                <select class="fselect" id="dOut" name="output_format">
+                  <option value="srt">SRT</option><option value="ass">ASS</option>
+                  <option value="vtt">WebVTT</option><option value="lrc">LRC</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="flabel" for="dEnc"><span class="le">Encoding</span><span class="la">الترميز</span></label>
+                <select class="fselect" id="dEnc" name="input_encoding">
+                  <option value="auto">Auto / تلقائي</option>
+                  <option value="utf-8">UTF-8</option>
+                  <option value="utf-8-sig">UTF-8 BOM</option>
+                  <option value="utf-16">UTF-16</option>
+                  <option value="latin-1">Latin-1</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COL 2: RTL + TimeShift + Action -->
+      <div class="desk-col2">
+        <div class="cards-stack">
+
+          <!-- RTL -->
+          <div class="card rtl-card" id="dRtlCard">
+            <div class="card-head"></div>
+            <div class="card-body">
+              <div class="ctitle-desk"><i class="fa-solid fa-align-right"></i><span class="le">RTL Fix</span><span class="la">إصلاح RTL</span></div>
+              <div class="rth-row" style="padding:0 0 2px">
+                <input type="checkbox" class="cbox" id="dRtlCheck" name="fix_rtl" value="true" checked style="flex-shrink:0">
+                <label for="dRtlCheck" class="clabel" style="font-weight:700;cursor:pointer">
+                  <span style="color:var(--accent)">✦</span>
+                  <span class="le"> Fix Arabic RTL Direction</span>
+                  <span class="la"> إصلاح اتجاه النصوص العربية (RTL)</span>
+                </label>
+              </div>
+              <div class="rtl-radio-wrap" style="padding:0">
+                <label class="rrow">
+                  <input type="radio" class="rbtn" name="rtl_mode" value="rle" checked>
+                  <span class="rlabel"><span class="tag-chip">U+202B</span><span class="le"> RLE only — Default</span><span class="la"> RLE الافتراضي</span></span>
+                </label>
+                <label class="rrow">
+                  <input type="radio" class="rbtn" name="rtl_mode" value="rle_pdf">
+                  <span class="rlabel"><span class="tag-chip">RLE + PDF</span><span class="le"> For advanced players</span><span class="la"> للمشغلات المتقدمة</span></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Time Shift -->
+          <div class="card">
+            <div class="card-head"></div>
+            <div class="card-body">
+              <div class="ctitle-desk"><i class="fa-regular fa-clock"></i><span class="le">Time Shift</span><span class="la">ضبط التوقيت (تأخير / تقديم)</span></div>
+              <div class="irow">
+                <div class="field">
+                  <label class="flabel" for="dShiftMs"><span class="le">Shift (ms)</span><span class="la">مقدار الإزاحة (MS)</span></label>
+                  <input type="number" class="finput" id="dShiftMs" name="time_shift_ms" value="0" step="100" placeholder="0" inputmode="numeric">
+                  <div class="shift-prev" id="dShiftPrev"></div>
+                </div>
+                <div class="field">
+                  <label class="flabel" for="dShiftFrom"><span class="le">From Timestamp</span><span class="la">بدءاً من</span></label>
+                  <input type="text" class="finput" id="dShiftFrom" name="time_shift_from" value="00:00:00,000" placeholder="00:00:00,000">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /cards-stack -->
+
+        <!-- Action bar inside col2 -->
+        <div class="desk-action">
+          <button type="submit" class="proc-btn" id="dProcBtn" disabled>
+            <i class="fa-solid fa-bolt" id="dProcIcon"></i>
+            <div class="spinner" id="dSpinner"></div>
+            <span class="le">Process &amp; Download</span><span class="la">بدء المعالجة والتحميل</span>
+          </button>
+          <div class="status" id="dStatus" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <!-- COL 3: Cleanup + Brackets -->
+      <div class="desk-col3">
+        <div class="cards-stack">
+
+          <!-- Cleanup -->
+          <div class="card">
+            <div class="card-head"></div>
+            <div class="card-body">
+              <div class="ctitle-desk"><i class="fa-solid fa-broom"></i><span class="le">Cleanup Options</span><span class="la">خيارات التنظيف</span></div>
+              <label class="crow" style="border-top:none;padding-top:0">
+                <input type="checkbox" class="cbox" name="remove_tashkeel" value="true">
+                <span class="clabel"><span class="le">Remove Arabic Diacritics (Tashkeel)</span><span class="la">إزالة التشكيل والحركات</span></span>
+              </label>
+              <label class="crow">
+                <input type="checkbox" class="cbox" name="remove_music_lines" value="true">
+                <span class="clabel"><span class="le">Remove Music Lines (♪ ♫)</span><span class="la">إزالة الأسطر الموسيقية (♪ ♫)</span></span>
+              </label>
+              <label class="crow">
+                <input type="checkbox" class="cbox" id="dRmTags" name="remove_all_tags" value="true">
+                <span class="clabel"><span class="le">Remove All Tags</span><span class="la">إزالة كافة التنسيقات</span></span>
+              </label>
+              <div class="sub-checks" id="dTagOpts">
+                <label class="crow dim" style="border-top:none;padding-top:4px">
+                  <input type="checkbox" class="cbox" name="keep_italic" value="true" disabled>
+                  <span class="clabel"><span class="le">Keep &lt;i&gt;</span><span class="la">الاحتفاظ بـ &lt;i&gt;</span></span>
+                </label>
+                <label class="crow dim">
+                  <input type="checkbox" class="cbox" name="keep_bold" value="true" disabled>
+                  <span class="clabel"><span class="le">Keep &lt;b&gt;</span><span class="la">الاحتفاظ بـ &lt;b&gt;</span></span>
+                </label>
+                <label class="crow dim" style="margin-bottom:4px">
+                  <input type="checkbox" class="cbox" name="keep_font_color" value="true" disabled>
+                  <span class="clabel"><span class="le">Keep &lt;font&gt; colors</span><span class="la">الاحتفاظ بالألوان &lt;font&gt;</span></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Brackets -->
+          <div class="card">
+            <div class="card-head"></div>
+            <div class="card-body">
+              <div class="ctitle-desk"><i class="fa-solid fa-code"></i><span class="le">Clean Brackets &amp; Symbols</span><span class="la">إزالة الأقواس والرموز</span></div>
+              <input type="hidden" name="clean_brackets" id="dClnBrk" value="false">
+              <input type="hidden" name="bracket_options" id="dBrkOpts" value="{}">
+              <label class="crow" style="border-top:none;padding-top:0">
+                <input type="checkbox" class="cbox bracket-opt" data-key="remove_square">
+                <span class="clabel"><span class="le">Remove [ ] content</span><span class="la">حذف محتوى [ ]</span></span>
+              </label>
+              <label class="crow">
+                <input type="checkbox" class="cbox bracket-opt" data-key="remove_round">
+                <span class="clabel"><span class="le">Remove ( ) content</span><span class="la">حذف محتوى ( )</span></span>
+              </label>
+              <label class="crow">
+                <input type="checkbox" class="cbox bracket-opt" data-key="remove_curly_text">
+                <span class="clabel"><span class="le">Remove { } content</span><span class="la">حذف محتوى { }</span></span>
+              </label>
+              <div class="divider"></div>
+              <div style="font-size:.75rem;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">
+                <i class="fa-solid fa-language" style="color:var(--accent);margin-left:4px"></i>
+                <span class="le">Translation</span><span class="la">الترجمة</span>
+              </div>
+              <select class="fselect" disabled style="margin-bottom:6px">
+                <option><span class="le">-- No Translation --</span><span class="la">-- بدون ترجمة --</span></option>
+              </select>
+              <div class="cs-note"><i class="fa-solid fa-sparkles"></i><span class="le">AI Translation coming soon</span><span class="la">ميزة الترجمة الذكية ستتوفر قريباً</span></div>
+            </div>
+          </div>
+
+        </div><!-- /cards-stack -->
+      </div>
+
+    </div><!-- /desk-grid -->
+  </form>
+
+  <footer class="desk-footer">
+    <span class="le">Built by</span><span class="la">تم التطوير بواسطة</span>
+    <a href="https://x.com/bruuhim" target="_blank" rel="noopener noreferrer">@Bruuhim</a>
+  </footer>
 </div>
 
 <script>
-(function() {
-    /* --- Lang toggle --- */
-    const langToggle = document.getElementById('languageToggle');
-    const html = document.documentElement;
-    langToggle.addEventListener('change', () => {
-        if (langToggle.checked) {
-            html.setAttribute('lang', 'en');
-            html.setAttribute('dir', 'ltr');
-        } else {
-            html.setAttribute('lang', 'ar');
-            html.setAttribute('dir', 'rtl');
+(function(){
+  const html = document.documentElement;
+
+  /* lang toggle */
+  document.getElementById('langToggle').addEventListener('change', function(){
+    if(this.checked){html.setAttribute('lang','en');html.setAttribute('dir','ltr')}
+    else{html.setAttribute('lang','ar');html.setAttribute('dir','rtl')}
+  });
+
+  /* accordion (mobile only) */
+  document.querySelectorAll('.card-head[data-acc]').forEach(h=>{
+    h.addEventListener('click',()=>{
+      const card = h.closest('.card');
+      const body = document.getElementById(h.dataset.acc);
+      const open = card.classList.toggle('open');
+      if(body) body.style.display = open ? 'block' : 'none';
+    });
+  });
+
+  /* RTL card lit state */
+  function syncRtl(chk, card){
+    card.classList.toggle('lit', chk.checked);
+  }
+  const mRtlChk = document.getElementById('mRtlCheck');
+  const mRtlCard = document.getElementById('mRtlCard');
+  const dRtlChk = document.getElementById('dRtlCheck');
+  const dRtlCard = document.getElementById('dRtlCard');
+  mRtlChk.addEventListener('change',()=>syncRtl(mRtlChk,mRtlCard)); syncRtl(mRtlChk,mRtlCard);
+  dRtlChk.addEventListener('change',()=>syncRtl(dRtlChk,dRtlCard)); syncRtl(dRtlChk,dRtlCard);
+
+  /* tag sub-opts */
+  function initTagOpts(rmId, optsId){
+    const rm = document.getElementById(rmId);
+    const opts = document.getElementById(optsId);
+    function sync(){
+      opts.querySelectorAll('.crow').forEach(r=>{
+        r.classList.toggle('dim',!rm.checked);
+        r.querySelector('input').disabled = !rm.checked;
+      });
+    }
+    rm.addEventListener('change',sync); sync();
+  }
+  initTagOpts('mRmTags','mTagOpts');
+  initTagOpts('dRmTags','dTagOpts');
+
+  /* bracket opts */
+  function initBrk(form, clnId, optsId){
+    function sync(){
+      const o={};
+      form.querySelectorAll('.bracket-opt').forEach(cb=>{ if(cb.checked) o[cb.dataset.key]=true; });
+      const has = Object.keys(o).length>0;
+      document.getElementById(clnId).value = has?'true':'false';
+      document.getElementById(optsId).value = JSON.stringify(o);
+    }
+    form.querySelectorAll('.bracket-opt').forEach(cb=>cb.addEventListener('change',sync));
+  }
+  initBrk(document.getElementById('mForm'),'mClnBrk','mBrkOpts');
+  initBrk(document.getElementById('dForm'),'dClnBrk','dBrkOpts');
+
+  /* file handling — shared across both forms */
+  function initUpload({uploadId, browseId, inputId, listId, btnId}){
+    const zone = document.getElementById(uploadId);
+    const browse = document.getElementById(browseId);
+    const input = document.getElementById(inputId);
+    const list = document.getElementById(listId);
+    const btn = document.getElementById(btnId);
+    let files = [];
+
+    browse.addEventListener('click', e=>{e.stopPropagation();input.click();});
+    zone.addEventListener('click',()=>input.click());
+    zone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')input.click();});
+    zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag');});
+    zone.addEventListener('dragleave',()=>zone.classList.remove('drag'));
+    zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag');add([...e.dataTransfer.files]);});
+    input.addEventListener('change',()=>{add([...input.files]);input.value='';});
+
+    function add(fs){
+      fs.forEach(f=>{
+        if(f.name.match(/\.(srt|ass)$/i)&&!files.find(x=>x.name===f.name&&x.size===f.size))
+          files.push(f);
+      });
+      render();
+    }
+    function render(){
+      list.innerHTML='';
+      if(!files.length){list.style.display='none';btn.disabled=true;return;}
+      list.style.display='flex';btn.disabled=false;
+      files.forEach((f,i)=>{
+        const ext=f.name.split('.').pop().toUpperCase();
+        const kb=(f.size/1024).toFixed(1);
+        const d=document.createElement('div');
+        d.className='fitem';
+        d.innerHTML=`<div class="fbadge">${ext}</div><div class="finfo"><div class="fname" title="${f.name}">${f.name}</div><div class="fsize">${kb} KB</div></div><button type="button" class="fremove" data-i="${i}" aria-label="Remove"><i class="fa-solid fa-xmark"></i></button>`;
+        list.appendChild(d);
+      });
+      list.querySelectorAll('.fremove').forEach(b=>b.addEventListener('click',()=>{files.splice(parseInt(b.dataset.i),1);render();}));
+      return files;
+    }
+    return {getFiles:()=>files};
+  }
+
+  const mUp = initUpload({uploadId:'mUpload',browseId:'mBrowse',inputId:'mFileInput',listId:'mFileList',btnId:'mProcBtn'});
+  const dUp = initUpload({uploadId:'dUpload',browseId:'dBrowse',inputId:'dFileInput',listId:'dFileList',btnId:'dProcBtn'});
+
+  /* time shift preview */
+  function initShift(inputId, prevId){
+    const inp = document.getElementById(inputId);
+    const prev = document.getElementById(prevId);
+    inp.addEventListener('input',()=>{
+      const ms=parseInt(inp.value)||0;
+      if(!ms){prev.style.display='none';return;}
+      const abs=Math.abs(ms), isEn=html.getAttribute('lang')==='en';
+      prev.textContent=isEn
+        ?(ms>0?`Forward ${abs}ms`:`Back ${abs}ms`)
+        :(ms>0?`تقديم ${abs}ms`:`تأخير ${abs}ms`);
+      prev.style.display='block';
+    });
+  }
+  initShift('mShiftMs','mShiftPrev');
+  initShift('dShiftMs','dShiftPrev');
+
+  /* submit */
+  function initSubmit(formId, getFiles, btnId, iconId, spinnerId, statusId, rtlChkId){
+    const form = document.getElementById(formId);
+    const btn = document.getElementById(btnId);
+    const icon = document.getElementById(iconId);
+    const spin = document.getElementById(spinnerId);
+    const st = document.getElementById(statusId);
+    const rtlChk = document.getElementById(rtlChkId);
+
+    form.addEventListener('submit', async e=>{
+      e.preventDefault();
+      const files = getFiles();
+      if(!files.length) return;
+      const fd = new FormData();
+      files.forEach(f=>fd.append('files',f));
+      ['output_format','input_encoding','time_shift_ms','time_shift_from',
+       'remove_tashkeel','remove_music_lines','remove_all_tags','keep_italic',
+       'keep_bold','keep_font_color','clean_brackets','bracket_options'
+      ].forEach(name=>{
+        const el = form.querySelector(`[name="${name}"]`);
+        if(el){
+          if(el.type==='checkbox') fd.append(name,el.checked?'true':'false');
+          else fd.append(name,el.value);
         }
+      });
+      const rtlMode = form.querySelector('[name="rtl_mode"]:checked')?.value||'rle';
+      fd.append('fix_rtl',rtlChk.checked?'true':'false');
+      fd.append('fix_rtl_pdf',rtlMode==='rle_pdf'?'true':'false');
+
+      btn.disabled=true; icon.style.display='none'; spin.style.display='block';
+      showSt(st,'wait',html.getAttribute('lang')==='en'?'Processing…':'جارٍ المعالجة…');
+
+      try{
+        const res = await fetch('/process',{method:'POST',body:fd});
+        if(!res.ok){const err=await res.json().catch(()=>({error:'Unknown error'}));throw new Error(err.error||'Server error');}
+        const blob=await res.blob();
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');
+        a.href=url;
+        a.download=files.length>1?'subtitles_fixed.zip':(files[0].name.replace(/\.(srt|ass)$/i,'')+'_fixed.'+(form.querySelector('[name="output_format"]').value||'srt'));
+        document.body.appendChild(a);a.click();document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        const isEn=html.getAttribute('lang')==='en';
+        showSt(st,'ok',isEn?`✓ ${files.length} file(s) processed`:`✓ تمت معالجة ${files.length} ملف بنجاح`);
+      }catch(err){
+        const isEn=html.getAttribute('lang')==='en';
+        showSt(st,'err',(isEn?'✕ Error: ':'✕ خطأ: ')+err.message);
+      }finally{
+        icon.style.display=''; spin.style.display='none';
+        btn.disabled = !getFiles().length;
+      }
     });
+  }
 
-    /* --- Accordion --- */
-    document.querySelectorAll('.accordion-header[data-target]').forEach(header => {
-        header.addEventListener('click', () => {
-            const section = header.closest('.accordion-section');
-            section.classList.toggle('open');
-        });
-    });
+  function showSt(el,cls,msg){el.className='status '+cls;el.textContent=msg;el.style.display='flex';}
 
-    /* --- File handling --- */
-    const uploadArea  = document.getElementById('uploadArea');
-    const browseBtn   = document.getElementById('browseButton');
-    const fileInput   = document.getElementById('fileInput');
-    const fileListEl  = document.getElementById('fileList');
-    const processBtn  = document.getElementById('processButton');
-    const processIcon = document.getElementById('processIcon');
-    const processSpin = document.getElementById('processSpinner');
-    const statusEl    = document.getElementById('statusMessage');
-
-    let selectedFiles = [];
-
-    browseBtn.addEventListener('click', e => { e.stopPropagation(); fileInput.click(); });
-    uploadArea.addEventListener('click', () => fileInput.click());
-    uploadArea.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') fileInput.click(); });
-
-    uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
-    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
-    uploadArea.addEventListener('drop', e => {
-        e.preventDefault(); uploadArea.classList.remove('dragover');
-        addFiles([...e.dataTransfer.files]);
-    });
-    fileInput.addEventListener('change', () => { addFiles([...fileInput.files]); fileInput.value = ''; });
-
-    function addFiles(files) {
-        files.forEach(f => {
-            if (f.name.match(/\.(srt|ass)$/i) && !selectedFiles.find(x => x.name === f.name && x.size === f.size))
-                selectedFiles.push(f);
-        });
-        renderFileList();
-    }
-
-    function renderFileList() {
-        fileListEl.innerHTML = '';
-        if (selectedFiles.length === 0) {
-            fileListEl.style.display = 'none';
-            processBtn.disabled = true;
-            return;
-        }
-        fileListEl.style.display = 'flex';
-        processBtn.disabled = false;
-        selectedFiles.forEach((f, i) => {
-            const ext = f.name.split('.').pop().toUpperCase();
-            const kb  = (f.size / 1024).toFixed(1);
-            const div = document.createElement('div');
-            div.className = 'file-item';
-            div.innerHTML = `
-                <div class="file-badge">${ext}</div>
-                <div class="file-info">
-                    <div class="file-name" title="${f.name}">${f.name}</div>
-                    <div class="file-size">${kb} KB</div>
-                </div>
-                <button type="button" class="file-remove" data-idx="${i}" aria-label="Remove file">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>`;
-            fileListEl.appendChild(div);
-        });
-        fileListEl.querySelectorAll('.file-remove').forEach(btn => {
-            btn.addEventListener('click', () => {
-                selectedFiles.splice(parseInt(btn.dataset.idx), 1);
-                renderFileList();
-            });
-        });
-    }
-
-    /* --- Time shift preview + badge --- */
-    const shiftInput   = document.getElementById('timeShiftMs');
-    const shiftPreview = document.getElementById('shiftPreview');
-    const timeShiftBadge = document.getElementById('timeShiftBadge');
-    shiftInput.addEventListener('input', () => {
-        const ms = parseInt(shiftInput.value) || 0;
-        timeShiftBadge.classList.toggle('visible', ms !== 0);
-        if (ms === 0) { shiftPreview.style.display = 'none'; return; }
-        const abs = Math.abs(ms);
-        const isEn = html.getAttribute('lang') === 'en';
-        const dir = isEn
-            ? (ms > 0 ? `Forward by ${abs}ms (${(abs/1000).toFixed(2)}s)` : `Back by ${abs}ms (${(abs/1000).toFixed(2)}s)`)
-            : (ms > 0 ? `تقديم بمقدار ${abs}ms (${(abs/1000).toFixed(2)}ث)` : `تأخير بمقدار ${abs}ms (${(abs/1000).toFixed(2)}ث)`);
-        shiftPreview.textContent = dir;
-        shiftPreview.style.display = 'block';
-    });
-
-    /* --- Cleanup badge --- */
-    const cleanupBadge = document.getElementById('cleanupBadge');
-    document.querySelectorAll('#cleanupBody .check-box').forEach(cb => {
-        cb.addEventListener('change', () => {
-            const any = [...document.querySelectorAll('#cleanupBody .check-box:not([disabled])')].some(c => c.checked);
-            cleanupBadge.classList.toggle('visible', any);
-        });
-    });
-
-    /* --- Brackets badge --- */
-    const bracketsBadge = document.getElementById('bracketsBadge');
-    function syncBracketOpts() {
-        const opts = {};
-        document.querySelectorAll('.bracket-opt').forEach(cb => {
-            if (cb.checked) opts[cb.dataset.key] = true;
-        });
-        const hasAny = Object.keys(opts).length > 0;
-        bracketsBadge.classList.toggle('visible', hasAny);
-        document.getElementById('cleanBracketsHidden').value = hasAny ? 'true' : 'false';
-        document.getElementById('bracketOptionsHidden').value = JSON.stringify(opts);
-    }
-    document.querySelectorAll('.bracket-opt').forEach(cb => cb.addEventListener('change', syncBracketOpts));
-
-    /* --- RTL card styling --- */
-    const fixRtlCheck = document.getElementById('fixRtlCheck');
-    const rtlCard     = document.getElementById('rtlCard');
-    function syncRtlCard() {
-        rtlCard.classList.toggle('active', fixRtlCheck.checked);
-    }
-    fixRtlCheck.addEventListener('change', syncRtlCard);
-    syncRtlCard();
-
-    /* --- Tag keep sub-options --- */
-    const removeAllTags = document.getElementById('removeAllTags');
-    const tagKeepOpts   = document.getElementById('tagKeepOptions');
-    function syncTagOpts() {
-        tagKeepOpts.querySelectorAll('.check-row').forEach(r => {
-            r.classList.toggle('subdued', !removeAllTags.checked);
-            r.querySelector('input').disabled = !removeAllTags.checked;
-        });
-    }
-    removeAllTags.addEventListener('change', syncTagOpts);
-    syncTagOpts();
-
-    /* --- Submit --- */
-    document.getElementById('uploadForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        if (selectedFiles.length === 0) return;
-
-        const formData = new FormData();
-        selectedFiles.forEach(f => formData.append('files', f));
-
-        const fields = ['output_format','input_encoding','time_shift_ms','time_shift_from',
-                        'remove_tashkeel','remove_music_lines','remove_all_tags','keep_italic',
-                        'keep_bold','keep_font_color','clean_brackets','bracket_options'];
-        fields.forEach(name => {
-            const el = document.querySelector(`[name="${name}"]`);
-            if (el) {
-                if (el.type === 'checkbox') formData.append(name, el.checked ? 'true' : 'false');
-                else formData.append(name, el.value);
-            }
-        });
-
-        const rtlMode = document.querySelector('[name="rtl_mode"]:checked')?.value || 'rle';
-        formData.append('fix_rtl', fixRtlCheck.checked ? 'true' : 'false');
-        formData.append('fix_rtl_pdf', rtlMode === 'rle_pdf' ? 'true' : 'false');
-
-        setLoading(true);
-        showStatus('loading', html.getAttribute('lang') === 'en' ? 'Processing\u2026' : '\u062c\u0627\u0631\u064d \u0627\u0644\u0645\u0639\u0627\u0644\u062c\u0629\u2026');
-
-        try {
-            const res = await fetch('/process', { method: 'POST', body: formData });
-            if (!res.ok) {
-                const err = await res.json().catch(() => ({ error: 'Unknown error' }));
-                throw new Error(err.error || 'Server error');
-            }
-            const blob = await res.blob();
-            const url  = URL.createObjectURL(blob);
-            const a    = document.createElement('a');
-            a.href     = url;
-            a.download = selectedFiles.length > 1
-                ? 'subtitles_fixed.zip'
-                : (selectedFiles[0].name.replace(/\.(srt|ass)$/i, '') + '_fixed.' + (document.getElementById('outputFormat').value || 'srt'));
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            const isEn = html.getAttribute('lang') === 'en';
-            showStatus('success', isEn
-                ? `\u2713 ${selectedFiles.length} file(s) processed successfully`
-                : `\u2713 \u062a\u0645\u062a \u0645\u0639\u0627\u0644\u062c\u0629 ${selectedFiles.length} \u0645\u0644\u0641 \u0628\u0646\u062c\u0627\u062d`);
-        } catch (err) {
-            const isEn = html.getAttribute('lang') === 'en';
-            showStatus('error', (isEn ? '\u2715 Error: ' : '\u2715 \u062e\u0637\u0623: ') + err.message);
-        } finally {
-            setLoading(false);
-        }
-    });
-
-    function setLoading(on) {
-        processBtn.disabled = on || selectedFiles.length === 0;
-        processIcon.style.display = on ? 'none' : '';
-        processSpin.style.display = on ? 'block' : 'none';
-    }
-
-    function showStatus(type, msg) {
-        statusEl.className = 'status ' + type;
-        statusEl.textContent = msg;
-        statusEl.style.display = 'flex';
-    }
+  initSubmit('mForm',mUp.getFiles,'mProcBtn','mProcIcon','mSpinner','mStatus','mRtlCheck');
+  initSubmit('dForm',dUp.getFiles,'dProcBtn','dProcIcon','dSpinner','dStatus','dRtlCheck');
 
 })();
 </script>
